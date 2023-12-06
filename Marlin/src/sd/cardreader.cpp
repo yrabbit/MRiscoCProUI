@@ -32,9 +32,7 @@
 #include "../libs/hex_print.h"
 #include "../lcd/marlinui.h"
 
-#if ENABLED(DWIN_CREALITY_LCD)
-  #include "../lcd/e3v2/creality/dwin.h"
-#elif ENABLED(DWIN_LCD_PROUI)
+#if ENABLED(DWIN_LCD_PROUI)
   #include "../lcd/e3v2/proui/dwin.h"
 #endif
 
@@ -500,7 +498,7 @@ void CardReader::mount() {
     cdroot();
   else {
     #if ANY(HAS_SD_DETECT, USB_FLASH_DRIVE_SUPPORT)
-      if (marlin_state != MF_INITIALIZING) LCD_ALERTMESSAGE(MSG_MEDIA_INIT_FAIL);
+      if (marlin_state != MF_INITIALIZING) LCD_MESSAGE(MSG_MEDIA_INIT_FAIL);
     #endif
   }
 
@@ -719,6 +717,10 @@ void CardReader::openFileRead(const char * const path, const uint8_t subcall_typ
         break;
 
     #endif
+
+    #if PROUI_EX
+       case 100: break;  // Reserved for read file header.
+    #endif
   }
 
   abortFilePrintNow();
@@ -739,6 +741,7 @@ void CardReader::openFileRead(const char * const path, const uint8_t subcall_typ
 
     selectFileByName(fname);
     ui.set_status(longFilename[0] ? longFilename : fname);
+    TERN_(DWIN_LCD_PROUI, DWIN_Print_Header(longFilename[0] ? longFilename : fname));
   }
   else
     openFailed(fname);

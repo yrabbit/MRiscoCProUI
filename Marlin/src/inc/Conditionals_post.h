@@ -539,7 +539,7 @@
   #endif
 
   // Extender cable doesn't support SD_DETECT_PIN
-  #if ENABLED(NO_SD_DETECT)
+   #if ENABLED(NO_SD_DETECT) && DISABLED(DWIN_LCD_PROUI)
     #undef SD_DETECT_PIN
   #endif
 
@@ -2499,8 +2499,14 @@
 // PID heating
 #if ANY(PIDTEMP, PIDTEMPBED, PIDTEMPCHAMBER)
   #define HAS_PID_HEATING 1
-  #if ENABLED(DWIN_LCD_PROUI) && ANY(PIDTEMP, PIDTEMPBED)
+#endif
+
+#if ENABLED(DWIN_LCD_PROUI)
+  #if ANY(PIDTEMP, PIDTEMPBED)
     #define PROUI_PID_TUNE 1
+  #endif
+  #if ANY(PROUI_PID_TUNE, MPC_AUTOTUNE) && DISABLED(DISABLE_TUNING_GRAPH)
+    #define PROUI_TUNING_GRAPH 1
   #endif
 #endif
 
@@ -2946,7 +2952,11 @@
 /**
  * Bed Probe dependencies
  */
-#if ANY(MESH_BED_LEVELING, HAS_BED_PROBE)
+#if DISABLED(DWIN_LCD_PROUI) && ANY(BABYSTEPPING, HAS_BED_PROBE)
+  #define HAS_ZOFFSET_ITEM 1
+#endif
+
+#if HAS_ZOFFSET_ITEM
   #ifndef PROBE_OFFSET_ZMIN
     #define PROBE_OFFSET_ZMIN -20
   #endif
@@ -2954,7 +2964,7 @@
     #define PROBE_OFFSET_ZMAX  20
   #endif
 #endif
-#if HAS_BED_PROBE
+#if ANY(MESH_BED_LEVELING, HAS_BED_PROBE)
   #ifndef PROBE_OFFSET_XMIN
     #define PROBE_OFFSET_XMIN -50
   #endif
@@ -3042,7 +3052,7 @@
  * Advanced Pause - Filament Change
  */
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
-  #if ANY(HAS_MARLINUI_MENU, EXTENSIBLE_UI, DWIN_LCD_PROUI, DWIN_CREALITY_LCD_JYERSUI) || ALL(EMERGENCY_PARSER, HOST_PROMPT_SUPPORT)
+  #if ANY(HAS_MARLINUI_MENU, EXTENSIBLE_UI, DWIN_LCD_PROUI) || ALL(EMERGENCY_PARSER, HOST_PROMPT_SUPPORT)
     #define M600_PURGE_MORE_RESUMABLE 1
   #endif
   #ifndef FILAMENT_CHANGE_SLOW_LOAD_LENGTH
@@ -3158,7 +3168,7 @@
   #ifndef MESH_MAX_Y
     #define MESH_MAX_Y _MESH_MAX_Y
   #endif
-#else
+#elif DISABLED(DWIN_LCD_PROUI)
   #undef MESH_MIN_X
   #undef MESH_MIN_Y
   #undef MESH_MAX_X
@@ -3339,12 +3349,12 @@
 #if defined(TARGET_LPC1768) && IS_RRD_FG_SC && (SD_SCK_PIN == LCD_PINS_D4)
   #define SDCARD_SORT_ALPHA         // Keep one directory level in RAM. Changing directory levels
                                     // may still glitch the screen, but LCD updates clean it up.
-  #if SDSORT_LIMIT > 64 || !SDSORT_USES_RAM || SDSORT_USES_STACK || !SDSORT_CACHE_NAMES
+  #if SDSORT_LIMIT > 100 || !SDSORT_USES_RAM || SDSORT_USES_STACK || !SDSORT_CACHE_NAMES
     #undef SDSORT_LIMIT
     #undef SDSORT_USES_RAM
     #undef SDSORT_USES_STACK
     #undef SDSORT_CACHE_NAMES
-    #define SDSORT_LIMIT       64
+    #define SDSORT_LIMIT       100
     #define SDSORT_USES_RAM    true
     #define SDSORT_USES_STACK  false
     #define SDSORT_CACHE_NAMES true

@@ -37,7 +37,7 @@ namespace LanguageNarrow_tr {
   LSTR LANGUAGE                           = _UxGT("Turkish");
 
   // These strings should be translated
-  LSTR WELCOME_MSG                        = MACHINE_NAME _UxGT(" hazır.");
+  LSTR WELCOME_MSG                        = CUSTOM_MACHINE_NAME _UxGT(" hazır");
   LSTR MSG_YES                            = _UxGT("EVET");
   LSTR MSG_NO                             = _UxGT("HAYIR");
   LSTR MSG_HIGH                           = _UxGT("YÜKSEK");
@@ -148,6 +148,7 @@ namespace LanguageNarrow_tr {
   LSTR MSG_MESH_VIEWER                    = _UxGT("Mesh görüntüleyici");
   LSTR MSG_EDIT_MESH                      = _UxGT("Mesh Düzenle");
   LSTR MSG_MESH_VIEW                      = _UxGT("Mesh Göster");
+  LSTR MSG_CHANGE_MESH                    = _UxGT("Normal Mesh Göster");
   LSTR MSG_EDITING_STOPPED                = _UxGT("Mesh Düzenleme Durdu");
   LSTR MSG_NO_VALID_MESH                  = _UxGT("Geçerli Mesh yok");
   LSTR MSG_ACTIVATE_MESH                  = _UxGT("Seviyeleme Aç");

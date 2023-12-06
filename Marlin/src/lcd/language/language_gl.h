@@ -36,7 +36,7 @@ namespace LanguageNarrow_gl {
   constexpr uint8_t CHARSIZE              = 1;
   LSTR LANGUAGE                           = _UxGT("Galician");
 
-  LSTR WELCOME_MSG                        = MACHINE_NAME _UxGT(" lista.");
+  LSTR WELCOME_MSG                        = CUSTOM_MACHINE_NAME _UxGT(" lista");
   LSTR MSG_YES                            = _UxGT("SI");
   LSTR MSG_NO                             = _UxGT("NON");
   LSTR MSG_BACK                           = _UxGT("Atrás");

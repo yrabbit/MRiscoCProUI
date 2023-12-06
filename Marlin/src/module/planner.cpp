@@ -116,8 +116,11 @@
 // Delay for delivery of first block to the stepper ISR, if the queue contains 2 or
 // fewer movements. The delay is measured in milliseconds, and must be less than 250ms
 #define BLOCK_DELAY_NONE         0U
-#define BLOCK_DELAY_FOR_1ST_MOVE 100U
-
+#if ENABLED(CV_LASER_MODULE) // 107011 -20211020 修复激光 抖动灰模式打印不出的bug
+  #define BLOCK_DELAY_FOR_1ST_MOVE 0
+#else
+  #define BLOCK_DELAY_FOR_1ST_MOVE 100U
+#endif
 Planner planner;
 
 // public:
@@ -174,7 +177,7 @@ float Planner::mm_per_step[DISTINCT_AXES];      // (mm) Millimeters per step
 
 #if HAS_EXTRUDERS
   int16_t Planner::flow_percentage[EXTRUDERS] = ARRAY_BY_EXTRUDERS1(100); // Extrusion factor for each extruder
-  float Planner::e_factor[EXTRUDERS] = ARRAY_BY_EXTRUDERS1(1.0f); // The flow percentage and volumetric multiplier combine to scale E movement
+  float Planner::e_factor[EXTRUDERS] = ARRAY_BY_EXTRUDERS1(1.00f); // The flow percentage and volumetric multiplier combine to scale E movement
 #endif
 
 #if DISABLED(NO_VOLUMETRICS)
@@ -1592,7 +1595,7 @@ void Planner::check_axes_activity() {
 
 #if HAS_LEVELING
 
-  constexpr xy_pos_t level_fulcrum = {
+  TERN(PROUI_EX, ,constexpr) xy_pos_t level_fulcrum = {
     TERN(Z_SAFE_HOMING, Z_SAFE_HOMING_X_POINT, X_HOME_POS),
     TERN(Z_SAFE_HOMING, Z_SAFE_HOMING_Y_POINT, Y_HOME_POS)
   };

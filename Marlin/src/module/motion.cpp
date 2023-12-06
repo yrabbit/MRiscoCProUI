@@ -77,7 +77,6 @@
 #define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
 #include "../core/debug_out.h"
 
-
 #if ENABLED(BD_SENSOR)
   #include "../feature/bedlevel/bdl/bdl.h"
 #endif
@@ -863,8 +862,11 @@ void restore_feedrate_and_scaling() {
     OPTARG(HAS_HOTEND_OFFSET, const uint8_t old_tool_index/*=0*/, const uint8_t new_tool_index/*=0*/)
   ) {
 
-    #if ENABLED(DUAL_X_CARRIAGE)
+    #if PROUI_EX
 
+      ProEx.UpdateAxis(axis);
+
+    #elif ENABLED(DUAL_X_CARRIAGE)
       if (axis == X_AXIS) {
 
         // In Dual X mode hotend_offset[X] is T1's home position

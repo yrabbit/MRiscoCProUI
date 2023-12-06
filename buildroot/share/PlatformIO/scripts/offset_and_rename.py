@@ -62,8 +62,15 @@ if pioutil.is_pio_build():
             from pathlib import Path
             from datetime import datetime
             from os import path
-            _newpath = Path(target[0].dir.path, datetime.now().strftime(new_name.replace('{date}', '%Y%m%d').replace('{time}', '%H%M%S')))
-            Path(target[0].path).replace(_newpath)
-            env['PROGNAME'] = path.splitext(_newpath)[0]
+
+            _newtarget = Path(target[0].dir.path, datetime.now().strftime(new_name.replace('{date}', '%Y%m%d').replace('{time}', '%H%M%S')))
+            _newsource = Path(source[0].dir.path, datetime.now().strftime(new_name.replace('{date}', '%Y%m%d').replace('{time}', '%H%M%S').replace('.bin', '.elf')))
+            BIN_NAME = Path(target[0].path).replace(_newtarget)
+            ELF_NAME = Path(source[0].path).replace(_newsource)
+            env['PROGNAME'] = path.splitext(_newtarget)[0]
+            print("FIRMWARE ELF: %s" % ELF_NAME)
+            print("FIRMWARE BIN: %s" % BIN_NAME)
 
         marlin.add_post_action(rename_target)
+        import open_explorer
+        open_explorer.open_file_explorer()

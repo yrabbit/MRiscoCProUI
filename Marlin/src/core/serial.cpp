@@ -97,6 +97,11 @@ void SERIAL_WARN_START()  { SERIAL_ECHO(F("Warning:")); }
 
 void SERIAL_ECHO_SP(uint8_t count) { count *= (PROPORTIONAL_FONT_RATIO); while (count--) SERIAL_CHAR(' '); }
 
+// serial_print_P workaround is undefined without this call to function
+void serial_print_P(PGM_P p) {
+    SERIAL_ECHO_P(p); 
+}
+
 void serial_offset(const_float_t v, const uint8_t sp/*=0*/) {
   if (v == 0 && sp == 1)
     SERIAL_CHAR(' ');

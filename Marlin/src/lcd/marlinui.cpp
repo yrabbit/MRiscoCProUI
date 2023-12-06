@@ -45,12 +45,8 @@ MarlinUI ui;
   #include "utf8.h"
 #endif
 
-#if ENABLED(DWIN_CREALITY_LCD)
-  #include "e3v2/creality/dwin.h"
-#elif ENABLED(DWIN_LCD_PROUI)
+#if ENABLED(DWIN_LCD_PROUI)
   #include "e3v2/proui/dwin.h"
-#elif ENABLED(DWIN_CREALITY_LCD_JYERSUI)
-  #include "e3v2/jyersui/dwin.h"
 #endif
 
 #if ENABLED(LCD_PROGRESS_BAR) && !IS_TFTGLCD_PANEL
@@ -66,6 +62,22 @@ MarlinUI ui;
 #endif
 
 constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
+
+#ifdef BED_SCREW_INSET
+  float MarlinUI::screw_pos = BED_SCREW_INSET;
+#endif
+
+#if PROUI_EX && HAS_MESH
+  float MarlinUI::mesh_inset_min_x = MESH_INSET;
+  float MarlinUI::mesh_inset_max_x = X_BED_SIZE - MESH_INSET;
+  float MarlinUI::mesh_inset_min_y = MESH_INSET;
+  float MarlinUI::mesh_inset_max_y = Y_BED_SIZE - MESH_INSET;
+#endif
+
+#if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
+  int MarlinUI::enc_rateA = 135;
+  int MarlinUI::enc_rateB = 25;
+#endif
 
 #if HAS_STATUS_MESSAGE
   #if ENABLED(STATUS_MESSAGE_SCROLLING) && ANY(HAS_WIRED_LCD, DWIN_LCD_PROUI)
@@ -124,6 +136,7 @@ constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
 
 #if ENABLED(SOUND_MENU_ITEM)
   bool MarlinUI::sound_on = ENABLED(SOUND_ON_DEFAULT);
+  bool MarlinUI::tick_on = ENABLED(TICK_ON_DEFAULT);
 #endif
 
 #if ENABLED(PCA9632_BUZZER)
@@ -494,6 +507,10 @@ void MarlinUI::init() {
 
   #endif // HAS_MARLINUI_MENU
 
+  ////////////////////////////////////////////
+  ///////////// Keypad Handling //////////////
+  ////////////////////////////////////////////
+
   #if IS_RRW_KEYPAD && HAS_ENCODER_ACTION
 
     volatile uint8_t MarlinUI::keypad_buttons;
@@ -773,6 +790,10 @@ void MarlinUI::init() {
       #endif
     #endif
   }
+
+  ////////////////////////////////////////////
+  /////////////// Manual Move ////////////////
+  ////////////////////////////////////////////
 
   #if HAS_MARLINUI_MENU
 
@@ -1061,6 +1082,7 @@ void MarlinUI::init() {
                     SERIAL_ECHO_START();
                     SERIAL_ECHOPGM("Enc Step Rate: ", encoderStepRate);
                     SERIAL_ECHOPGM("  Multiplier: ", encoderMultiplier);
+                    SERIAL_ECHOPGM("  ENCODER_5X_STEPS_PER_SEC: ", ENCODER_5X_STEPS_PER_SEC);
                     SERIAL_ECHOPGM("  ENCODER_10X_STEPS_PER_SEC: ", ENCODER_10X_STEPS_PER_SEC);
                     SERIAL_ECHOPGM("  ENCODER_100X_STEPS_PER_SEC: ", ENCODER_100X_STEPS_PER_SEC);
                     SERIAL_EOL();
@@ -1199,9 +1221,10 @@ void MarlinUI::init() {
           #ifdef NEOPIXEL_BKGD_INDEX_FIRST
             neo.set_background_off();
             neo.show();
-          #elif PIN_EXIST(LCD_BACKLIGHT)
+          //#elif PIN_EXIST(LCD_BACKLIGHT) && ENABLED(CR10_STOCKDISPLAY)
             WRITE(LCD_BACKLIGHT_PIN, LOW); // Backlight off
           #endif
+          // TODO: Backlight off (add function to turn off backlight for LCD-12864)
           backlight_off_ms = 0;
         }
       #elif HAS_DISPLAY_SLEEP
@@ -1459,13 +1482,16 @@ void MarlinUI::host_notify(const char * const cstr) {
     FSTR_P msg;
     if (printingIsPaused())
       msg = GET_TEXT_F(MSG_PRINT_PAUSED);
-    #if HAS_MEDIA
+    #if HAS_MEDIA && DISABLED(DWIN_LCD_PROUI)
       else if (IS_SD_PRINTING())
         return set_status_no_expire(card.longest_filename());
     #endif
     else if (print_job_timer.isRunning())
-      msg = GET_TEXT_F(MSG_PRINTING);
-
+      #if ENABLED(CV_LASER_MODULE)
+        msg = laser_device.is_laser_device() ? GET_TEXT_F(MSG_ENGRAVING) : GET_TEXT_F(MSG_PRINTING);
+      #else
+        msg = GET_TEXT_F(MSG_PRINTING);
+      #endif
     #if SERVICE_INTERVAL_1 > 0
       else if (print_job_timer.needsService(1)) msg = FPSTR(service1);
     #endif
@@ -1478,8 +1504,8 @@ void MarlinUI::host_notify(const char * const cstr) {
 
     else if (!no_welcome) msg = GET_TEXT_F(WELCOME_MSG);
 
-    else if (ENABLED(DWIN_LCD_PROUI))
-        msg = F("");
+    else if (ENABLED(DWIN_LCD_PROUI)) msg = F("");
+
     else
       return;
 
@@ -1491,6 +1517,10 @@ void MarlinUI::host_notify(const char * const cstr) {
    * @param level Alert level. Negative to ignore and reset the level. Non-zero never expires.
    * @return      TRUE if the level could NOT be set.
    */
+  void MarlinUI::set_status(FSTR_P const fstr, int8_t level) { // PROUI_EX workaround libproui.a undefined reference
+    _set_status_and_level(FTOP(fstr), level);
+  }
+
   bool MarlinUI::set_alert_level(int8_t &level) {
     if (level < 0) level = alert_level = 0;
     if (level < alert_level) return true;
@@ -1598,9 +1628,7 @@ void MarlinUI::host_notify(const char * const cstr) {
     #endif
 
     TERN_(EXTENSIBLE_UI, ExtUI::onStatusChanged(status_message));
-    TERN_(DWIN_CREALITY_LCD, dwinStatusChanged(status_message));
-    TERN_(DWIN_LCD_PROUI, dwinCheckStatusMessage());
-    TERN_(DWIN_CREALITY_LCD_JYERSUI, jyersDWIN.updateStatus(status_message));
+    TERN_(DWIN_LCD_PROUI, DWIN_CheckStatusMessage());
   }
 
   #if ENABLED(STATUS_MESSAGE_SCROLLING)
@@ -1636,6 +1664,8 @@ void MarlinUI::host_notify(const char * const cstr) {
     pgm ? host_notify_P(ustr) : host_notify(ustr);
   }
   void MarlinUI::status_printf_P(int8_t level, PGM_P const fmt, ...) {
+    if (set_alert_level(level)) return;
+
     MString<30> msg;
 
     va_list args;
@@ -1655,6 +1685,9 @@ void MarlinUI::host_notify(const char * const cstr) {
   #endif
 
   void MarlinUI::abort_print() {
+    #if ENABLED(CV_LASER_MODULE)
+      if (laser_device.is_laser_device()) laser_device.quick_stop();
+    #endif
     #if HAS_MEDIA
       wait_for_heatup = wait_for_user = false;
       card.abortFilePrintSoon();
@@ -1666,7 +1699,7 @@ void MarlinUI::host_notify(const char * const cstr) {
     TERN_(HOST_PROMPT_SUPPORT, hostui.prompt_open(PROMPT_INFO, F("UI Aborted"), FPSTR(DISMISS_STR)));
     LCD_MESSAGE(MSG_PRINT_ABORTED);
     TERN_(HAS_MARLINUI_MENU, return_to_status());
-    TERN_(DWIN_LCD_PROUI, hmiFlag.abort_flag = true);
+    TERN_(DWIN_LCD_PROUI, HMI_flag.abort_flag = true);
   }
 
   #if ALL(HAS_MARLINUI_MENU, PSU_CONTROL)
@@ -1698,8 +1731,14 @@ void MarlinUI::host_notify(const char * const cstr) {
     LCD_MESSAGE(MSG_PRINT_PAUSED);
 
     #if ENABLED(PARK_HEAD_ON_PAUSE)
-      pause_show_message(PAUSE_MESSAGE_PARKING, PAUSE_MODE_PAUSE_PRINT); // Show message immediately to let user know about pause in progress
-      queue.inject(F("M25 P\nM24"));
+      #if ENABLED(CV_LASER_MODULE)
+        if (laser_device.is_laser_device()) queue.inject(F("M25"));
+        else
+      #endif
+      {
+        pause_show_message(PAUSE_MESSAGE_PARKING, PAUSE_MODE_PAUSE_PRINT); // Show message immediately to let user know about pause in progress
+        queue.inject(F("M25 P\nM24"));
+      }
     #elif HAS_MEDIA
       queue.inject(F("M25"));
     #elif defined(ACTION_ON_PAUSE)
