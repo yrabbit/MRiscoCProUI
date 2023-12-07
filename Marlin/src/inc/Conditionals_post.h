@@ -2952,7 +2952,7 @@
 /**
  * Bed Probe dependencies
  */
-#if DISABLED(DWIN_LCD_PROUI) && ANY(BABYSTEPPING, HAS_BED_PROBE)
+#if ANY(BABYSTEPPING, PROBE_SELECTED)
   #define HAS_ZOFFSET_ITEM 1
 #endif
 
@@ -2964,7 +2964,7 @@
     #define PROBE_OFFSET_ZMAX  20
   #endif
 #endif
-#if ANY(MESH_BED_LEVELING, HAS_BED_PROBE)
+#if HAS_BED_PROBE
   #ifndef PROBE_OFFSET_XMIN
     #define PROBE_OFFSET_XMIN -50
   #endif

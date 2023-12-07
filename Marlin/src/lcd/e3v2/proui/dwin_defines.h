@@ -41,10 +41,6 @@
   #define JUST_BABYSTEP 1
 #endif
 
-#if ANY(BABYSTEPPING, HAS_BED_PROBE)
-  #define HAS_ZOFFSET_ITEM 1
-#endif
-
 #define Def_Background_Color  Color_Bg_Black //
 #define Def_Cursor_Color      Color_Cyan //
 #define Def_TitleBg_Color     Color_Voxelab_Red //
