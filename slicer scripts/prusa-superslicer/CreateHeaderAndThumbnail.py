@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 # ------------------------------------------------------------------------------
-# Prusa / Super Slicer post-processor script for the Professional Firmware
+# Orca / Prusa / Super Slicer post-processor script for the Professional Firmware
 # URL: https://github.com/mriscoc/Ender3V2S1
 # Miguel A. Risco-Castillo
-# version: 1.7
-# date: 2023/08/02
+# version: 2.1
+# date: 2023/09/17
 #
 # Contains code from the jpg re-encoder thumbnail post processor script:
 # github.com/alexqzd/Marlin/blob/Gcode-preview/Display%20firmware/gcode_thumb_to_jpg.py
@@ -14,18 +14,18 @@
 import sys
 import re
 import os
-import base64 
+import base64
 import io
 import subprocess
 
 try:
     from PIL import Image
 except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip3", "install", "Pillow"])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "Pillow"])
     from PIL import Image
-    
+
 def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip3", "install", package])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
 # Get the g-code source file name
 sourceFile = sys.argv[1]
@@ -87,13 +87,25 @@ filament = float(match[1])/1000 if match is not None else 0
 match = os.getenv('SLIC3R_LAYER_HEIGHT')
 layer = float(match) if match is not None else 0
 
-minx = 0
-miny = 0
-minz = 0
-maxx = 0
-maxy = 0
-maxz = 0
+match = re.search('; First layer print x min = ([0-9.]+)', lines)
+minx = float(match[1]) if match is not None else 0
 
+match = re.search('; First layer print y min = ([0-9.]+)', lines)
+miny = float(match[1]) if match is not None else 0
+
+match = re.search('; First layer print x max = ([0-9.]+)', lines)
+maxx = float(match[1]) if match is not None else 0
+
+match = re.search('; First layer print y max = ([0-9.]+)', lines)
+maxy = float(match[1]) if match is not None else 0
+
+match = re.search('; Total layer count = ([0-9.]+)', lines)
+totlc = float(match[1]) if match is not None else 0
+
+maxz = layer*totlc
+minz = 0
+
+#Generate output file
 try:
     with open(sourceFile, "w+") as of:
     # Write header values
@@ -109,8 +121,8 @@ try:
         of.write(';MAXY:{:.3f}\n'.format(maxy))
         of.write(';MAXZ:{:.3f}\n'.format(maxz))
         of.write(';POSTPROCESSED\n')
-        of.write(';Header generated for the MRiscoC Professional Firmware\n')
-        of.write(';https://github.com/mriscoc/Ender3V2S1\n\n')
+        of.write(';Header generated for the MRiscoCProUI Firmware\n')
+        of.write(';https://github.com/classicrocker883/MRiscoCProUI')
         of.write(lines)
 except:
     print('Error writing output file')

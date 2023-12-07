@@ -27,6 +27,7 @@
 #include "../common/encoder.h"
 #include "../common/limits.h"
 #include "../../../libs/BL24CXX.h"
+#include "../../../MarlinCore.h"
 #if ENABLED(LED_CONTROL_MENU)
   #include "../../../feature/leds/leds.h"
 #endif
@@ -35,18 +36,13 @@
   #include "custom_gcodes.h"
 #endif
 
+#if HAS_MEDIA
+  #include "../../../sd/cardreader.h"
+#endif
+
 #if ENABLED(CV_LASER_MODULE)
   #include "cv_laser_module.h"
 #endif
-
-namespace GET_LANG(LCD_LANGUAGE) {
-  #define _MSG_PREHEAT(N) \
-    LSTR MSG_PREHEAT_##N                  = _UxGT("Preheat ") PREHEAT_## N ##_LABEL; \
-    LSTR MSG_PREHEAT_## N ##_SETTINGS     = _UxGT("Preheat ") PREHEAT_## N ##_LABEL _UxGT(" Settings");
-  #if PREHEAT_COUNT > 3
-    REPEAT_S(4, INCREMENT(PREHEAT_COUNT), _MSG_PREHEAT)
-  #endif
-}
 
 extern char DateTime[16+1];
 
@@ -132,8 +128,8 @@ typedef struct {
   bool AdaptiveStepSmoothing;
   bool EnablePreview;
 } HMI_data_t;
-
 extern HMI_data_t HMI_data;
+
 static constexpr size_t eeprom_data_size = sizeof(HMI_data_t) + TERN0(PROUI_EX, sizeof(PRO_data_t));
 
 typedef struct {
@@ -157,7 +153,6 @@ typedef struct {
   uint8_t Select = 0;                 // Auxiliary selector variable
   AxisEnum axis = X_AXIS;             // Axis Select
 } HMI_value_t;
-
 extern HMI_value_t HMI_value;
 
 typedef struct {
@@ -171,9 +166,12 @@ typedef struct {
     bool cancel_abl:1;  // cancel current abl
   #endif
 } HMI_flag_t;
-
 extern HMI_flag_t HMI_flag;
 extern uint8_t checkkey;
+
+inline bool Printing() { return printingIsActive() || printingIsPaused(); }
+inline bool SD_Printing() { return Printing() && IS_SD_FILE_OPEN(); }
+inline bool Host_Printing() { return Printing() && !IS_SD_FILE_OPEN(); }
 
 // Popups
 #if HAS_HOTEND || HAS_HEATED_BED
@@ -256,7 +254,8 @@ void Goto_PowerLossRecovery();
 void Goto_ConfirmToPrint();
 void Draw_Main_Area();      // Redraw main area
 void DWIN_Draw_Dashboard(); // Status Area
-void DWIN_DrawStatusLine(const char *text = ""); // Draw simple status text
+void DWIN_DrawStatusLine(const char *text); // Draw simple status text
+inline void DWIN_DrawStatusLine(FSTR_P fstr) { DWIN_DrawStatusLine(FTOP(fstr)); }
 void DWIN_RedrawDash();     // Redraw Dash and Status line
 void DWIN_RedrawScreen();   // Redraw all screen elements
 void HMI_MainMenu();        // Main process screen
@@ -275,8 +274,10 @@ void DWIN_HomingDone();
 #if HAS_MESH
   void DWIN_MeshUpdate(const int8_t cpos, const int8_t tpos, const_float_t zval);
 #endif
-void DWIN_LevelingStart();
-void DWIN_LevelingDone();
+#if HAS_LEVELING
+  void DWIN_LevelingStart();
+  void DWIN_LevelingDone();
+#endif
 void DWIN_Print_Started();
 void DWIN_Print_Pause();
 void DWIN_Print_Resume();
@@ -288,7 +289,6 @@ void DWIN_CopySettingsTo(char * const buff);
 void DWIN_CopySettingsFrom(const char * const buff);
 void DWIN_SetDataDefaults();
 void DWIN_RebootScreen();
-inline void DWIN_Gcode(const int16_t codenum) { TERN_(HAS_CGCODE, custom_gcode(codenum)); }
 
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
   void DWIN_Popup_Pause(FSTR_P const fmsg, uint8_t button=0);

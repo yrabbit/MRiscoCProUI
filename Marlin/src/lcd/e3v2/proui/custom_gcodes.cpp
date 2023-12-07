@@ -23,17 +23,11 @@
 
 #if ALL(DWIN_LCD_PROUI, HAS_CGCODE)
 
-#include "../../../MarlinCore.h" // for wait_for_user
 #include "../../../gcode/gcode.h"
 #include "../../../libs/buzzer.h"
 #include "../../marlinui.h"
 
 #include "dwin.h"
-#include "custom_gcodes.h"
-
-#if ALL(PROUI_EX, HAS_MEDIA)
-  #include "gcode_preview.h"
-#endif
 
 //=============================================================================
 // Extended G-CODES
@@ -109,7 +103,7 @@ void C250() {
   }
 #endif
 
-// Special Creality DWIN GCodes
+// Special Creality DWIN G-Codes
 void custom_gcode(const int16_t codenum) {
   switch(codenum) {
     #if HAS_CUSTOM_COLORS

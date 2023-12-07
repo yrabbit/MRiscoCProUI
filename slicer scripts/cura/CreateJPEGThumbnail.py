@@ -1,14 +1,15 @@
 #------------------------------------------------------------------------------
-# Cura JPEG Thumbnail creator
-# Professional firmware for Ender3v2
+# Cura JPEG Thumbnail creator post processing script
+# MRiscoCProUI firmware
 # Miguel A. Risco-Castillo
-# version: 1.6
-# date: 2023-07-23
+# version: 2.1
+# date: 2023-09-17
 #
-# Contains code from:
+# Contains thumbnail code from:
 # https://github.com/Ultimaker/Cura/blob/master/plugins/PostProcessingPlugin/scripts/CreateThumbnail.py
 #------------------------------------------------------------------------------
 
+import re
 import base64
 import json
 from typing import Callable, TypeVar, Optional
@@ -16,6 +17,7 @@ from enum import Enum, auto
 
 from UM.Logger import Logger
 from cura.Snapshot import Snapshot
+from cura.CuraApplication import CuraApplication
 from cura.CuraVersion import CuraVersion
 
 from ..Script import Script
@@ -77,8 +79,9 @@ class QualityFinder:
         return ratio
 
     def compare_quality(self, value: int) -> Ordering:
+        Logger.log("d", f"Trying a quality of {value}%")
         ratio = self.__get_ratio(value)
-        Logger.log("d", f"Trying quality {value}, which is {ratio * 100.0:.2f}% of {self.target_size}")
+        Logger.log("d", f"Image size is {ratio * 100.0:.2f}% of {self.target_size}")
 
         # check if the image is too large
         if ratio > 1.0:
@@ -162,31 +165,31 @@ class CreateJPEGThumbnail(Script):
             "version": 2,
             "settings":
             {
-                "width":
+                "thumbnail_width":
                 {
-                    "label": "Width",
+                    "label": "Thumbnail width",
                     "description": "Width of the generated thumbnail",
                     "unit": "px",
                     "type": "int",
                     "default_value": 200,
-                    "minimum_value": "0",
-                    "minimum_value_warning": "12",
-                    "maximum_value_warning": "800"
+                    "minimum_value": "20",
+                    "minimum_value_warning": "100",
+                    "maximum_value": "230"
                 },
-                "height":
+                "thumbnail_height":
                 {
-                    "label": "Height",
+                    "label": "Thumbnail height",
                     "description": "Height of the generated thumbnail",
                     "unit": "px",
                     "type": "int",
                     "default_value": 200,
-                    "minimum_value": "0",
-                    "minimum_value_warning": "12",
-                    "maximum_value_warning": "600"
+                    "minimum_value": "20",
+                    "minimum_value_warning": "100",
+                    "maximum_value": "230"
                 },
-                "max_size":
+                "thumbnail_max_size":
                 {
-                    "label": "Maximum Thumbnail Size",
+                    "label": "Maximum thumbnail size",
                     "description": "The maximum size of the thumbnail in bytes. Thumbnails must be smaller than 20 kbytes for TJC displays. If the thumbnail size should not be changed, write -1.",
                     "unit": "byte",
                     "type": "int",
@@ -197,9 +200,19 @@ class CreateJPEGThumbnail(Script):
         }, indent=4)
 
     def execute(self, data):
-        width = self.getSettingValueByKey("width")
-        height = self.getSettingValueByKey("height")
-        max_size = self.getSettingValueByKey("max_size")
+        header_string = ';Generated for MRiscoCProUI Firmware\n'
+        header_string = header_string + ';https://github.com/classicrocker883/MRiscoCProUI\n'
+        header_string = header_string + ';===========================================================\n'
+        layer = data[0]
+        layer_index = data.index(layer)
+        lines = layer.split("\n")
+        lines.insert(0, header_string)
+        final_lines = "\n".join(lines)
+        data[layer_index] = final_lines
+
+        width = self.getSettingValueByKey("thumbnail_width")
+        height = self.getSettingValueByKey("thumbnail_height")
+        max_size = self.getSettingValueByKey("thumbnail_max_size")
 
         Logger.log("d", f"Options: width={width}, height={height}, max_size={max_size}")
 
@@ -209,16 +222,20 @@ class CreateJPEGThumbnail(Script):
             # reduce the quality of the image until the size is below max_size
             # this option is necessary for some displays like TJC where the image must be smaller than 20kb
             if max_size != -1:
-                finder = QualityFinder(lambda quality: len(self._encodeSnapshot(snapshot, quality=quality)), target_size=max_size)
-                # quality ranges from 95 (best) to 1 (worst)
-                qualities = list(range(1, 95 + 1))
-                index = binary_search(qualities, finder.compare_quality)
-                quality = finder.closest_match[0]
-                if index is not None:
-                    quality = qualities[index]
-                else:
-                    Logger.log("e", f"Failed to reduce image size to at most {max_size} bytes")
-                encoded_snapshot = self._encodeSnapshot(snapshot, quality=quality)
+                if len(encoded_snapshot) > max_size:
+                    Logger.log("d", f"Image size of {len(encoded_snapshot)} is larger than {max_size}")
+                    finder = QualityFinder(lambda quality: len(self._encodeSnapshot(snapshot, quality=quality)), target_size=max_size)
+                    # quality ranges from 95 (best) to 1 (worst)
+                    qualities = list(range(1, 95 + 1))
+                    index = binary_search(qualities, finder.compare_quality)
+                    quality = finder.closest_match[0]
+                    if index is not None:
+                        quality = qualities[index]
+                    else:
+                        Logger.log("e", f"Failed to reduce image size to at most {max_size} bytes")
+
+                    Logger.log("d", f"Image encoded at quality of {quality}%")
+                    encoded_snapshot = self._encodeSnapshot(snapshot, quality=quality)
 
             snapshot_gcode = self._convertSnapshotToGcode(
                 encoded_snapshot, width, height)

@@ -71,8 +71,8 @@ GcodeSuite gcode;
 
 #include "../MarlinCore.h" // for idle, kill
 
-#if ENABLED(DWIN_LCD_PROUI)
-  #include "../lcd/e3v2/proui/dwin.h"
+#if ALL(DWIN_LCD_PROUI, HAS_CGCODE)
+  #include "../lcd/e3v2/proui/custom_gcodes.h"
 #endif
 
 // Inactivity shutdown
@@ -1141,7 +1141,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
     #endif
 
     #if ALL(DWIN_LCD_PROUI, HAS_CGCODE)
-      case 'C' : DWIN_Gcode(parser.codenum); break;               // PROUI_EX Cn: Custom Gcodes
+      case 'C' : custom_gcode(parser.codenum); break;             // Cn: Custom Gcodes
     #endif
 
     default:

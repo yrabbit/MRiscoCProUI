@@ -45,7 +45,7 @@
 #define MEDIA_TYPE_EN "SD Card"
 
 #ifndef PREHEAT_1_LABEL
-  #define PREHEAT_1_LABEL ""
+  #define PREHEAT_1_LABEL "PLA"
 #endif
 
 namespace LanguageNarrow_en {
@@ -75,8 +75,6 @@ namespace LanguageNarrow_en {
   LSTR MSG_LCD_SOFT_ENDSTOPS              = _UxGT("Soft Endstops");
   LSTR MSG_MAIN_MENU                      = _UxGT("Main Menu");
   LSTR MSG_ADVANCED_SETTINGS              = _UxGT("Advanced Settings");
-  LSTR MSG_TOOLBAR_SETUP                  = _UxGT("Toolbar Setup");
-  LSTR MSG_OPTION_DISABLED                = _UxGT("Option Disabled");
   LSTR MSG_CONFIGURATION                  = _UxGT("Configuration");
   LSTR MSG_RUN_AUTO_FILES                 = _UxGT("Run Auto Files");
   LSTR MSG_DISABLE_STEPPERS               = _UxGT("Disable Steppers");
@@ -470,7 +468,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_ERR_EEPROM_VERSION             = _UxGT("Err: EEPROM Version");
   LSTR MSG_ERR_EEPROM_CORRUPT             = _UxGT("Err: EEPROM Corrupt");
   LSTR MSG_SETTINGS_STORED                = _UxGT("Settings Stored");
-  LSTR MSG_HAS_PREVIEW                    = _UxGT("Gcode Preview");
+  LSTR MSG_HAS_PREVIEW                    = _UxGT("G-code Preview");
   LSTR MSG_RESET_PRINTER                  = _UxGT("Restart Printer");
   LSTR MSG_REFRESH                        = LCD_STR_REFRESH _UxGT("Refresh");
   LSTR MSG_INFO_SCREEN                    = _UxGT("Info Screen");
@@ -953,6 +951,48 @@ namespace LanguageNarrow_en {
   LSTR DGUS_MSG_WRITE_EEPROM_FAILED       = _UxGT("EEPROM write failed");
   LSTR DGUS_MSG_READ_EEPROM_FAILED        = _UxGT("EEPROM read failed");
   LSTR DGUS_MSG_FILAMENT_RUNOUT           = _UxGT("Filament runout E%d");
+
+  // DWIN_LCD_PROUI specific message strings
+  #define _MSG_PREHEAT(N) \
+    LSTR MSG_PREHEAT_##N                  = _UxGT("Preheat ") PREHEAT_## N ##_LABEL; \
+    LSTR MSG_PREHEAT_## N ##_SETTINGS     = _UxGT("Preheat ") PREHEAT_## N ##_LABEL _UxGT(" Settings");
+  #if PREHEAT_COUNT > 3
+    REPEAT_S(4, INCREMENT(PREHEAT_COUNT), _MSG_PREHEAT)
+  #endif
+  LSTR MSG_BED_TEMPERATURE                = _UxGT("Bed Temperature");
+  LSTR MSG_NOZZLE_TEMPERATURE             = _UxGT("Nozzle temperature");
+  LSTR MSG_TOO_HIGH                       = _UxGT("is too high");
+  LSTR MSG_TOO_LOW                        = _UxGT("is too low");
+  LSTR MSG_CHECK_FILENAME                 = _UxGT("Please check filenames");
+  LSTR MSG_ONLY_GCODE                     = _UxGT("Only G-code can be printed");
+  LSTR MSG_MPC_SETTINGS                   = _UxGT("MPC Settings");
+  LSTR MSG_HOTEND_PID_SETTINGS            = _UxGT(STR_HOTEND_PID " Settings");
+  LSTR MSG_BED_PID_SETTINGS               = _UxGT(STR_BED_PID " Settings");
+  LSTR MSG_HOTEND_TUNE                    = _UxGT("Tune " STR_HOTEND_PID);
+  LSTR MSG_BED_TUNE                       = _UxGT("Tune " STR_BED_PID);
+  LSTR MSG_PID_SETTINGS                   = _UxGT("PID Settings");
+  LSTR MSG_PID_SET_KP                     = _UxGT("Set" STR_KP);
+  LSTR MSG_PID_SET_KI                     = _UxGT("Set" STR_KI);
+  LSTR MSG_PID_SET_KD                     = _UxGT("Set" STR_KD);
+  LSTR MSG_MPC_TARGET                     = _UxGT("MPC target:     Celsius");
+  LSTR MSG_PID_TARGET                     = _UxGT("PID target:     Celsius");
+  LSTR MSG_TARGET                         = _UxGT("Target:     Celsius");
+  LSTR MSG_FOR_NOZZLE                     = _UxGT("for NOZZLE");
+  LSTR MSG_FOR_BED                        = _UxGT("for BED");
+  LSTR MSG_NOZZLE_RUN                     = _UxGT("for NOZZLE is running");
+  LSTR MSG_BED_RUN                        = _UxGT("for BED is running");
+  LSTR MSG_250K_BAUD                      = _UxGT("250K baud");
+  LSTR MSG_SCREW_INSET                    = _UxGT("Bed Screw Inset");
+  LSTR MSG_SPEED_IND                      = _UxGT("Speed Indicator");
+  LSTR MSG_ZERO_MESH                      = _UxGT("Zero Current Mesh");
+  LSTR MSG_HOTEND_GRAPH                   = _UxGT("Hotend Temp Graph");
+  LSTR MSG_BED_GRAPH                      = _UxGT("Bed Temp Graph");
+  LSTR MSG_EXIT_MENU                      = _UxGT("Exit to Main Menu");
+  LSTR MSG_TRAMWIZ_CALC                   = _UxGT("Calculate Average");
+  LSTR MSG_TRAMWIZ_LOWER                  = _UxGT("Lower");
+  LSTR MSG_TRAMWIZ_RAISE                  = _UxGT("Raise");
+  LSTR MSG_TOOLBAR_SETUP                  = _UxGT("Toolbar Setup");
+  LSTR MSG_OPTION_DISABLED                = _UxGT("Option Disabled");
 }
 
 namespace LanguageWide_en {
