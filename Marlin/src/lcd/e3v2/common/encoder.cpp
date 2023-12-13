@@ -87,9 +87,7 @@ EncoderState encoderReceiveAnalyze() {
       #if PIN_EXISTS(LCD_LED)
         //LED_Action();
       #endif
-      #if LCD_BACKLIGHT_TIMEOUT_MINS
-        ui.refresh_backlight_timeout();
-      #endif
+      TERN_(HAS_BACKLIGHT_TIMEOUT, ui.refresh_backlight_timeout());
       if (!ui.backlight) {
         ui.refresh_brightness();
         return ENCODER_DIFF_NO;
@@ -126,17 +124,10 @@ EncoderState encoderReceiveAnalyze() {
     if (temp_diff > 0) { temp_diffState = TERN(REVERSE_ENCODER_DIRECTION, ENCODER_DIFF_CCW, ENCODER_DIFF_CW); }
     else { temp_diffState = TERN(REVERSE_ENCODER_DIRECTION, ENCODER_DIFF_CW, ENCODER_DIFF_CCW); }
 
-    #if LCD_BACKLIGHT_TIMEOUT_MINS
-      if (temp_diffState > 0) {
-        ui.refresh_backlight_timeout(); //reset timer after encoder +- (this can be changed -> added to an all in one if statement)
-        if (!ui.backlight) { ui.refresh_brightness(); }
-      }
-    #endif
-
     #if ENABLED(ENCODER_RATE_MULTIPLIER)
       #if ENABLED(ENC_MENU_ITEM)
-        int a = ui.enc_rateA;
-        int b = ui.enc_rateB;
+        u_int a = ui.enc_rateA;
+        u_int b = ui.enc_rateB;
       #endif
       millis_t ms = millis();
       int32_t encoderMultiplier = 1;
@@ -169,6 +160,10 @@ EncoderState encoderReceiveAnalyze() {
     if (encoderRate.encoderMoveValue < 0) encoderRate.encoderMoveValue = -encoderRate.encoderMoveValue;
 
     temp_diff = 0;
+  }
+  if (temp_diffState != ENCODER_DIFF_NO) {
+    TERN_(HAS_BACKLIGHT_TIMEOUT, ui.refresh_backlight_timeout());
+    if (!ui.backlight) ui.refresh_brightness();
   }
   return temp_diffState;
 }

@@ -64,9 +64,7 @@ void MeshViewerClass::DrawMeshGrid(const uint8_t csizex, const uint8_t csizey) {
 
 void MeshViewerClass::DrawMeshPoint(const uint8_t x, const uint8_t y, const float z) {
   if (isnan(z)) return;
-  #if LCD_BACKLIGHT_TIMEOUT_MINS
-    ui.refresh_backlight_timeout();
-  #endif
+  TERN_(HAS_BACKLIGHT_TIMEOUT, ui.refresh_backlight_timeout();)
   const uint8_t fs = DWINUI::fontWidth(meshfont);
   const int16_t v = round(z * 100);
   NOLESS(max, z); NOMORE(min, z);

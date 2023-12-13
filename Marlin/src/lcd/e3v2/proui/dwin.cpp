@@ -1307,7 +1307,7 @@ void EachMomentUpdate() {
   static millis_t next_var_update_ms = 0, next_rts_update_ms = 0, next_status_update_ms = 0;
   const millis_t ms = millis();
 
-  #if LCD_BACKLIGHT_TIMEOUT_MINS
+  #if HAS_BACKLIGHT_TIMEOUT
     if (ui.backlight_off_ms && ELAPSED(ms, ui.backlight_off_ms)) {
       TurnOffBacklight(); // Backlight off
       ui.backlight_off_ms = 0;
@@ -2574,7 +2574,7 @@ void ApplyMove() {
 
 #endif
 
-#if LCD_BACKLIGHT_TIMEOUT_MINS
+#if ENABLED(EDITABLE_DISPLAY_TIMEOUT)
   void ApplyTimer() { ui.backlight_timeout_minutes = MenuData.Value; }
   void SetTimer() { SetIntOnClick(ui.backlight_timeout_min, ui.backlight_timeout_max, ui.backlight_timeout_minutes, ApplyTimer); }
 #endif
@@ -3456,7 +3456,7 @@ void Draw_Tune_Menu() {
     #if ENABLED(ADVK_TUNE_ITEM) && ENABLED(LIN_ADVANCE)
       EDIT_ITEM(ICON_MaxAccelerated, MSG_ADVANCE_K, onDrawPFloat3Menu, SetLA_K, &planner.extruder_advance_K[0]);
     #endif
-    #if LCD_BACKLIGHT_TIMEOUT_MINS
+    #if ENABLED(EDITABLE_DISPLAY_TIMEOUT)
       EDIT_ITEM(ICON_Box, MSG_SCREEN_TIMEOUT, onDrawPInt8Menu, SetTimer, &ui.backlight_timeout_minutes);
     #endif
     #if HAS_LCD_BRIGHTNESS
@@ -4469,7 +4469,7 @@ void Draw_AdvancedSettings_Menu() {
     #if HAS_LCD_BRIGHTNESS
       EDIT_ITEM(ICON_Brightness, MSG_BRIGHTNESS, onDrawPInt8Menu, SetBrightness, &ui.brightness);
     #endif
-    #if LCD_BACKLIGHT_TIMEOUT_MINS
+    #if ENABLED(EDITABLE_DISPLAY_TIMEOUT)
       EDIT_ITEM(ICON_Box, MSG_SCREEN_TIMEOUT, onDrawPInt8Menu, SetTimer, &ui.backlight_timeout_minutes);
     #endif
     #if BED_SCREW_INSET
@@ -4522,7 +4522,7 @@ void Draw_Advanced_Menu() { // From Control_Menu (Control) || Default-NP Advance
     #if HAS_LCD_BRIGHTNESS
       EDIT_ITEM(ICON_Brightness, MSG_BRIGHTNESS, onDrawPInt8Menu, SetBrightness, &ui.brightness);
     #endif
-    #if LCD_BACKLIGHT_TIMEOUT_MINS
+    #if ENABLED(EDITABLE_DISPLAY_TIMEOUT)
       EDIT_ITEM(ICON_Box, MSG_SCREEN_TIMEOUT, onDrawPInt8Menu, SetTimer, &ui.backlight_timeout_minutes);
     #endif
     #if BED_SCREW_INSET
