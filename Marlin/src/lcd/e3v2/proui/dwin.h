@@ -343,7 +343,7 @@ void Draw_FilamentMan_Menu();
 void Draw_Temperature_Menu();
 void Draw_MaxSpeed_Menu();
 void Draw_MaxAccel_Menu();
-#if HAS_CLASSIC_JERK
+#if ENABLED(CLASSIC_JERK)
   void Draw_MaxJerk_Menu();
 #endif
 void Draw_Steps_Menu();
