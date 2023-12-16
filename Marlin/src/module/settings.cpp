@@ -614,8 +614,8 @@ typedef struct SettingsDataStruct {
   // Encoder Rate
   //
   #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
-    u_int enc_rateA;
-    u_int enc_rateB;
+    uint16_t enc_rateA;
+    uint16_t enc_rateB;
   #endif
 
   //

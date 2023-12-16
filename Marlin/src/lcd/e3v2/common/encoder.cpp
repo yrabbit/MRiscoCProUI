@@ -126,8 +126,8 @@ EncoderState encoderReceiveAnalyze() {
 
     #if ENABLED(ENCODER_RATE_MULTIPLIER)
       #if ENABLED(ENC_MENU_ITEM)
-        u_int a = ui.enc_rateA;
-        u_int b = ui.enc_rateB;
+        uint16_t a = ui.enc_rateA;
+        uint16_t b = ui.enc_rateB;
       #endif
       millis_t ms = millis();
       int32_t encoderMultiplier = 1;
