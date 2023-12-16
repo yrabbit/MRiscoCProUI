@@ -1792,6 +1792,7 @@ void DWIN_HomingDone() {
         case PID_EXTR_START:
           HMI_SaveProcessID(PlotProcess);
       #endif
+          Title.ShowCaption(GET_TEXT_F(MSG_HOTEND_GRAPH));
           DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_NOZZLE_TEMPERATURE));
           _maxtemp = thermalManager.hotend_max_target(0);
           _target = thermalManager.degTargetHotend(0);
@@ -1799,6 +1800,7 @@ void DWIN_HomingDone() {
       #if ENABLED(PIDTEMPBED)
         case PID_BED_START:
           HMI_SaveProcessID(PlotProcess);
+          Title.ShowCaption(GET_TEXT_F(MSG_BED_GRAPH));
           DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_BED_TEMPERATURE));
           _maxtemp = BED_MAX_TARGET;
           _target = thermalManager.degTargetBed();
