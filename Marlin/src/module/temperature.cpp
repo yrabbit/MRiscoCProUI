@@ -4697,7 +4697,7 @@ void Temperature::isr() {
           }
         #endif
 
-        #if PROUI_EX && HAS_ONESTEP_LEVELING
+        #if ALL(PROUI_EX, HAS_AUTOLEVEL)
           ProEx.HeatedBed();
         #endif
 

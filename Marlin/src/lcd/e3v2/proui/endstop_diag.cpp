@@ -48,7 +48,7 @@ void draw_es_label(FSTR_P const flabel=nullptr) {
 void draw_es_state(const bool is_hit, const bool is_fil) {
   const uint8_t LM = 130;
   DWINUI::cursor.x = LM;
-  DWIN_Draw_Rectangle(1, HMI_data.PopupBg_Color, LM, DWINUI::cursor.y, LM + 100, DWINUI::cursor.y + 20);
+  DWIN_Draw_Rectangle(1, HMI_data.PopupBg_Color, LM, DWINUI::cursor.y, LM + 120, DWINUI::cursor.y + 20);
   is_fil ? (is_hit ? DWINUI::Draw_String(RGB(16,63,16), F("PRESENT")) : DWINUI::Draw_String(RGB(31,31,16), F("Runout Detected"))) :
   (is_hit ? DWINUI::Draw_String(RGB(31,31,16), F(STR_ENDSTOP_HIT)) : DWINUI::Draw_String(RGB(16,63,16), F(STR_ENDSTOP_OPEN)));
   DWINUI::MoveBy(0, 25);

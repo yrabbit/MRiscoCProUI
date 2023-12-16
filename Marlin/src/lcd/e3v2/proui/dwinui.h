@@ -167,11 +167,11 @@
 
 // Extended and default UI Colors
 #define Color_Black           0x0000 //changed 0
-#define Color_Green           0x07E0 //RGB(0,63,0)
-#define Color_Blue            0x001F //RGB(0,0,31)
+#define Color_Green           0x07E0 //RGB(0, 63,  0)
+#define Color_Blue            0x001F //RGB(0,  0, 31)
 #define Color_Light_White     0xBDD7
 #define Color_Light_Green     0x3460
-#define Color_Cyan            0x07FF
+#define Color_Cyan            0x07FF //RGB(0, 63, 31)
 #define Color_Light_Cyan      0x04F3
 #define Color_Light_Blue      0x3A6A
 #define Color_Magenta         0xF81F
@@ -229,23 +229,18 @@ constexpr uint8_t  TITLE_HEIGHT = 30,
 // Menuitem caption Y position
 #define MBASE(L) (MYPOS(L) + CAPOFF)
 
-typedef struct { uint16_t left, top, right, bottom; } rect_t;
-typedef struct { uint16_t x, y, w, h; } frame_rect_t;
+typedef struct { uint16_t left, top, right, bottom; } rect_t; // { left, top, right, bottom; }
+typedef struct { uint16_t x, y, w, h; } frame_rect_t;         // { x, y, w, h; }
 
 class TitleClass {
 public:
   char caption[32] = "";
-  // uint8_t frameid = 0;
   rect_t frame = {0};
   void draw();
   void SetCaption(const char * const title);
   inline void SetCaption(FSTR_P title) { SetCaption((char *)title); }
   void ShowCaption(const char * const title);
   inline void ShowCaption(FSTR_P title) { ShowCaption((char *)title); }
-  // void SetFrame(uint8_t id, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
-  // void SetFrame(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
-  // void FrameCopy(uint8_t id, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
-  // void FrameCopy(uint16_t x, uint16_t y, uint16_t h, uint16_t v);
 };
 extern TitleClass Title;
 
@@ -299,16 +294,6 @@ namespace DWINUI {
   void MoveBy(int16_t x, int16_t y);
   void MoveBy(xy_int_t point);
 
-  /*/ Draw a line from the cursor to xy position
-  //  color: Line segment color
-  //  x/y: End point
-  inline void LineTo(uint16_t color, uint16_t x, uint16_t y) {
-    DWIN_Draw_Line(color, cursor.x, cursor.y, x, y);
-  }
-  inline void LineTo(uint16_t x, uint16_t y) {
-    DWIN_Draw_Line(pencolor, cursor.x, cursor.y, x, y);
-  }
-  */
   // Extend a frame box
   //  v: value to extend
   inline frame_rect_t ExtendFrame(frame_rect_t frame, uint8_t v) {
@@ -566,7 +551,7 @@ namespace DWINUI {
   //  x: abscissa of the center of the circle
   //  y: ordinate of the center of the circle
   //  r: circle radius
-  void Draw_Circle(uint16_t color, uint16_t x,uint16_t y,uint8_t r);
+  void Draw_Circle(uint16_t color, uint16_t x, uint16_t y, uint8_t r);
   inline void Draw_Circle(uint16_t color, uint8_t r) {
     Draw_Circle(color, cursor.x, cursor.y, r);
   }
@@ -613,7 +598,7 @@ namespace DWINUI {
   //  x: abscissa of the center of the circle
   //  y: ordinate of the center of the circle
   //  r: circle radius
-  void Draw_FillCircle(uint16_t bcolor, uint16_t x,uint16_t y,uint8_t r);
+  void Draw_FillCircle(uint16_t bcolor, uint16_t x, uint16_t y, uint8_t r);
   inline void Draw_FillCircle(uint16_t bcolor, uint8_t r) {
     Draw_FillCircle(bcolor, cursor.x, cursor.y, r);
   }

@@ -160,8 +160,8 @@ typedef struct {
   bool abort_flag:1;    // sd or host was aborted
   bool pause_flag:1;    // printing is paused
   bool select_flag:1;   // Popup button selected
-  bool home_flag:1;     // homing in course
-  bool config_flag:1;   // SD G-code file is a Configuration file
+  //bool home_flag:1;     // homing in course
+  //bool config_flag:1;   // SD G-code file is a Configuration file
   #if PROUI_EX && HAS_LEVELING
     bool cancel_abl:1;  // cancel current abl
   #endif
@@ -169,8 +169,8 @@ typedef struct {
 extern HMI_flag_t HMI_flag;
 extern uint8_t checkkey;
 
-inline bool Printing() { return printingIsActive() || printingIsPaused(); }
-inline bool SD_Printing() { return Printing() && IS_SD_FILE_OPEN(); }
+inline bool Printing()      { return printingIsActive() || printingIsPaused(); }
+inline bool SD_Printing()   { return Printing() && IS_SD_FILE_OPEN(); }
 inline bool Host_Printing() { return Printing() && !IS_SD_FILE_OPEN(); }
 
 // Popups
@@ -224,7 +224,7 @@ void DoCoolDown();
 void ApplyExtMinT();
 void ParkHead();
 void RaiseHead();
-TERN(HAS_BED_PROBE, float, void) tram(uint8_t point, bool stow_probe = true);
+TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool stow_probe=true));
 #if HAS_BED_PROBE && ENABLED(TRAMWIZ_MENU_ITEM)
   void Trammingwizard();
   void TramwizStart();

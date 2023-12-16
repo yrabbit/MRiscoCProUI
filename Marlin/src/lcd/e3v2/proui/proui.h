@@ -30,8 +30,8 @@
 
 #define X_BED_MIN 150
 #define Y_BED_MIN 150
-constexpr int16_t DEF_X_BED_SIZE = X_BED_SIZE;
-constexpr int16_t DEF_Y_BED_SIZE = Y_BED_SIZE;
+constexpr uint16_t DEF_X_BED_SIZE = X_BED_SIZE;
+constexpr uint16_t DEF_Y_BED_SIZE = Y_BED_SIZE;
 constexpr int16_t DEF_X_MIN_POS = X_MIN_POS;
 constexpr int16_t DEF_Y_MIN_POS = Y_MIN_POS;
 constexpr int16_t DEF_X_MAX_POS = X_MAX_POS;
@@ -43,7 +43,7 @@ constexpr bool DEF_INVERT_E0_DIR = INVERT_E0_DIR;
 #else
   constexpr xyz_int_t DEF_NOZZLE_PARK_POINT = {0};
 #endif
-constexpr int8_t DEF_GRID_MAX_POINTS = TERN(HAS_MESH, GRID_MAX_POINTS_X, 3);
+constexpr uint8_t DEF_GRID_MAX_POINTS = TERN(HAS_MESH, GRID_MAX_POINTS_X, 3);
 #define GRID_MIN 3
 #define GRID_LIMIT 9
 #ifndef MESH_INSET
@@ -61,28 +61,28 @@ constexpr int8_t DEF_GRID_MAX_POINTS = TERN(HAS_MESH, GRID_MAX_POINTS_X, 3);
 #ifndef MESH_MAX_Y
   #define MESH_MAX_Y  Y_BED_SIZE - (MESH_INSET)
 #endif
-constexpr int16_t DEF_MESH_MIN_X = MESH_MIN_X;
-constexpr int16_t DEF_MESH_MAX_X = MESH_MAX_X; // TODO
-constexpr int16_t DEF_MESH_MIN_Y = MESH_MIN_Y;
-constexpr int16_t DEF_MESH_MAX_Y = MESH_MAX_Y;
+constexpr uint16_t DEF_MESH_MIN_X = MESH_MIN_X;
+constexpr uint16_t DEF_MESH_MAX_X = MESH_MAX_X; // TODO
+constexpr uint16_t DEF_MESH_MIN_Y = MESH_MIN_Y;
+constexpr uint16_t DEF_MESH_MAX_Y = MESH_MAX_Y;
 #define MIN_MESH_INSET 0
 #define MAX_MESH_INSET X_BED_SIZE
-constexpr int16_t DEF_Z_PROBE_FEEDRATE_SLOW = Z_PROBE_FEEDRATE_SLOW;
+constexpr uint16_t DEF_Z_PROBE_FEEDRATE_SLOW = Z_PROBE_FEEDRATE_SLOW;
 #ifndef MULTIPLE_PROBING
   #define MULTIPLE_PROBING 0
 #endif
 #define DEF_FIL_MOTION_SENSOR ENABLED(FILAMENT_MOTION_SENSOR)
 #if DISABLED(FILAMENT_RUNOUT_SENSOR) // must be defined as opposite FIL_RUNOUT_STATE in Configuration.h
-  #if MOTHERBOARD == BOARD_CREALITY_V427 || MOTHERBOARD == BOARD_CREALITY_V422 || MOTHERBOARD == BOARD_CREALITY_V4
+  #if MOTHERBOARD == BOARD_CREALITY_V427 || MOTHERBOARD == BOARD_CREALITY_V24S1_301F4 || MOTHERBOARD == BOARD_CREALITY_V24S1_301 || MOTHERBOARD == BOARD_VOXELAB_AQUILA || MOTHERBOARD == BOARD_AQUILA_V101
     #define FIL_RUNOUT_STATE LOW
-  #elif MOTHERBOARD == BOARD_VOXELAB_AQUILA //|| MOTHERBOARD == BOARD_AQUILA_X2_H32
+  #elif MOTHERBOARD == BOARD_CREALITY_V422 || MOTHERBOARD == BOARD_CREALITY_V4
     #define FIL_RUNOUT_STATE HIGH
   #endif
 #endif
 
 typedef struct {
-  int16_t x_bed_size = DEF_X_BED_SIZE;
-  int16_t y_bed_size = DEF_Y_BED_SIZE;
+  uint16_t x_bed_size = DEF_X_BED_SIZE;
+  uint16_t y_bed_size = DEF_Y_BED_SIZE;
   int16_t x_min_pos  = DEF_X_MIN_POS;
   int16_t y_min_pos  = DEF_Y_MIN_POS;
   int16_t x_max_pos  = DEF_X_MAX_POS;

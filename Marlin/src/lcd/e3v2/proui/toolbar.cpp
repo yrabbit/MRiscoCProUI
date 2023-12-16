@@ -42,7 +42,7 @@ void onDrawTBItem(MenuItemClass* menuitem, int8_t line) {
   const uint8_t xoff = (DWIN_WIDTH - (B_XPOS * ToolBar.count() + tw)) / 2;
   const uint8_t xp = xoff + line * B_XPOS + (line > sel ? tw : 0);
   if (focused && (line == sel)) {
-    DWIN_Draw_Box(1, Color_Bg_Window, xp - 2, TBYPOS, B_XPOS, TBHEIGHT);
+    DWIN_Draw_Box(1, HMI_data.PopupBg_Color, xp - 2, TBYPOS, B_XPOS, TBHEIGHT);
     DWINUI::Draw_String(xp + B_XPOS, B_YPOS + 1, menuitem->caption);
   }
   DWINUI::Draw_Icon(menuitem->icon, xp, B_YPOS);
@@ -50,13 +50,13 @@ void onDrawTBItem(MenuItemClass* menuitem, int8_t line) {
 
 void Draw_ToolBar(bool force /*=false*/) {
   if (force || (CurrentMenu != &ToolBar)) {
-    CurrentMenu = &ToolBar;
     MenuItemsPrepare(TBMaxOpt);
     for (uint8_t i = 0; i < TBMaxOpt; ++i) {
       TBGetItem(PRO_data.TBopt[i]);
       if (TBItem->icon) MENU_ITEM_F(TBItem->icon, TBItem->caption, onDrawTBItem, TBItem->onClick);
     }
     ToolBar.onExit = &Exit_ToolBar;
+    CurrentMenu = &ToolBar;
   }
   ToolBar.draw();
 }
@@ -70,7 +70,7 @@ void UpdateTBSetupItem(MenuItemClass* menuitem, uint8_t val) {
 void DrawTBSetupItem(bool focused) {
   const uint8_t line = CurrentMenu->line();
   const uint16_t ypos = MYPOS(line) + 1;
-  DWINUI::Draw_Box(1, focused ? Color_Bg_Window : HMI_data.Background_Color, { 15, ypos, DWIN_WIDTH - 15, MLINE - 1 });
+  DWINUI::Draw_Box(1, focused ? HMI_data.PopupBg_Color : HMI_data.Background_Color, { 15, ypos, DWIN_WIDTH - 15, MLINE - 1 });
   onDrawMenuItem(static_cast<MenuItemClass*>(CurrentMenu->SelectedItem()), line);
   if (focused) DWINUI::Draw_Char(VALX + 24, MBASE(line), 18);
 }

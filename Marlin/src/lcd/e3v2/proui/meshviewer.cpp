@@ -112,7 +112,7 @@ void MeshViewerClass::Draw(const bool withsave/*=false*/, const bool redraw/*=tr
   }
   else {
     if (redraw) DrawMesh(bedlevel.z_values, GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y);
-    else DWINUI::Draw_Box(1, HMI_data.Background_Color, {89,305,99,38});
+    else DWINUI::Draw_Box(1, HMI_data.Background_Color, { 89, 305, 99, 38 });
   }
 
   if (withsave) {

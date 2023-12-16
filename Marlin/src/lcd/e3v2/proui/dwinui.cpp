@@ -26,18 +26,18 @@
 #include "dwin.h"
 
 xy_int_t DWINUI::cursor = { 0 };
-uint16_t DWINUI::textcolor = Def_Text_Color; // Text color
+uint16_t DWINUI::textcolor = Def_Text_Color;       // Text color
 uint16_t DWINUI::backcolor = Def_Background_Color; // Background color
-uint16_t DWINUI::buttoncolor = HMI_data.TitleBg_Color; // Title color
-uint8_t  DWINUI::fontid = font8x16; // Font size 8x16
+uint16_t DWINUI::buttoncolor = Def_TitleBg_Color;  // Title color
+uint8_t  DWINUI::fontid = font8x16;                // Font size 8x16
 FSTR_P const DWINUI::Author = F(STRING_CONFIG_H_AUTHOR);
 
 void (*DWINUI::onTitleDraw)(TitleClass* title) = nullptr;
 
 void DWINUI::init() {
   cursor.reset();
-  textcolor = Def_Text_Color;
-  backcolor = Def_Background_Color;
+  textcolor = HMI_data.Text_Color;
+  backcolor = HMI_data.Background_Color;
   buttoncolor = HMI_data.TitleBg_Color;
   fontid = font8x16;
 }
@@ -191,7 +191,7 @@ void DWINUI::Draw_Int(uint8_t bShow, bool signedMode, fontid_t fid, uint16_t col
 //  value: float value
 void DWINUI::Draw_Float(uint8_t bShow, bool signedMode, fontid_t fid, uint16_t color, uint16_t bColor, uint8_t iNum, uint8_t fNum, uint16_t x, uint16_t y, float value) {
   char nstr[10];
-  DWIN_Draw_String(bShow, fid, color, bColor, x, y, dtostrf(value, iNum + (signedMode ? 2:1) + fNum, fNum, nstr));
+  DWIN_Draw_String(bShow, fid, color, bColor, x, y, dtostrf(value, iNum + (signedMode ? 2 : 1) + fNum, fNum, nstr));
 }
 
 // ------------------------- Icons -------------------------------//
@@ -217,18 +217,18 @@ void DWINUI::Draw_Select_Box(uint16_t xpos, uint16_t ypos) {
 
 void DWINUI::Draw_Button(uint16_t color, uint16_t bcolor, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, const char * const caption) {
   DWIN_Draw_Rectangle(1, bcolor, x1, y1, x2, y2);
-  Draw_CenteredString(0, fontid, color, bcolor, x1, x2, (y2 + y1 - fontHeight())/2, caption);
+  Draw_CenteredString(0, fontid, color, bcolor, x1, x2, (y2 + y1 - fontHeight()) / 2, caption);
 }
 
 void DWINUI::Draw_Button(uint8_t id, uint16_t x, uint16_t y, bool sel) {
   if (sel) { Draw_Select_Box(x, y); }
   switch (id) {
     case BTN_Continue: Draw_Button(GET_TEXT_F(MSG_BUTTON_CONTINUE), x, y); break;
-    case BTN_Cancel  : Draw_Button(GET_TEXT_F(MSG_BUTTON_CANCEL), x, y); break;
-    case BTN_Confirm : Draw_Button(GET_TEXT_F(MSG_BUTTON_CONFIRM), x, y); break;
-    case BTN_Print   : Draw_Button(GET_TEXT_F(MSG_BUTTON_PRINT), x, y); break;
-    case BTN_Save    : Draw_Button(GET_TEXT_F(MSG_BUTTON_SAVE), x, y); break;
-    case BTN_Purge   : Draw_Button(GET_TEXT_F(MSG_BUTTON_PURGE), x, y); break;
+    case BTN_Cancel  : Draw_Button(GET_TEXT_F(MSG_BUTTON_CANCEL),   x, y); break;
+    case BTN_Confirm : Draw_Button(GET_TEXT_F(MSG_BUTTON_CONFIRM),  x, y); break;
+    case BTN_Print   : Draw_Button(GET_TEXT_F(MSG_BUTTON_PRINT),    x, y); break;
+    case BTN_Save    : Draw_Button(GET_TEXT_F(MSG_BUTTON_SAVE),     x, y); break;
+    case BTN_Purge   : Draw_Button(GET_TEXT_F(MSG_BUTTON_PURGE),    x, y); break;
     default: break;
   }
 }
@@ -267,13 +267,13 @@ void DWINUI::Draw_Circle(uint16_t color, uint16_t x, uint16_t y, uint8_t r) {
 //  y: ordinate of the center of the circle
 //  r: circle radius
 void DWINUI::Draw_FillCircle(uint16_t bcolor, uint16_t x, uint16_t y, uint8_t r) {
-  DWIN_Draw_Line(bcolor, x-r,y,x+r,y);
+  DWIN_Draw_Line(bcolor, x - r, y, x + r, y);
   uint16_t b = 1;
   while (b <= r) {
     uint16_t a = SQRT(sq(r) - sq(b));
-    DWIN_Draw_Line(bcolor, x-a,y+b,x+a,y+b);
-    DWIN_Draw_Line(bcolor, x-a,y-b,x+a,y-b);
-    b+=TERN(TJC_DISPLAY,2,1);
+    DWIN_Draw_Line(bcolor, x - a, y + b, x + a, y + b);
+    DWIN_Draw_Line(bcolor, x - a, y - b, x + a, y - b);
+    b += TERN(TJC_DISPLAY, 2, 1);
   }
 }
 
@@ -322,7 +322,7 @@ void DWINUI::Draw_Checkbox(uint16_t color, uint16_t bcolor, uint16_t x, uint16_t
 
 // Clear Menu by filling the menu area with background color
 void DWINUI::ClearMainArea() {
-  DWIN_Draw_Rectangle(1, backcolor, 0, TITLE_HEIGHT, DWIN_WIDTH - 1, STATUS_Y - 1);
+  DWIN_Draw_Rectangle(1, HMI_data.Background_Color, 0, TITLE_HEIGHT, DWIN_WIDTH - 1, STATUS_Y - 1);
 }
 
 /* Title Class ==============================================================*/
@@ -334,7 +334,6 @@ void TitleClass::draw() {
 }
 
 void TitleClass::SetCaption(const char * const title) {
-  // frameid = 0;
   if ( caption == title ) return;
   const uint8_t len = _MIN(sizeof(caption) - 1, strlen(title));
   memcpy(&caption[0], title, len);
@@ -345,24 +344,5 @@ void TitleClass::ShowCaption(const char * const title) {
   SetCaption(title);
   draw();
 }
-
-// void TitleClass::SetFrame(uint8_t id, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2) {
-//   caption[0] = '\0';
-//   frameid = id;
-//   frame = { x1, y1, x2, y2 };
-// }
-
-// void TitleClass::SetFrame(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
-//   SetFrame(1, x, y, x + w - 1, y + h - 1);
-// }
-
-// void TitleClass::FrameCopy(uint8_t id, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2) {
-//   SetFrame(id, x1, y1, x2, y2);
-//   draw();
-// }
-
-// void TitleClass::FrameCopy(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
-//   FrameCopy(1, x, y, x + w - 1, y + h - 1);
-// }
 
 #endif // DWIN_LCD_PROUI

@@ -1212,7 +1212,7 @@ void MarlinUI::init() {
           run_current_screen();
 
           // Apply all DWIN drawing after processing
-          TERN_(IS_DWIN_MARLINUI, dwinUpdateLCD());
+          TERN_(IS_DWIN_MARLINUI, DWIN_UpdateLCD());
 
         #endif
 

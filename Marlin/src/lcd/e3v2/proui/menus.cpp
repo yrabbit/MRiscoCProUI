@@ -38,9 +38,6 @@ MenuData_t MenuData;
 
 void Draw_Title(TitleClass* title) {
   DWIN_Draw_Rectangle(1, HMI_data.TitleBg_Color, 0, 0, DWIN_WIDTH - 1, TITLE_HEIGHT - 1);
-  // if (title->frameid)
-  //   DWIN_Frame_AreaCopy(title->frameid, title->frame.left, title->frame.top, title->frame.right, title->frame.bottom, 14, (TITLE_HEIGHT - (title->frame.bottom - title->frame.top)) / 2 - 1);
-  // else
   #if ENABLED(TITLE_CENTERED)
     DWINUI::Draw_CenteredString(false, DWIN_FONT_HEAD, HMI_data.TitleTxt_Color, HMI_data.TitleBg_Color, (TITLE_HEIGHT - DWINUI::fontHeight(DWIN_FONT_HEAD)) / 2 - 1, title->caption);
   #else
@@ -97,9 +94,6 @@ void Draw_Menu_IntValue(uint16_t bcolor, const uint8_t line, uint8_t iNum, const
 
 void onDrawMenuItem(MenuItemClass* menuitem, int8_t line) {
   if (menuitem->icon) DWINUI::Draw_Icon(menuitem->icon, ICOX, MBASE(line) - 3);
-  // if (menuitem->frameid)
-  //   DWIN_Frame_AreaCopy(menuitem->frameid, menuitem->frame.left, menuitem->frame.top, menuitem->frame.right, menuitem->frame.bottom, LBLX, MBASE(line));
-  // else
   DWINUI::Draw_String(LBLX, MBASE(line) - 1, menuitem->caption);
   DWIN_Draw_HLine(HMI_data.SplitLine_Color, 16, MYPOS(line + 1), 240);
 }
@@ -340,7 +334,7 @@ MenuClass::MenuClass() {
 void MenuClass::draw() {
   MenuTitle.draw();
   DWINUI::SetColors(HMI_data.Text_Color, HMI_data.Background_Color, HMI_data.TitleBg_Color);
-  DWIN_Draw_Rectangle(1, DWINUI::backcolor, 0, TITLE_HEIGHT, DWIN_WIDTH - 1, STATUS_Y - 1);
+  DWINUI::ClearMainArea();
   for (int8_t i = 0; i < MenuItemCount; i++)
     MenuItems[i]->draw(i - topline);
   Draw_Menu_Cursor(line());
@@ -355,12 +349,12 @@ void MenuClass::onScroll(bool dir) {
     Erase_Menu_Cursor(line());
     DWIN_UpdateLCD();
     if ((sel - topline) == TROWS) {
-      DWIN_Frame_AreaMove(1, DWIN_SCROLL_UP, MLINE, DWINUI::backcolor, 0, TITLE_HEIGHT + 1, DWIN_WIDTH, STATUS_Y - 1);
+      DWIN_Frame_AreaMove(1, DWIN_SCROLL_UP, MLINE, HMI_data.Background_Color, 0, TITLE_HEIGHT + 1, DWIN_WIDTH, STATUS_Y - 1);
       topline++;
       MenuItems[sel]->draw(TROWS - 1);
     }
     if ((sel < topline)) {
-      DWIN_Frame_AreaMove(1, DWIN_SCROLL_DOWN, MLINE, DWINUI::backcolor, 0, TITLE_HEIGHT + 1, DWIN_WIDTH, STATUS_Y - 1);
+      DWIN_Frame_AreaMove(1, DWIN_SCROLL_DOWN, MLINE, HMI_data.Background_Color, 0, TITLE_HEIGHT + 1, DWIN_WIDTH, STATUS_Y - 1);
       topline--;
       MenuItems[sel]->draw(0);
     }
@@ -409,24 +403,11 @@ MenuItemClass::MenuItemClass(uint8_t cicon, const char * const text, OnDrawItem 
   SetCaption(text);
 }
 
-// MenuItemClass::MenuItemClass(uint8_t cicon, uint8_t id, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, OnDrawItem ondraw, OnClickItem onclick) : CustomMenuItemClass(ondraw, onclick) {
-//   icon = cicon;
-//   caption[0] = '\0';
-//   frameid = id;
-//   frame = { x1, y1, x2, y2 };
-// }
-
 void MenuItemClass::SetCaption(const char * const text) {
   const uint8_t len = _MIN(sizeof(caption) - 1, strlen(text));
   memcpy(&caption[0], text, len);
   caption[len] = '\0';
 }
-
-// void MenuItemClass::SetFrame(uint8_t id, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2) {
-//   caption[0] = '\0';
-//   frameid = id;
-//   frame = { x1, y1, x2, y2 };
-// }
 
 MenuItemPtrClass::MenuItemPtrClass(uint8_t cicon, const char * const text, OnDrawItem ondraw, OnClickItem onclick, void* val) : MenuItemClass(cicon, text, ondraw, onclick) {
   value = val;
@@ -443,7 +424,7 @@ void MenuItemsClear() {
   MenuItemTotal = 0;
 }
 
-void MenuItemsPrepare(int8_t totalitems) {
+void MenuItemsPrepare(uint8_t totalitems) {
   MenuItemsClear();
   MenuItemTotal = _MIN(totalitems, MENU_MAX_ITEMS);
   MenuItems = new CustomMenuItemClass*[totalitems];
@@ -476,14 +457,6 @@ MenuItemClass* MenuItemAdd(uint8_t cicon, const char * const text/*=nullptr*/, O
   else return nullptr;
 }
 
-// MenuItemClass* MenuItemAdd(uint8_t cicon, uint8_t id, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, OnDrawItem ondraw/*=nullptr*/, OnClickItem onclick/*=nullptr*/) {
-//   if (MenuItemCount < MenuItemTotal) {
-//     MenuItemClass* menuitem = new MenuItemClass(cicon, id, x1, y1, x2, y2, ondraw, onclick);
-//     return MenuItemAdd(menuitem);
-//   }
-//   else return nullptr;
-// }
-
 MenuItemClass* EditItemAdd(uint8_t cicon, const char * const text, OnDrawItem ondraw, OnClickItem onclick, void* val) {
   if (MenuItemCount < MenuItemTotal) {
     MenuItemClass* menuitem = new MenuItemPtrClass(cicon, text, ondraw, onclick, val);
@@ -497,7 +470,7 @@ void InitMenu() {
   PreviousMenu = nullptr;
 }
 
-bool SetMenu(MenuClass* &menu, FSTR_P title, int8_t totalitems) {
+bool SetMenu(MenuClass* &menu, FSTR_P title, uint8_t totalitems) {
   if (!menu) menu = new MenuClass();
   const bool NotCurrent = (CurrentMenu != menu);
   if (NotCurrent) {

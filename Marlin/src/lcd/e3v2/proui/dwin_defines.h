@@ -33,17 +33,18 @@
   #define DASH_REDRAW 1
 #endif
 
-#if DISABLED(PROBE_MANUALLY) && ANY(AUTO_BED_LEVELING_BILINEAR, AUTO_BED_LEVELING_LINEAR, AUTO_BED_LEVELING_3POINT, AUTO_BED_LEVELING_UBL)
-  #define HAS_ONESTEP_LEVELING 1
-#endif
-
 #if !HAS_BED_PROBE && ENABLED(BABYSTEPPING)
   #define JUST_BABYSTEP 1
 #endif
 
+#if (ALT_COLOR_MENU == 2)
+#define Def_Background_Color  RGB( 0, 8, 6) // Dark Green/Blue
+#define Def_TitleBg_Color     RGB( 0, 23, 16) // Orient Blue
+#else
 #define Def_Background_Color  Color_Bg_Black //
-#define Def_Cursor_Color      Color_Cyan //
 #define Def_TitleBg_Color     Color_Voxelab_Red //
+#endif
+#define Def_Cursor_Color      Color_Cyan //
 #define Def_TitleTxt_Color    Color_White
 #define Def_Text_Color        Color_White
 #define Def_Selected_Color    Select_Color
@@ -93,7 +94,7 @@
   #include "../../../core/types.h"
 
   #if HAS_TOOLBAR
-    #define TBMaxOpt 5                    // Amount of shortcuts on screen
+    constexpr uint8_t TBMaxOpt = 5;       // Amount of shortcuts on screen
     #if HAS_BED_PROBE
       #define DEF_TBOPT {1, 7, 6, 2, 4}   // Default shorcuts for ALB/UBL
     #else

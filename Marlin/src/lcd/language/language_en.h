@@ -991,6 +991,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_TRAMWIZ_CALC                   = _UxGT("Calculate Average");
   LSTR MSG_TRAMWIZ_LOWER                  = _UxGT("Lower");
   LSTR MSG_TRAMWIZ_RAISE                  = _UxGT("Raise");
+  LSTR MSG_HOME_Z_AND_DISABLE             = _UxGT("Home Z and Disable");
   LSTR MSG_TOOLBAR_SETUP                  = _UxGT("Toolbar Setup");
   LSTR MSG_OPTION_DISABLED                = _UxGT("Option Disabled");
 }

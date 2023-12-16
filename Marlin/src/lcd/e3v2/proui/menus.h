@@ -77,12 +77,9 @@ class MenuItemClass: public CustomMenuItemClass {
 public:
   uint8_t icon = 0;
   char caption[MENU_CHAR_LIMIT] = "";
-  // uint8_t frameid = 0;
   rect_t frame = {0};
   using CustomMenuItemClass::CustomMenuItemClass;
   MenuItemClass(uint8_t cicon, const char * const text=nullptr, OnDrawItem ondraw=nullptr, OnClickItem onclick=nullptr);
-  // MenuItemClass(uint8_t cicon, uint8_t id, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, OnDrawItem ondraw=nullptr, OnClickItem onclick=nullptr);
-  // void SetFrame(uint8_t id, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
   void SetCaption(const char * const text=nullptr);
 };
 
@@ -164,7 +161,7 @@ void HMI_SetPFloat();
 void InitMenu();
 
 // Create a new menu
-bool SetMenu(MenuClass* &menu, FSTR_P title, int8_t totalitems);
+bool SetMenu(MenuClass* &menu, FSTR_P title, uint8_t totalitems);
 
 // Reset top line and selected item
 void ResetMenu(MenuClass* &menu);
@@ -185,7 +182,7 @@ void ReDrawItem();
 void MenuItemsClear();
 
 // Prepare MenuItems array
-void MenuItemsPrepare(int8_t totalitems);
+void MenuItemsPrepare(uint8_t totalitems);
 
 // Is the current menu = menu?
 bool IsMenu(MenuClass* menu);
@@ -196,7 +193,6 @@ MenuItemClass* MenuItemAdd(uint8_t cicon, const char * const text=nullptr, OnDra
 inline MenuItemClass* MenuItemAdd(uint8_t cicon, FSTR_P text=nullptr, OnDrawItem ondraw=nullptr, OnClickItem onclick=nullptr) {
   return MenuItemAdd(cicon, FTOP(text), ondraw, onclick);
 }
-// MenuItemClass* MenuItemAdd(uint8_t cicon, uint8_t id, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, OnDrawItem ondraw=nullptr, OnClickItem onclick=nullptr);
 MenuItemClass* EditItemAdd(uint8_t cicon, const char * const text, OnDrawItem ondraw, OnClickItem onclick, void* val);
 inline MenuItemClass* EditItemAdd(uint8_t cicon, FSTR_P text, OnDrawItem ondraw, OnClickItem onclick, void* val) {
   return EditItemAdd(cicon, FTOP(text), ondraw, onclick, val);
