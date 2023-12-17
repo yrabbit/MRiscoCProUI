@@ -49,6 +49,8 @@ The screen <b>freezes and restarts</b> when SD card is inserted. This means that
 #### Other Information:
 General information about the firmware and updates is located in the _Wiki_ page [What's New In This Release](https://github.com/classicrocker883/MriscocProUI/wiki/What's-New-in-this-Release). <br> Other changes and updates are [addressed here](https://github.com/classicrocker883/MriscocProUI/releases/latest) and are [addressed here](https://github.com/mriscoc/Ender3V2S1/releases/latest).
 
+[Linear Advance Information](https://github.com/MarlinFirmware/MarlinDocumentation/blob/master/_features/lin_advance.md)
+
 #### One important change to note is the `Mesh Inset` now saves upon restart -- it is working as normal.
     /**
      * The nozzle is only able to move within the physical bounds of the machine.
@@ -94,8 +96,6 @@ Once all that is done, just build like you would normally and *MarlinSimulator.e
 For MacOS or Linux, you're on your own...sorry.
 <br>
 
-[Linear Advance Information](https://github.com/MarlinFirmware/MarlinDocumentation/blob/master/_features/lin_advance.md)
-
 The Precompiled binary files of this firmware can work with STM32 (STM32F103RET6/RCT6 - STMicroelectronics) and it's clones: G32 (GD32F103Rx - GigaDevice), N32 (N32F103Rx / N32G455x - Nation), and H32 (HC32F460x - Huada Semiconductor/HDSC). They can be downloaded from:
 [Latest Release](https://github.com/classicrocker883/MriscocProUI/releases/latest)
 
@@ -106,10 +106,14 @@ The Precompiled binary files of this firmware can work with STM32 (STM32F103RET6
 <BR/>
 
 ## Donations
-Please consider making a donation, as large or as small and as often as you'd like.
-Thank you for your support, I receive donations through [Paypal](https://www.paypal.com/paypalme/andrewleduc)
 
-[<img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif">](https://www.paypal.com/donate/?business=PFNSKQX9WQQ8W&no_recurring=0&currency_code=USD)
+Please consider making a donation, as large or as small and as often as you'd like.
+Thank you for your support, I receive donations through  
+[Ko-fi](https://ko-fi.com/classicrocker883)  
+[Venmo](https://venmo.com/u/andrewleduc88)  
+[Paypal](https://www.paypal.com/paypalme/andrewleduc)
+
+[<img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif">](https://www.paypal.com/donate/?business=PFNSKQX9WQQ8W&no_recurring=0&currency_code=USD)  **PayPal**
 
 ## Wiki
  - [How to install the firmware](https://github.com/mriscoc/Ender3V2S1/wiki/How-to-install-the-firmware)
