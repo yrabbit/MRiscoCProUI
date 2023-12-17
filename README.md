@@ -36,9 +36,10 @@ New ICON's have been added, and old ones enhanced. Whoever edited them before sa
 
 #### Important Info regarding HC32:
 * H32->HC32 support is currently only in the branch **HC32-&lt;Month&gt;**. You can find the original repo here [@shadow578/Marlin-H32](https://github.com/shadow578/Marlin-H32)
+* HC32 support has recently been added to the [Marlin Firmware](https://github.com/MarlinFirmware/Marlin) repository. Please post any [Issues](https://github.com/MarlinFirmware/Marlin/issues) there first, otherwise if there are any ProUI specific issues or anything else to report please do so under [Issues tab](https://github.com/classicrocker883/MriscocProUI/issues) here.
 * I have created a second build using the JyersUI as a workaround for the save/store settings issue with ProUI. However, that is also a work-in-progress. I will have both build types available.
 * * > [!NOTE]
-    > <ins>**FOREWARNING**</ins>: So far everything has been working great - as normal - except there are reports of it restarting after saving with no other negative effects. So far, that is the only issue. I just wanted to give advance notice and if there is anything else to report please do so under [Issues tab](https://github.com/classicrocker883/MriscocProUI/issues).
+    > <ins>**FOREWARNING**</ins>: So far everything has been working great - as normal - except there are reports of it restarting after saving with no other negative effects. So far, that is the only issue. I just wanted to give advance notice.
   * > Previous Issue of it restarting when saving/store settings has been fixed in the more recent ProUI version (October Rev.1). HOWEVER, now there is a current Issue to be addressed:<br>
 The screen <b>freezes and restarts</b> when SD card is inserted. This means that everything <i>so far</i> seems to work correctly as it should, except for when an <b>SD card is inserted</b>, so printing may not be possible <i>unless</i> you use USB serial interface to upload the file (through a slicer or something like Pronterface).
     > This issue is now the main focus to be fixed.
