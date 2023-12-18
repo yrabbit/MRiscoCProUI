@@ -122,16 +122,16 @@
 
   // Default TMC slave addresses
   #ifndef X_SLAVE_ADDRESS
-    #define X_SLAVE_ADDRESS                    0
+    #define X_SLAVE_ADDRESS  0
   #endif
   #ifndef Y_SLAVE_ADDRESS
-    #define Y_SLAVE_ADDRESS                    2
+    #define Y_SLAVE_ADDRESS  2
   #endif
   #ifndef Z_SLAVE_ADDRESS
-    #define Z_SLAVE_ADDRESS                    1
+    #define Z_SLAVE_ADDRESS  1
   #endif
   #ifndef E0_SLAVE_ADDRESS
-    #define E0_SLAVE_ADDRESS                   3
+    #define E0_SLAVE_ADDRESS 3
   #endif
 #endif
 
