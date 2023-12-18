@@ -135,7 +135,7 @@
 
 // Printer's unique ID, used by some programs to differentiate between machines.
 // Choose your own or use a service like https://www.uuidgenerator.net/version4
-//#define MACHINE_UUID "00000000-0000-0000-0000-000000000000"
+#define MACHINE_UUID "8b7805b3-61f5-3028-8267-45437cc909ac" // 07790442-9d65-11ee-8c90-0242ac120002
 
 // @section stepper drivers
 
