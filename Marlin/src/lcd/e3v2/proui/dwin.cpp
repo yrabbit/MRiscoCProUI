@@ -730,7 +730,7 @@ void _draw_ZOffsetIcon() {
 #if ALL(HAS_FILAMENT_SENSOR, PROUI_EX)
   void _draw_runout_icon() {
     static bool _runout_active = false;
-    if (runout.enabled) { _draw_iconblink(_runout_active, FilamentSensorDevice::poll_runout_state(0), ICON_StepE, ICON_Version, 112, 417); }
+    if (runout.enabled) { _draw_iconblink(_runout_active, FilamentSensorDevice::poll_runout_state(0), ICON_StepE, ICON_Version, 113, 416); }
     else {
       DWIN_Draw_Box(1, HMI_data.Background_Color, 113, 416, 20, 20);
       DWINUI::Draw_Icon(ICON_StepE, 113, 416);
@@ -1325,20 +1325,24 @@ void EachMomentUpdate() {
       if (checkkey == ESDiagProcess) { esDiag.update(); }
     #endif
     #if PROUI_TUNING_GRAPH
-      if (checkkey == PidProcess TERN_(PLOT_TUNE_ITEM, || checkkey == PlotProcess)) {
+      if (checkkey == PidProcess) {
         TERN_(PIDTEMP, if (HMI_value.tempControl == PID_EXTR_START) { plot.update(thermalManager.wholeDegHotend(0)); })
         TERN_(PIDTEMPBED, if (HMI_value.tempControl == PID_BED_START) { plot.update(thermalManager.wholeDegBed()); })
       }
       if (checkkey == MPCProcess) {
         TERN_(MPCTEMP, if (HMI_value.tempControl == MPCTEMP_START) { plot.update(thermalManager.wholeDegHotend(0)); })
       }
+      #if ENABLED(PLOT_TUNE_ITEM)
+        if (checkkey == PlotProcess) {
+          TERN_(PIDTEMP, if (HMI_value.tempControl == PID_EXTR_START) { plot.update(thermalManager.wholeDegHotend(0)); })
+          TERN_(PIDTEMPBED, if (HMI_value.tempControl == PID_BED_START) { plot.update(thermalManager.wholeDegBed()); })
+          TERN_(MPCTEMP, if (HMI_value.tempControl == MPCTEMP_START) { plot.update(thermalManager.wholeDegHotend(0)); })
+          if (HMI_flag.abort_flag || HMI_flag.pause_flag || print_job_timer.isPaused()) {
+            HMI_ReturnScreen();
+          }
+        }
+      #endif
     #endif
-  }
-
-  if (checkkey == PlotProcess) {
-    if (HMI_flag.abort_flag || HMI_flag.pause_flag || print_job_timer.isPaused()) {
-      HMI_ReturnScreen();
-    }
   }
 
   #if HAS_STATUS_MESSAGE_TIMEOUT
@@ -1511,7 +1515,8 @@ void DWIN_HandleScreen() {
     case PrintDone:
     TERN_(HAS_ESDIAG,
     case ESDiagProcess:)
-    case PlotProcess:
+    TERN_(PLOT_TUNE_ITEM,
+    case PlotProcess:)
     case WaitResponse:    HMI_WaitForUser(); break;
     case Homing:
     case PidProcess:
@@ -1528,8 +1533,6 @@ bool IDisPopUp() {    // If ID is popup...
     case Homing:
     case Leveling:
     case PidProcess:
-    TERN_(PLOT_TUNE_ITEM,
-    case PlotProcess:)
     TERN_(HAS_ESDIAG,
     case ESDiagProcess:)
       return true;
@@ -1640,10 +1643,10 @@ void DWIN_HomingDone() {
 
 // PID/MPC process
 
-#if PROUI_TUNING_GRAPH && ANY(PROUI_PID_TUNE, MPC_AUTOTUNE)
+#if PROUI_TUNING_GRAPH
   celsius_t _maxtemp, _target;
   void DWIN_Draw_PID_MPC_Popup() {
-    frame_rect_t gfrm = {30, 150, DWIN_WIDTH - 60, 160};
+    constexpr frame_rect_t gfrm = { 30, 150, DWIN_WIDTH - 60, 160 };
     DWINUI::ClearMainArea();
     Draw_Popup_Bkgd();
     // Draw labels, Values
@@ -1680,6 +1683,56 @@ void DWIN_HomingDone() {
     plot.draw(gfrm, _maxtemp, _target);
     DWINUI::Draw_Int(false, 2, HMI_data.StatusTxt_Color, HMI_data.PopupBg_Color, 3, gfrm.x + 92, gfrm.y - DWINUI::fontHeight() - 6, _target);
   }
+
+  //Temperature (PID Tuning Graph) Plot During Printing
+  #if ENABLED(PLOT_TUNE_ITEM)
+
+    void dwinDrawPlot(tempcontrol_t result) {
+      HMI_value.tempControl = result;
+      constexpr frame_rect_t gfrm = { 30, 135, DWIN_WIDTH - 60, 160 };
+      DWINUI::ClearMainArea();
+      Draw_Popup_Bkgd();
+      HMI_SaveProcessID(PlotProcess);
+
+      switch (result) {
+        #if ENABLED(MPCTEMP)
+          case MPCTEMP_START:
+        #elif ENABLED(PIDTEMP)
+          case PID_EXTR_START:
+        #endif
+            Title.ShowCaption(GET_TEXT_F(MSG_HOTEND_GRAPH));
+            DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_NOZZLE_TEMPERATURE));
+            _maxtemp = thermalManager.hotend_max_target(0);
+            _target = thermalManager.degTargetHotend(0);
+            break;
+        #if ENABLED(PIDTEMPBED)
+          case PID_BED_START:
+            Title.ShowCaption(GET_TEXT_F(MSG_BED_GRAPH));
+            DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_BED_TEMPERATURE));
+            _maxtemp = BED_MAX_TARGET;
+            _target = thermalManager.degTargetBed();
+            break;
+        #endif
+        default:
+          break;
+      }
+
+      DWIN_Draw_String(false, 2, HMI_data.PopupTxt_Color, HMI_data.PopupBg_Color, gfrm.x, gfrm.y - DWINUI::fontHeight() - 4, GET_TEXT_F(MSG_TARGET));
+      plot.draw(gfrm, _maxtemp, _target);
+      DWINUI::Draw_Int(false, 2, HMI_data.StatusTxt_Color, HMI_data.PopupBg_Color, 3, gfrm.x + 80, gfrm.y - DWINUI::fontHeight() - 4, _target);
+      DWINUI::Draw_Button(BTN_Continue, 86, 305, true);
+      DWIN_UpdateLCD();
+    }
+
+    void drawHPlot() {
+      TERN_(PIDTEMP, dwinDrawPlot(PID_EXTR_START);)
+      TERN_(MPCTEMP, dwinDrawPlot(MPCTEMP_START);)
+    }
+    void drawBPlot() {
+      TERN_(PIDTEMPBED, dwinDrawPlot(PID_BED_START);)
+    }
+
+  #endif
 #endif
 
 #if PROUI_PID_TUNE
@@ -1774,58 +1827,6 @@ void DWIN_HomingDone() {
   }
 
 #endif // MPCTEMP
-
-//Temperature (PID Tuning Graph) Plot During Printing
-#if ALL(PROUI_TUNING_GRAPH, PLOT_TUNE_ITEM) && ANY(HAS_TEMP_SENSOR, HAS_HEATED_BED)
-
-  void dwinDrawPlot(tempcontrol_t result) {
-    HMI_value.tempControl = result;
-    frame_rect_t gfrm = {30, 135, DWIN_WIDTH - 60, 160};
-    DWINUI::ClearMainArea();
-    Draw_Popup_Bkgd();
-
-    switch (result) {
-      #if ENABLED(MPCTEMP)
-        case MPCTEMP_START:
-          HMI_SaveProcessID(MPCProcess);
-      #elif ENABLED(PIDTEMP)
-        case PID_EXTR_START:
-          HMI_SaveProcessID(PlotProcess);
-      #endif
-          Title.ShowCaption(GET_TEXT_F(MSG_HOTEND_GRAPH));
-          DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_NOZZLE_TEMPERATURE));
-          _maxtemp = thermalManager.hotend_max_target(0);
-          _target = thermalManager.degTargetHotend(0);
-          break;
-      #if ENABLED(PIDTEMPBED)
-        case PID_BED_START:
-          HMI_SaveProcessID(PlotProcess);
-          Title.ShowCaption(GET_TEXT_F(MSG_BED_GRAPH));
-          DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_BED_TEMPERATURE));
-          _maxtemp = BED_MAX_TARGET;
-          _target = thermalManager.degTargetBed();
-          break;
-      #endif
-      default:
-        break;
-    }
-
-    DWIN_Draw_String(false, 2, HMI_data.PopupTxt_Color, HMI_data.PopupBg_Color, gfrm.x, gfrm.y - DWINUI::fontHeight() - 4, GET_TEXT_F(MSG_TARGET));
-    plot.draw(gfrm, _maxtemp, _target);
-    DWINUI::Draw_Int(false, 2, HMI_data.StatusTxt_Color, HMI_data.PopupBg_Color, 3, gfrm.x + 80, gfrm.y - DWINUI::fontHeight() - 4, _target);
-    DWINUI::Draw_Button(BTN_Continue, 86, 305, true);
-    DWIN_UpdateLCD();
-  }
-
-  void drawHPlot() {
-    TERN_(PIDTEMP, dwinDrawPlot(PID_EXTR_START);)
-    TERN_(MPCTEMP, dwinDrawPlot(MPCTEMP_START);)
-  }
-  void drawBPlot() {
-    TERN_(PIDTEMPBED, dwinDrawPlot(PID_BED_START);)
-  }
-
-#endif
 
 // Started a Print Job
 void DWIN_Print_Started() {
