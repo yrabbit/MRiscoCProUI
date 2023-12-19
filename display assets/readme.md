@@ -4,13 +4,13 @@ Some features, such as G-code preview, need updated firmware to work on some DAC
 
 If you have the stock icon set, in principle you **do not need to update the display to use this firmware**, only some TJC display units need a [firmware update](tjc_update.zip?raw=true) to boot properly. Creality currently provides several types of display units with its Ender-3 V2/S1/Neo printers:
 
-**DWIN display**, the original display unit, it supports all firmware functions.
+**DWIN display**, the original display unit, it supports all firmware functions.  
 [![Ender3v2-DWIN](https://user-images.githubusercontent.com/2745567/156829365-a58a3afc-77e3-40b9-9e16-5edfe3073de8.jpg)](https://raw.githubusercontent.com/MRiscoC/Ender3V2S1/Ender3V2S1-Released/display%20assets/displays/DWIN.jpg)
 
 **DACAI display**, some versions need [updated firmware to enable G-code preview](dacai_update.zip?raw=true)
 [![Ender3S1-DACAI](https://user-images.githubusercontent.com/2745567/156829472-2c38a4ab-bdde-4c21-b78f-a30692c96500.jpg)](https://raw.githubusercontent.com/MRiscoC/Ender3V2S1/Ender3V2S1-Released/display%20assets/displays/DACAI.jpg)
 
-**SYNWIT (VIEWE) display**, initially unsupported due to incompatibilities with QR-codes (removed in latest firmware version) some users [report problems](https://github.com/MRiscoC/Ender3V2S1/issues/323) with this screen, but now seems that it is working without issues.
+**SYNWIT (VIEWE) display**, initially unsupported due to incompatibilities with QR-codes (removed in latest firmware version) some users [report problems](https://github.com/MRiscoC/Ender3V2S1/issues/323) with this screen, but now seems that it is working without issues.  
 [![VIEWE](https://user-images.githubusercontent.com/2745567/163235004-1d3f1ed4-e149-4ca8-ae60-438df5f0b70a.png)](https://raw.githubusercontent.com/MRiscoC/Ender3V2S1/Ender3V2S1-Released/display%20assets/displays/SYNWIT1.jpg)
 [![SYNWIT2R](https://user-images.githubusercontent.com/2745567/209407402-25053f01-6a5d-4c76-90c8-da5aec43100c.png)](https://raw.githubusercontent.com/MRiscoC/Ender3V2S1/Ender3V2S1-Released/display%20assets/displays/SYNWIT2.jpg)
 
@@ -75,7 +75,7 @@ If you can't see preview images with this [g-code test file](../slicer%20scripts
 ---
 
 ### Updating printer firmware
-For update your printer firmware and get the latest version go here: <https://github.com/classicrocker883/MRiscoCProUI/releases/latest>
+To update your printer firmware and get the latest version go [here](https://github.com/classicrocker883/MRiscoCProUI/releases/latest)
 
 ### Credits
 - [**ClassicRocker883**](https://github.com/classicrocker883) for updating the icons
