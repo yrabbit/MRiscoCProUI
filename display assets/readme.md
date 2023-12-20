@@ -52,7 +52,7 @@ If you can't see preview images with this [g-code test file](../slicer%20scripts
 
 ## [Go to Aquila display firmware](Aquila%20Display%20Firmware)
 
-<a href=Aquila%20Display%20Firmware><img src="https://user-images.githubusercontent.com/18502096/197379769-0ee09e3b-e637-4353-ac5a-e0090256df47.jpg" height="400" /></a>
+<a href=Aquila%20Display%20Firmware><img src="https://github.com/classicrocker883/MRiscoCProUI/assets/18502096/30ed1822-e5d5-4be5-9283-636390933178" height="400" /></a>
 
 <br>
 
