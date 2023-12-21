@@ -1273,13 +1273,9 @@ void HMI_WaitForUser() {
         select_page.reset();
         Goto_Main_Menu();
         break;
-      #if HAS_ABL_OR_UBL
+      #if HAS_BED_PROBE
         case Leveling:
-          #if PROUI_EX
-            ProEx.StopLeveling();
-          #else
-            HMI_ReturnScreen();
-          #endif
+          TERN(PROUI_EX, ProEx.StopLeveling(), HMI_ReturnScreen());
           break;
       #endif
       default:
@@ -1362,7 +1358,7 @@ void EachMomentUpdate() {
   if (!PENDING(ms, next_rts_update_ms)) {
     next_rts_update_ms = ms + DWIN_UPDATE_INTERVAL;
 
-    if ((HMI_flag.printing_flag != Printing()) && (checkkey != Homing) && (checkkey != Leveling)) {
+    if ((HMI_flag.printing_flag != Printing()) && (checkkey != Homing) TERN_(HAS_BED_PROBE, && (checkkey != Leveling))) {
       HMI_flag.printing_flag = Printing();
       DEBUG_ECHOLNPGM("printing_flag: ", HMI_flag.printing_flag);
       if (HMI_flag.printing_flag) { DWIN_Print_Started(); }
@@ -1509,7 +1505,8 @@ void DWIN_HandleScreen() {
     case SetIntNoDraw:    HMI_SetNoDraw(); break;
     case PrintProcess:    HMI_Printing(); break;
     case Popup:           HMI_Popup(); break;
-    case Leveling:        TERN_(PROUI_EX, HMI_WaitForUser();) break;
+    OPTCODE(HAS_BED_PROBE,
+    case Leveling:        OPTCODE(PROUI_EX, HMI_WaitForUser()) break)
     OPTCODE(HAS_LOCKSCREEN,
     case Locked:          HMI_LockScreen(); break)
     case PrintDone:
@@ -1519,7 +1516,10 @@ void DWIN_HandleScreen() {
     case PlotProcess:)
     case WaitResponse:    HMI_WaitForUser(); break;
     case Homing:
-    case PidProcess:
+    TERN_(PROUI_PID_TUNE,
+    case PidProcess:)
+    TERN_(MPCTEMP,
+    case MPCProcess:)
     case NothingToDo:     break;
     default: break;
   }
@@ -1531,8 +1531,12 @@ bool IDisPopUp() {    // If ID is popup...
     case WaitResponse:
     case Popup:
     case Homing:
-    case Leveling:
-    case PidProcess:
+    TERN_(HAS_BED_PROBE,
+    case Leveling:)
+    TERN_(PROUI_PID_TUNE,
+    case PidProcess:)
+    TERN_(MPCTEMP,
+    case MPCProcess:)
     TERN_(HAS_ESDIAG,
     case ESDiagProcess:)
       return true;
@@ -1550,7 +1554,8 @@ void HMI_SaveProcessID(const uint8_t id) {
     TERN_(HAS_ESDIAG,
     case ESDiagProcess:)
     case PrintDone:
-    case Leveling:
+    TERN_(HAS_BED_PROBE,
+    case Leveling:)
     TERN_(PLOT_TUNE_ITEM,
     case PlotProcess:)
     case WaitResponse:
@@ -1684,7 +1689,7 @@ void DWIN_HomingDone() {
     DWINUI::Draw_Int(false, 2, HMI_data.StatusTxt_Color, HMI_data.PopupBg_Color, 3, gfrm.x + 92, gfrm.y - DWINUI::fontHeight() - 6, _target);
   }
 
-  //Temperature (PID Tuning Graph) Plot During Printing
+  // Plot Temperature Graph (PID Tuning Graph)
   #if ENABLED(PLOT_TUNE_ITEM)
 
     void dwinDrawPlot(tempcontrol_t result) {
@@ -1732,8 +1737,8 @@ void DWIN_HomingDone() {
       TERN_(PIDTEMPBED, dwinDrawPlot(PID_BED_START);)
     }
 
-  #endif
-#endif
+  #endif // PLOT_TUNE_ITEM
+#endif // PROUI_TUNING_GRAPH
 
 #if PROUI_PID_TUNE
 
@@ -1826,7 +1831,7 @@ void DWIN_HomingDone() {
     }
   }
 
-#endif // MPCTEMP
+#endif // MPC_AUTOTUNE
 
 // Started a Print Job
 void DWIN_Print_Started() {
@@ -4104,8 +4109,10 @@ void Draw_GetColor_Menu() {
     }
   #endif
 
-  void ApplyMeshFadeHeight() { set_z_fade_height(planner.z_fade_height); }
-  void SetMeshFadeHeight() { SetPFloatOnClick(0, 100, 1, ApplyMeshFadeHeight); }
+  #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
+    void ApplyMeshFadeHeight() { set_z_fade_height(planner.z_fade_height); }
+    void SetMeshFadeHeight() { SetPFloatOnClick(0, 100, 1, ApplyMeshFadeHeight); }
+  #endif
 
   #if ENABLED(ACTIVATE_MESH_ITEM)
 
@@ -4184,7 +4191,9 @@ void Draw_GetColor_Menu() {
       #if ALL(HAS_HEATED_BED, PREHEAT_BEFORE_LEVELING)
         EDIT_ITEM(ICON_Temperature, MSG_UBL_SET_TEMP_BED, onDrawPIntMenu, SetBedLevT, &HMI_data.BedLevT);
       #endif
-      EDIT_ITEM(ICON_Fade, MSG_Z_FADE_HEIGHT, onDrawPFloatMenu, SetMeshFadeHeight, &planner.z_fade_height);
+      #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
+        EDIT_ITEM(ICON_Fade, MSG_Z_FADE_HEIGHT, onDrawPFloatMenu, SetMeshFadeHeight, &planner.z_fade_height);
+      #endif
       #if ENABLED(AUTO_BED_LEVELING_UBL)
         EDIT_ITEM(ICON_Tilt, MSG_UBL_TILTING_GRID, onDrawPInt8Menu, SetUBLTiltGrid, &bedLevelTools.tilt_grid);
       #endif
