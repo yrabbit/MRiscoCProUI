@@ -166,9 +166,9 @@
 #define BTN_Purge             92
 
 // Extended and default UI Colors
-#define Color_Black           0x0000 //changed 0
-#define Color_Green           0x07E0 //RGB(0, 63,  0)
-#define Color_Blue            0x001F //RGB(0,  0, 31)
+#define Color_Black           0x0000
+#define Color_Green           0x07E0 //RGB(0, 63, 0)
+#define Color_Blue            0x001F //RGB(0, 0, 31)
 #define Color_Light_White     0xBDD7
 #define Color_Light_Green     0x3460
 #define Color_Cyan            0x07FF //RGB(0, 63, 31)

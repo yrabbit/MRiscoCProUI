@@ -1929,19 +1929,19 @@ void DWIN_Print_Aborted() {
     HMI_data.TitleTxt_Color   = Def_TitleTxt_Color;
     HMI_data.Text_Color       = Def_Text_Color;
     HMI_data.Selected_Color   = RGB(6, 29, 27); // Royal Blue
-    HMI_data.SplitLine_Color  = RGB( 0, 23, 16); // Orient Blue
+    HMI_data.SplitLine_Color  = RGB(0, 23, 16); // Orient Blue
     HMI_data.Highlight_Color  = Def_Highlight_Color;
-    HMI_data.StatusBg_Color   = RGB( 0, 23, 16); // Orient Blue
-    HMI_data.StatusTxt_Color  = RGB( 31, 63, 0); // Yellow
+    HMI_data.StatusBg_Color   = RGB(0, 23, 16); // Orient Blue
+    HMI_data.StatusTxt_Color  = RGB(31, 63, 0); // Yellow
     HMI_data.PopupBg_Color    = Color_Bg_Window;
     HMI_data.PopupTxt_Color   = Popup_Text_Color;
-    HMI_data.AlertBg_Color    = RGB( 30, 0, 15); // BG_Red
-    HMI_data.AlertTxt_Color   = RGB( 31, 63, 0); // Yellow
-    HMI_data.PercentTxt_Color = RGB( 31, 49, 9); // Dark_Yellow
+    HMI_data.AlertBg_Color    = RGB(30, 0, 15); // BG_Red
+    HMI_data.AlertTxt_Color   = RGB(31, 63, 0); // Yellow
+    HMI_data.PercentTxt_Color = RGB(31, 49, 9); // Dark_Yellow
     HMI_data.Barfill_Color    = BarFill_Color;
     HMI_data.Indicator_Color  = Color_White;
     HMI_data.Coordinate_Color = Color_White;
-    HMI_data.Bottom_Color     = RGB( 0, 23, 16); // Orient Blue
+    HMI_data.Bottom_Color     = RGB(0, 23, 16); // Orient Blue
   }
 #else // 0 = Voxelab Default
   void DWIN_SetColorDefaults() {
