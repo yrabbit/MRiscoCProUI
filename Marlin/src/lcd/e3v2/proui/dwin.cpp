@@ -1705,14 +1705,14 @@ void DWIN_HomingDone() {
         #elif ENABLED(PIDTEMP)
           case PID_EXTR_START:
         #endif
-            Title.ShowCaption(GET_TEXT_F(MSG_HOTEND_GRAPH));
+            Title.ShowCaption(GET_TEXT_F(MSG_HOTEND_TEMP_GRAPH));
             DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_NOZZLE_TEMPERATURE));
             _maxtemp = thermalManager.hotend_max_target(0);
             _target = thermalManager.degTargetHotend(0);
             break;
         #if ENABLED(PIDTEMPBED)
           case PID_BED_START:
-            Title.ShowCaption(GET_TEXT_F(MSG_BED_GRAPH));
+            Title.ShowCaption(GET_TEXT_F(MSG_BED_TEMP_GRAPH));
             DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_BED_TEMPERATURE));
             _maxtemp = BED_MAX_TARGET;
             _target = thermalManager.degTargetBed();
@@ -3121,8 +3121,8 @@ void Draw_Prepare_Menu() {
     MENU_ITEM(ICON_Tram, MSG_BED_TRAMMING, onDrawSubMenu, Draw_Tramming_Menu);
     MENU_ITEM(ICON_FilMan, MSG_FILAMENT_MAN, onDrawSubMenu, Draw_FilamentMan_Menu);
     #if ALL(PROUI_TUNING_GRAPH, PLOT_TUNE_ITEM)
-      MENU_ITEM(ICON_PIDNozzle, MSG_HOTEND_GRAPH, onDrawMenuItem, drawHPlot);
-      MENU_ITEM(ICON_PIDBed, MSG_BED_GRAPH, onDrawMenuItem, drawBPlot);
+      MENU_ITEM(ICON_PIDNozzle, MSG_HOTEND_TEMP_GRAPH, onDrawMenuItem, drawHPlot);
+      MENU_ITEM(ICON_PIDBed, MSG_BED_TEMP_GRAPH, onDrawMenuItem, drawBPlot);
     #endif
   }
   ui.reset_status(true);
@@ -3422,8 +3422,8 @@ void Draw_Tune_Menu() {
     EDIT_ITEM(ICON_Zoffset, MSG_ZPROBE_ZOFFSET, onDrawPFloat2Menu, SetZOffset, &BABY_Z_VAR);
     #endif
     #if ALL(PROUI_TUNING_GRAPH, PLOT_TUNE_ITEM)
-      MENU_ITEM(ICON_PIDNozzle, MSG_HOTEND_GRAPH, onDrawMenuItem, drawHPlot);
-      MENU_ITEM(ICON_PIDBed, MSG_BED_GRAPH, onDrawMenuItem, drawBPlot);
+      MENU_ITEM(ICON_PIDNozzle, MSG_HOTEND_TEMP_GRAPH, onDrawMenuItem, drawHPlot);
+      MENU_ITEM(ICON_PIDBed, MSG_BED_TEMP_GRAPH, onDrawMenuItem, drawBPlot);
     #endif
     #if HAS_LOCKSCREEN
       MENU_ITEM(ICON_Lock, MSG_LOCKSCREEN, onDrawMenuItem, DWIN_LockScreen);
