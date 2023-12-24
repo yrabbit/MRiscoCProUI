@@ -431,8 +431,8 @@ void Popup_window_PauseOrStop() {
 
 #if HAS_HOTEND || HAS_HEATED_BED
   void DWIN_Popup_Temperature(const int_fast8_t heater_id, const bool toohigh) {
-    FSTR_P heaterstr = (heater_id == H_BED) ? GET_TEXT_F(MSG_BED_TEMPERATURE) : GET_TEXT_F(MSG_NOZZLE_TEMPERATURE);
-    FSTR_P lowhighstr = toohigh ? GET_TEXT_F(MSG_TOO_HIGH) : GET_TEXT_F(MSG_TOO_LOW);
+    FSTR_P const heaterstr = (heater_id == H_BED) ? GET_TEXT_F(MSG_BED_TEMPERATURE) : GET_TEXT_F(MSG_NOZZLE_TEMPERATURE),
+                 lowhighstr = toohigh ? GET_TEXT_F(MSG_TOO_HIGH) : GET_TEXT_F(MSG_TOO_LOW);
     HMI_SaveProcessID(WaitResponse);
     DWIN_Show_Popup((toohigh ? ICON_TempTooHigh : ICON_TempTooLow), heaterstr, lowhighstr, BTN_Continue);
   }
@@ -455,8 +455,7 @@ void DWIN_ResetStatusLine() {
 // Djb2 hash algorithm
 uint32_t GetHash(char * str) {
   uint32_t hash = 5381;
-  char c;
-  while ((c = *str++)) hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+  for (char c; (c = *str++);) hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
   return hash;
 }
 

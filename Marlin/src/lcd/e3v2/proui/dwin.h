@@ -88,9 +88,6 @@ enum processID : uint8_t {
   };
 #endif
 
-#define DWIN_CHINESE 123
-#define DWIN_ENGLISH 0
-
 typedef struct {
   uint16_t Background_Color;
   uint16_t Cursor_Color;

@@ -291,7 +291,7 @@ _iconNames = {
     41 : 'ICON_Motion',
     42 : 'ICON_WriteEEPROM',
     43 : 'ICON_ReadEEPROM',
-    44 : 'ICON_ResumeEEPROM',
+    44 : 'ICON_ResetEEPROM',
     45 : 'ICON_Info',
     46 : 'ICON_SetEndTemp',
     47 : 'ICON_SetBedTemp',

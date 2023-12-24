@@ -21,10 +21,6 @@
  */
 #pragma once
 
-// Picture ID
-#define Language_English    1
-#define Language_Chinese    2
-
 #define USE_STOCK_DWIN_SET  // Use the Creality stock DWIN_SET instead of Marlin's unified DWIN_SET by The-EG & thinkyhead
 #ifdef USE_STOCK_DWIN_SET
   #define ICON 9 // 9.ICO
@@ -82,7 +78,7 @@
 #define ICON_Motion             41
 #define ICON_WriteEEPROM        42
 #define ICON_ReadEEPROM         43
-#define ICON_ResumeEEPROM       44
+#define ICON_ResetEEPROM       44
 #define ICON_Info               45
 
 #define ICON_SetEndTemp         46
