@@ -64,9 +64,10 @@ bool drawing_mesh = false;
     struct linear_fit_data lsf_results;
     incremental_LSF_reset(&lsf_results);
     GRID_LOOP(x, y) {
-      if (!isnan(bedlevel.z_values[x][y])) {
+      const float z = bedlevel.z_values[x][y];
+      if (!isnan(z)) {
         xy_pos_t rpos = { bedlevel.get_mesh_x(x), bedlevel.get_mesh_y(y) };
-        incremental_LSF(&lsf_results, rpos, bedlevel.z_values[x][y]);
+        incremental_LSF(&lsf_results, rpos, z);
       }
     }
 
@@ -179,8 +180,8 @@ float BedLevelToolsClass::get_min_value() {
 bool BedLevelToolsClass::meshValidate() {
   if ((MESH_MAX_X <= MESH_MIN_X) || (MESH_MAX_Y <= MESH_MIN_Y)) return false;
   GRID_LOOP(x, y) {
-    const float v = bedlevel.z_values[x][y];
-    if (isnan(v) || !WITHIN(v, Z_OFFSET_MIN, Z_OFFSET_MAX)) return false;
+    const float z = bedlevel.z_values[x][y];
+    if (isnan(z) || !WITHIN(z, Z_OFFSET_MIN, Z_OFFSET_MAX)) return false;
   }
   return true;
 }
@@ -230,10 +231,10 @@ bool BedLevelToolsClass::meshValidate() {
       }
       else {          // has value
         MString<12> msg;
-        if ((GRID_MAX_POINTS_X) < TERN(TJC_DISPLAY, 8, 10))
-          msg.set(p_float_t(abs(z), 2));
-        else
+        if ((GRID_MAX_POINTS_X) >= TERN(TJC_DISPLAY, 8, 10))
           msg.setf(F("%02i"), uint16_t(z * 100) % 100);
+        else
+          msg.set(p_float_t(abs(z), 2));
         const int8_t offset_x = cell_width_px / 2 - (fs / 2) * msg.length() - 2;
         if ((GRID_MAX_POINTS_X) >= TERN(TJC_DISPLAY, 8, 10))
           DWIN_Draw_String(false, meshfont, DWINUI::textcolor, DWINUI::backcolor, start_x_px - 2 + offset_x, start_y_px + offset_y, F("."));

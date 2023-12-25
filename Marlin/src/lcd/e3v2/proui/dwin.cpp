@@ -3136,7 +3136,7 @@ void Draw_Tramming_Menu() {
       #if HAS_BED_PROBE
         MENU_ITEM(ICON_Tram, MSG_TRAMMING_WIZARD, onDrawMenuItem, TramwizStart);
         EDIT_ITEM(ICON_Version, MSG_BED_TRAMMING_MANUAL, onDrawChkbMenu, SetManualTramming, &HMI_data.FullManualTramming);
-        EDIT_ITEM(ICON_ResumeEEPROM, MSG_TRAMWIZ_CALC, onDrawChkbMenu, SetCalcAvg, &HMI_data.CalcAvg);
+        EDIT_ITEM(ICON_ResetEEPROM, MSG_TRAMWIZ_CALC, onDrawChkbMenu, SetCalcAvg, &HMI_data.CalcAvg);
       #else
         MENU_ITEM(ICON_MoveZ0, MSG_HOME_Z_AND_DISABLE, onDrawMenuItem, HomeZandDisable);
       #endif
@@ -3278,7 +3278,7 @@ void Draw_Move_Menu() {
       #if ENABLED(BLTOUCH)
         MENU_ITEM(ICON_ProbeStow, MSG_MANUAL_STOW, onDrawMenuItem, ProbeStow);
         MENU_ITEM(ICON_ProbeDeploy, MSG_MANUAL_DEPLOY, onDrawMenuItem, ProbeDeploy);
-        MENU_ITEM(ICON_BltouchReset, MSG_MANUAL_RESET, onDrawMenuItem, bltouch._reset);
+        MENU_ITEM(ICON_BLtouchReset, MSG_MANUAL_RESET, onDrawMenuItem, bltouch._reset);
         MENU_ITEM(ICON_ProbeTest, MSG_M48_TEST, onDrawMenuItem, ProbeTest);
         #if ALL(HAS_BLTOUCH_HS_MODE, HS_MENU_ITEM)
           EDIT_ITEM(ICON_HSMode, MSG_ENABLE_HS_MODE, onDrawChkbMenu, SetHSMode, &bltouch.high_speed_mode);
@@ -3811,7 +3811,7 @@ void Draw_SelectColors_Menu() {
   checkkey = Menu;
   if (SET_MENU(SelectColorMenu, MSG_COLORS_SELECT, 21)) {
     BACK_ITEM(Draw_Control_Menu);
-    MENU_ITEM(ICON_ResumeEEPROM, MSG_RESTORE_DEFAULTS, onDrawMenuItem, RestoreDefaultColors);
+    MENU_ITEM(ICON_ResetEEPROM, MSG_RESTORE_DEFAULTS, onDrawMenuItem, RestoreDefaultColors);
     EDIT_ITEM_F(0, "Screen Background", onDrawSelColorItem, SelColor, &HMI_data.Background_Color);
     EDIT_ITEM_F(0, "Cursor", onDrawSelColorItem, SelColor, &HMI_data.Cursor_Color);
     EDIT_ITEM_F(0, "Title Background", onDrawSelColorItem, SelColor, &HMI_data.TitleBg_Color);
@@ -4458,7 +4458,7 @@ void Draw_AdvancedSettings_Menu() {
     BACK_ITEM(Goto_Main_Menu);
     #if ENABLED(EEPROM_SETTINGS)
       MENU_ITEM(ICON_ReadEEPROM, MSG_LOAD_EEPROM, onDrawMenuItem, ReadEeprom);
-      MENU_ITEM(ICON_ResumeEEPROM, MSG_RESTORE_DEFAULTS, onDrawMenuItem, ResetEeprom);
+      MENU_ITEM(ICON_ResetEEPROM, MSG_RESTORE_DEFAULTS, onDrawMenuItem, ResetEeprom);
     #endif
     #if HAS_LCD_BRIGHTNESS
       EDIT_ITEM(ICON_Brightness, MSG_BRIGHTNESS, onDrawPInt8Menu, SetBrightness, &ui.brightness);
@@ -4511,7 +4511,7 @@ void Draw_Advanced_Menu() { // From Control_Menu (Control) || Default-NP Advance
     BACK_ITEM(Draw_Control_Menu);
     #if ENABLED(EEPROM_SETTINGS)
       MENU_ITEM(ICON_ReadEEPROM, MSG_LOAD_EEPROM, onDrawMenuItem, ReadEeprom);
-      MENU_ITEM(ICON_ResumeEEPROM, MSG_RESTORE_DEFAULTS, onDrawMenuItem, ResetEeprom);
+      MENU_ITEM(ICON_ResetEEPROM, MSG_RESTORE_DEFAULTS, onDrawMenuItem, ResetEeprom);
     #endif
     #if HAS_LCD_BRIGHTNESS
       EDIT_ITEM(ICON_Brightness, MSG_BRIGHTNESS, onDrawPInt8Menu, SetBrightness, &ui.brightness);
