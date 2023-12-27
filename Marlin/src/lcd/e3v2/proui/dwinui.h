@@ -70,7 +70,7 @@
 #define ICON_MeshEditZ         ICON_MoveZ
 #define ICON_MeshNext          ICON_AxisD
 #define ICON_MeshPoints        ICON_HotendTemp
-#define ICON_MeshReset         ICON_StockConfiguration
+#define ICON_MeshReset         ICON_ResetEEPROM
 #define ICON_MeshSave          ICON_WriteEEPROM
 #define ICON_MeshViewer        ICON_Mesh
 #define ICON_MoveZ0            ICON_CloseMotor
