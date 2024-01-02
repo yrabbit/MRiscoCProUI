@@ -291,7 +291,7 @@ jobs:
       id: build_configs
       run: |
         if ($PWR); then PLTMP=-PWRLOSS; else PLTMP=; fi;
-        echo "filename=Aquila-X3_N32_UBL-ProUI${PLTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=Aquila_X3_N32_UBL-ProUI${PLTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -692,7 +692,7 @@ jobs:
         elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1";
         fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
-        echo "filename=Aquila_SKR-Mini-E3-${AVTMP}_MM-ProUI.bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Aquila_SKR-Mini-E3-${AVTMP}_MM-ProUI.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
