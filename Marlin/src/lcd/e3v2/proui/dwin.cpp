@@ -1091,11 +1091,7 @@ void DWIN_Draw_Dashboard() {
 
   DWINUI::Draw_Icon(ICON_Speed, 113, 383);
   DWINUI::Draw_Int(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 3, 116 + 2 * STAT_CHR_W, 384, feedrate_percentage);
-  #if ENABLED(SHOW_SPEED_IND)
-    if (!HMI_data.SpdInd) { DWINUI::Draw_String(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 116 + 5 * STAT_CHR_W + 2, 384, F("%")); }
-  #else
-    DWINUI::Draw_String(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 116 + 5 * STAT_CHR_W + 2, 384, F("%"));
-  #endif
+  TERN_(SHOW_SPEED_IND, if (!HMI_data.SpdInd)) DWINUI::Draw_String(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 116 + 5 * STAT_CHR_W + 2, 384, F("%"));
 
   #if HAS_FAN
     DWINUI::Draw_Icon(ICON_FanSpeed, 187, 383);
@@ -1863,6 +1859,22 @@ void DWIN_Print_Resume() {
 // Ended print job
 void DWIN_Print_Finished() {
   DEBUG_ECHOLNPGM("DWIN_Print_Finished");
+  #ifndef EVENT_GCODE_SD_ABORT
+    if (!HMI_flag.abort_flag && all_axes_homed()) {
+      #if ENABLED(NOZZLE_PARK_FEATURE) && DISABLED(PROUI_EX)
+        const xyz_pos_t park_point = NOZZLE_PARK_POINT;
+      #endif
+      const int16_t zpos = current_position.z + TERN(NOZZLE_PARK_FEATURE,
+      NOZZLE_PARK_Z_RAISE_MIN, Z_POST_CLEARANCE);
+      _MIN(zpos, Z_MAX_POS);
+      const int16_t ypos = TERN(NOZZLE_PARK_FEATURE, TERN(PROUI_EX, PRO_data.Park_point.y, park_point.y), Y_MAX_POS);
+      MString<32> cmd;
+      cmd.setf(cmd, F("G0F3000Z%i\nG0F2000Y%i"), zpos, ypos);
+      queue.inject(&cmd);
+    }
+  #else
+    if (!HMI_flag.abort_flag && all_axes_homed()) queue.inject(EVENT_GCODE_SD_ABORT);
+  #endif
   HMI_flag.abort_flag = false;
   HMI_flag.pause_flag = false;
   wait_for_heatup = false;
@@ -1876,20 +1888,6 @@ void DWIN_Print_Finished() {
 // Print was aborted
 void DWIN_Print_Aborted() {
   DEBUG_ECHOLNPGM("DWIN_Print_Aborted");
-  #ifndef EVENT_GCODE_SD_ABORT
-    if (all_axes_homed()) {
-      #if ENABLED(NOZZLE_PARK_FEATURE) && DISABLED(PROUI_EX)
-        const xyz_pos_t park_point = NOZZLE_PARK_POINT;
-      #endif
-      const int16_t zpos = current_position.z + TERN(NOZZLE_PARK_FEATURE,
-      NOZZLE_PARK_Z_RAISE_MIN, Z_POST_CLEARANCE);
-      _MIN(zpos, Z_MAX_POS);
-      const int16_t ypos = TERN(NOZZLE_PARK_FEATURE, TERN(PROUI_EX, PRO_data.Park_point.y, park_pos.y), Y_MAX_POS);
-      MString<32> cmd;
-      cmd.setf(cmd, F("G0F3000Z%i\nG0F2000Y%i"), zpos, ypos);
-      queue.inject(&cmd);
-    }
-  #endif
   #ifdef SD_FINISHED_RELEASECOMMAND
     queue.inject(SD_FINISHED_RELEASECOMMAND);
   #endif
@@ -2480,10 +2478,6 @@ void ApplyMove() {
     #define E_MIN_POS (current_position.e - (EXTRUDE_MAXLENGTH))
     #define E_MAX_POS (current_position.e + (EXTRUDE_MAXLENGTH))
     HMI_value.axis = E_AXIS; SetPFloatOnClick(E_MIN_POS, E_MAX_POS, UNITFDIGITS, ApplyMove, LiveMove);
-  }
-  void MoveE100() {
-    current_position.e+=100;
-    AxisMove(E_AXIS);
   }
 #endif
 
@@ -3231,7 +3225,7 @@ void Draw_Move_Menu() {
     #endif
     EDIT_ITEM(ICON_AxisC, MSG_LIVE_MOVE, onDrawChkbMenu, SetLiveMove, &EnableLiveMove);
   }
-    UpdateMenu(MoveMenu);
+  UpdateMenu(MoveMenu);
   if (!all_axes_trusted()) { LCD_MESSAGE_F("..WARNING: Current position is unknown, Home axes."); }
 }
 
@@ -3757,99 +3751,99 @@ void Draw_Steps_Menu() {
     DWIN_RedrawScreen();
   }
 
-void SelColor() {
-  MenuData.P_Int = (int16_t*)static_cast<MenuItemPtrClass*>(CurrentMenu->SelectedItem())->value;
-  HMI_value.Color.r = GetRColor(*MenuData.P_Int);  // Red
-  HMI_value.Color.g = GetGColor(*MenuData.P_Int);  // Green
-  HMI_value.Color.b = GetBColor(*MenuData.P_Int);  // Blue
-  Draw_GetColor_Menu();
-}
+  void SelColor() {
+    MenuData.P_Int = (int16_t*)static_cast<MenuItemPtrClass*>(CurrentMenu->SelectedItem())->value;
+    HMI_value.Color.r = GetRColor(*MenuData.P_Int);  // Red
+    HMI_value.Color.g = GetGColor(*MenuData.P_Int);  // Green
+    HMI_value.Color.b = GetBColor(*MenuData.P_Int);  // Blue
+    Draw_GetColor_Menu();
+  }
 
-void LiveRGBColor() {
-    HMI_value.Color[CurrentMenu->line() - 2] = MenuData.Value;
+  void LiveRGBColor() {
+      HMI_value.Color[CurrentMenu->line() - 2] = MenuData.Value;
+      const uint16_t color = RGB(HMI_value.Color.r, HMI_value.Color.g, HMI_value.Color.b);
+      DWIN_Draw_Rectangle(1, color, 20, 315, DWIN_WIDTH - 20, 335);
+  }
+  void SetRGBColor() {
+    const uint8_t color = static_cast<MenuItemClass*>(CurrentMenu->SelectedItem())->icon;
+    SetIntOnClick(0, (color == 1) ? 63 : 31, HMI_value.Color[color], nullptr, LiveRGBColor);
+  }
+
+  void DWIN_ApplyColor() {
+    *MenuData.P_Int = RGB(HMI_value.Color.r, HMI_value.Color.g, HMI_value.Color.b);
+    DWINUI::SetColors(HMI_data.Text_Color, HMI_data.Background_Color, HMI_data.TitleBg_Color);
+    Draw_SelectColors_Menu();
+    hash_changed = true;
+    LCD_MESSAGE(MSG_COLORS_APPLIED);
+    DWIN_Draw_Dashboard();
+  }
+
+  void DWIN_ApplyColor(const int8_t element, const bool ldef/*=false*/) {
     const uint16_t color = RGB(HMI_value.Color.r, HMI_value.Color.g, HMI_value.Color.b);
-    DWIN_Draw_Rectangle(1, color, 20, 315, DWIN_WIDTH - 20, 335);
-}
-void SetRGBColor() {
-  const uint8_t color = static_cast<MenuItemClass*>(CurrentMenu->SelectedItem())->icon;
-  SetIntOnClick(0, (color == 1) ? 63 : 31, HMI_value.Color[color], nullptr, LiveRGBColor);
-}
-
-void DWIN_ApplyColor() {
-  *MenuData.P_Int = RGB(HMI_value.Color.r, HMI_value.Color.g, HMI_value.Color.b);
-  DWINUI::SetColors(HMI_data.Text_Color, HMI_data.Background_Color, HMI_data.TitleBg_Color);
-  Draw_SelectColors_Menu();
-  hash_changed = true;
-  LCD_MESSAGE(MSG_COLORS_APPLIED);
-  DWIN_Draw_Dashboard();
-}
-
-void DWIN_ApplyColor(const int8_t element, const bool ldef/*=false*/) {
-  const uint16_t color = RGB(HMI_value.Color.r, HMI_value.Color.g, HMI_value.Color.b);
-  switch (element) {
-    case  2: HMI_data.Background_Color = ldef ? Def_Background_Color : color; DWINUI::SetBackgroundColor(HMI_data.Background_Color); break;
-    case  3: HMI_data.Cursor_Color     = ldef ? Def_Cursor_Color     : color; break;
-    case  4: HMI_data.TitleBg_Color    = ldef ? Def_TitleBg_Color    : color; DWINUI::SetButtonColor(HMI_data.TitleBg_Color); break;
-    case  5: HMI_data.TitleTxt_Color   = ldef ? Def_TitleTxt_Color   : color; break;
-    case  6: HMI_data.Text_Color       = ldef ? Def_Text_Color       : color; DWINUI::SetTextColor(HMI_data.Text_Color); break;
-    case  7: HMI_data.Selected_Color   = ldef ? Def_Selected_Color   : color; break;
-    case  8: HMI_data.SplitLine_Color  = ldef ? Def_SplitLine_Color  : color; break;
-    case  9: HMI_data.Highlight_Color  = ldef ? Def_Highlight_Color  : color; break;
-    case 10: HMI_data.StatusBg_Color   = ldef ? Def_StatusBg_Color   : color; break;
-    case 11: HMI_data.StatusTxt_Color  = ldef ? Def_StatusTxt_Color  : color; break;
-    case 12: HMI_data.PopupBg_Color    = ldef ? Def_PopupBg_Color    : color; break;
-    case 13: HMI_data.PopupTxt_Color   = ldef ? Def_PopupTxt_Color   : color; break;
-    case 14: HMI_data.AlertBg_Color    = ldef ? Def_AlertBg_Color    : color; break;
-    case 15: HMI_data.AlertTxt_Color   = ldef ? Def_AlertTxt_Color   : color; break;
-    case 16: HMI_data.PercentTxt_Color = ldef ? Def_PercentTxt_Color : color; break;
-    case 17: HMI_data.Barfill_Color    = ldef ? Def_Barfill_Color    : color; break;
-    case 18: HMI_data.Indicator_Color  = ldef ? Def_Indicator_Color  : color; break;
-    case 19: HMI_data.Coordinate_Color = ldef ? Def_Coordinate_Color : color; break;
-    case 20: HMI_data.Bottom_Color     = ldef ? Def_Bottom_Color     : color; break;
-    default: break;
+    switch (element) {
+      case  2: HMI_data.Background_Color = ldef ? Def_Background_Color : color; DWINUI::SetBackgroundColor(HMI_data.Background_Color); break;
+      case  3: HMI_data.Cursor_Color     = ldef ? Def_Cursor_Color     : color; break;
+      case  4: HMI_data.TitleBg_Color    = ldef ? Def_TitleBg_Color    : color; DWINUI::SetButtonColor(HMI_data.TitleBg_Color); break;
+      case  5: HMI_data.TitleTxt_Color   = ldef ? Def_TitleTxt_Color   : color; break;
+      case  6: HMI_data.Text_Color       = ldef ? Def_Text_Color       : color; DWINUI::SetTextColor(HMI_data.Text_Color); break;
+      case  7: HMI_data.Selected_Color   = ldef ? Def_Selected_Color   : color; break;
+      case  8: HMI_data.SplitLine_Color  = ldef ? Def_SplitLine_Color  : color; break;
+      case  9: HMI_data.Highlight_Color  = ldef ? Def_Highlight_Color  : color; break;
+      case 10: HMI_data.StatusBg_Color   = ldef ? Def_StatusBg_Color   : color; break;
+      case 11: HMI_data.StatusTxt_Color  = ldef ? Def_StatusTxt_Color  : color; break;
+      case 12: HMI_data.PopupBg_Color    = ldef ? Def_PopupBg_Color    : color; break;
+      case 13: HMI_data.PopupTxt_Color   = ldef ? Def_PopupTxt_Color   : color; break;
+      case 14: HMI_data.AlertBg_Color    = ldef ? Def_AlertBg_Color    : color; break;
+      case 15: HMI_data.AlertTxt_Color   = ldef ? Def_AlertTxt_Color   : color; break;
+      case 16: HMI_data.PercentTxt_Color = ldef ? Def_PercentTxt_Color : color; break;
+      case 17: HMI_data.Barfill_Color    = ldef ? Def_Barfill_Color    : color; break;
+      case 18: HMI_data.Indicator_Color  = ldef ? Def_Indicator_Color  : color; break;
+      case 19: HMI_data.Coordinate_Color = ldef ? Def_Coordinate_Color : color; break;
+      case 20: HMI_data.Bottom_Color     = ldef ? Def_Bottom_Color     : color; break;
+      default: break;
+    }
   }
-}
 
-void Draw_SelectColors_Menu() {
-  checkkey = Menu;
-  if (SET_MENU(SelectColorMenu, MSG_COLORS_SELECT, 21)) {
-    BACK_ITEM(Draw_Control_Menu);
-    MENU_ITEM(ICON_ResetEEPROM, MSG_RESTORE_DEFAULTS, onDrawMenuItem, RestoreDefaultColors);
-    EDIT_ITEM_F(0, "Screen Background", onDrawSelColorItem, SelColor, &HMI_data.Background_Color);
-    EDIT_ITEM_F(0, "Cursor", onDrawSelColorItem, SelColor, &HMI_data.Cursor_Color);
-    EDIT_ITEM_F(0, "Title Background", onDrawSelColorItem, SelColor, &HMI_data.TitleBg_Color);
-    EDIT_ITEM_F(0, "Title Text", onDrawSelColorItem, SelColor, &HMI_data.TitleTxt_Color);
-    EDIT_ITEM_F(0, "Text", onDrawSelColorItem, SelColor, &HMI_data.Text_Color);
-    EDIT_ITEM_F(0, "Selected", onDrawSelColorItem, SelColor, &HMI_data.Selected_Color);
-    EDIT_ITEM_F(0, "Split Line", onDrawSelColorItem, SelColor, &HMI_data.SplitLine_Color);
-    EDIT_ITEM_F(0, "Highlight", onDrawSelColorItem, SelColor, &HMI_data.Highlight_Color);
-    EDIT_ITEM_F(0, "Status Background", onDrawSelColorItem, SelColor, &HMI_data.StatusBg_Color);
-    EDIT_ITEM_F(0, "Status Text", onDrawSelColorItem, SelColor, &HMI_data.StatusTxt_Color);
-    EDIT_ITEM_F(0, "Popup Background", onDrawSelColorItem, SelColor, &HMI_data.PopupBg_Color);
-    EDIT_ITEM_F(0, "Popup Text", onDrawSelColorItem, SelColor, &HMI_data.PopupTxt_Color);
-    EDIT_ITEM_F(0, "Alert Background", onDrawSelColorItem, SelColor, &HMI_data.AlertBg_Color);
-    EDIT_ITEM_F(0, "Alert Text", onDrawSelColorItem, SelColor, &HMI_data.AlertTxt_Color);
-    EDIT_ITEM_F(0, "Percent Text", onDrawSelColorItem, SelColor, &HMI_data.PercentTxt_Color);
-    EDIT_ITEM_F(0, "Bar Fill", onDrawSelColorItem, SelColor, &HMI_data.Barfill_Color);
-    EDIT_ITEM_F(0, "Indicator value", onDrawSelColorItem, SelColor, &HMI_data.Indicator_Color);
-    EDIT_ITEM_F(0, "Coordinate value", onDrawSelColorItem, SelColor, &HMI_data.Coordinate_Color);
-    EDIT_ITEM_F(0, "Bottom Line", onDrawSelColorItem, SelColor, &HMI_data.Bottom_Color);
+  void Draw_SelectColors_Menu() {
+    checkkey = Menu;
+    if (SET_MENU(SelectColorMenu, MSG_COLORS_SELECT, 21)) {
+      BACK_ITEM(Draw_Control_Menu);
+      MENU_ITEM(ICON_ResetEEPROM, MSG_RESTORE_DEFAULTS, onDrawMenuItem, RestoreDefaultColors);
+      EDIT_ITEM_F(0, "Screen Background", onDrawSelColorItem, SelColor, &HMI_data.Background_Color);
+      EDIT_ITEM_F(0, "Cursor", onDrawSelColorItem, SelColor, &HMI_data.Cursor_Color);
+      EDIT_ITEM_F(0, "Title Background", onDrawSelColorItem, SelColor, &HMI_data.TitleBg_Color);
+      EDIT_ITEM_F(0, "Title Text", onDrawSelColorItem, SelColor, &HMI_data.TitleTxt_Color);
+      EDIT_ITEM_F(0, "Text", onDrawSelColorItem, SelColor, &HMI_data.Text_Color);
+      EDIT_ITEM_F(0, "Selected", onDrawSelColorItem, SelColor, &HMI_data.Selected_Color);
+      EDIT_ITEM_F(0, "Split Line", onDrawSelColorItem, SelColor, &HMI_data.SplitLine_Color);
+      EDIT_ITEM_F(0, "Highlight", onDrawSelColorItem, SelColor, &HMI_data.Highlight_Color);
+      EDIT_ITEM_F(0, "Status Background", onDrawSelColorItem, SelColor, &HMI_data.StatusBg_Color);
+      EDIT_ITEM_F(0, "Status Text", onDrawSelColorItem, SelColor, &HMI_data.StatusTxt_Color);
+      EDIT_ITEM_F(0, "Popup Background", onDrawSelColorItem, SelColor, &HMI_data.PopupBg_Color);
+      EDIT_ITEM_F(0, "Popup Text", onDrawSelColorItem, SelColor, &HMI_data.PopupTxt_Color);
+      EDIT_ITEM_F(0, "Alert Background", onDrawSelColorItem, SelColor, &HMI_data.AlertBg_Color);
+      EDIT_ITEM_F(0, "Alert Text", onDrawSelColorItem, SelColor, &HMI_data.AlertTxt_Color);
+      EDIT_ITEM_F(0, "Percent Text", onDrawSelColorItem, SelColor, &HMI_data.PercentTxt_Color);
+      EDIT_ITEM_F(0, "Bar Fill", onDrawSelColorItem, SelColor, &HMI_data.Barfill_Color);
+      EDIT_ITEM_F(0, "Indicator value", onDrawSelColorItem, SelColor, &HMI_data.Indicator_Color);
+      EDIT_ITEM_F(0, "Coordinate value", onDrawSelColorItem, SelColor, &HMI_data.Coordinate_Color);
+      EDIT_ITEM_F(0, "Bottom Line", onDrawSelColorItem, SelColor, &HMI_data.Bottom_Color);
+    }
+    UpdateMenu(SelectColorMenu);
   }
-  UpdateMenu(SelectColorMenu);
-}
 
-void Draw_GetColor_Menu() {
-  checkkey = Menu;
-  if (SET_MENU(GetColorMenu, MSG_COLORS_GET, 5)) {
-    BACK_ITEM(DWIN_ApplyColor);
-    MENU_ITEM(ICON_Cancel, MSG_BUTTON_CANCEL, onDrawMenuItem, Draw_SelectColors_Menu);
-    MENU_ITEM(0, MSG_COLORS_RED, onDrawGetColorItem, SetRGBColor);
-    MENU_ITEM(1, MSG_COLORS_GREEN, onDrawGetColorItem, SetRGBColor);
-    MENU_ITEM(2, MSG_COLORS_BLUE, onDrawGetColorItem, SetRGBColor);
+  void Draw_GetColor_Menu() {
+    checkkey = Menu;
+    if (SET_MENU(GetColorMenu, MSG_COLORS_GET, 5)) {
+      BACK_ITEM(DWIN_ApplyColor);
+      MENU_ITEM(ICON_Cancel, MSG_BUTTON_CANCEL, onDrawMenuItem, Draw_SelectColors_Menu);
+      MENU_ITEM(0, MSG_COLORS_RED, onDrawGetColorItem, SetRGBColor);
+      MENU_ITEM(1, MSG_COLORS_GREEN, onDrawGetColorItem, SetRGBColor);
+      MENU_ITEM(2, MSG_COLORS_BLUE, onDrawGetColorItem, SetRGBColor);
+    }
+    UpdateMenu(GetColorMenu);
+    DWIN_Draw_Rectangle(1, *MenuData.P_Int, 20, 315, DWIN_WIDTH - 20, 335);
   }
-  UpdateMenu(GetColorMenu);
-  DWIN_Draw_Rectangle(1, *MenuData.P_Int, 20, 315, DWIN_WIDTH - 20, 335);
-}
 
 #endif
 
