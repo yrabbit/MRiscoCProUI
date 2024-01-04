@@ -2617,7 +2617,7 @@ void ApplyMove() {
   #endif
 #endif
 
-#if ENABLED(ADVANCED_PAUSE_FEATURE)
+#if ENABLED(CONFIGURE_FILAMENT_CHANGE)
   void SetFilLoad()   { SetPFloatOnClick(0, EXTRUDE_MAXLENGTH, UNITFDIGITS); }
   void SetFilUnload() { SetPFloatOnClick(0, EXTRUDE_MAXLENGTH, UNITFDIGITS); }
 #endif
@@ -3297,7 +3297,7 @@ void Draw_FilSet_Menu() {
         MENU_ITEM(ICON_Runout, MSG_RUNOUT_ACTIVE, onDrawRunoutActive, SetRunoutActive);
       #endif
     #endif
-    #if ENABLED(ADVANCED_PAUSE_FEATURE)
+    #if ENABLED(CONFIGURE_FILAMENT_CHANGE)
       EDIT_ITEM(ICON_FilLoad, MSG_FILAMENT_LOAD, onDrawPFloatMenu, SetFilLoad, &fc_settings[EXT].load_length);
       EDIT_ITEM(ICON_FilUnload, MSG_FILAMENT_UNLOAD, onDrawPFloatMenu, SetFilUnload, &fc_settings[EXT].unload_length);
     #endif
