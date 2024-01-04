@@ -230,7 +230,7 @@ jobs:
         sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
         if ($PWR); then PLMP='\/\/'; else PLMP=; fi;
         sed -i "s/[^ ]*#define HAS_CUSTOM_COLORS 1/$PLMP#define HAS_CUSTOM_COLORS 1/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define HAS_ESDIAG 1/$PLMP#define HAS_ESDIAG 1/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define REPORT_CAPABILITIES_GCODE/$PLMP#define REPORT_CAPABILITIES_GCODE/g" Marlin/Configuration.h
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/g" platformio.ini
         pio run
         mkdir temp
@@ -300,7 +300,7 @@ jobs:
         cp configurations/Voxelab\ Aquila/X3/Version.h Marlin/Version.h
         if ($PWR); then PLMP='\/\/'; else PLMP=; fi;
         sed -i "s/[^ ]*#define HAS_CUSTOM_COLORS 1/$PLMP#define HAS_CUSTOM_COLORS 1/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define HAS_ESDIAG 1/$PLMP#define HAS_ESDIAG 1/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define REPORT_CAPABILITIES_GCODE/$PLMP#define REPORT_CAPABILITIES_GCODE/g" Marlin/Configuration.h
         sed -i "s/default_envs =.*/default_envs = N32G455RE_voxelab_maple/g" platformio.ini
         pio run
         mkdir temp
@@ -381,7 +381,7 @@ jobs:
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
         if [[ $IS && $TP ]]; then ETEMP='\/\/'; else ETEMP=; fi;
-        sed -i "s/[^ ]*#define EXTENDED_CAPABILITIES_REPORT/$ETEMP#define EXTENDED_CAPABILITIES_REPORT/g" Marlin/Configuration_adv.h
+        sed -i "s/[^ ]*#define REPORT_CAPABILITIES_GCODE/$ETEMP#define REPORT_CAPABILITIES_GCODE/g" Marlin/Configuration_adv.h
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
