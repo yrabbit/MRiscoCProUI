@@ -215,7 +215,9 @@
   #include "feature/fanmux.h"
 #endif
 
-#include "module/tool_change.h"
+#if HAS_TOOLCHANGE
+  #include "module/tool_change.h"
+#endif
 
 #if HAS_FANCHECK
   #include "feature/fancheck.h"
