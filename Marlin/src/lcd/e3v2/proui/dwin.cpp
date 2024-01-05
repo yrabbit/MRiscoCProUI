@@ -1504,12 +1504,14 @@ void DWIN_HandleScreen() {
     case Leveling:        OPTCODE(PROUI_EX, HMI_WaitForUser()) break)
     OPTCODE(HAS_LOCKSCREEN,
     case Locked:          HMI_LockScreen(); break)
+
     case PrintDone:
     TERN_(HAS_ESDIAG,
     case ESDiagProcess:)
     TERN_(PLOT_TUNE_ITEM,
     case PlotProcess:)
     case WaitResponse:    HMI_WaitForUser(); break;
+
     case Homing:
     TERN_(PROUI_PID_TUNE,
     case PidProcess:)
@@ -1520,8 +1522,8 @@ void DWIN_HandleScreen() {
   }
 }
 
-bool IDisPopUp() {    // If ID is popup...
-  switch (checkkey) {
+bool IDisPopUp(const uint8_t id) {    // If ID is popup...
+  switch (id) {
     case NothingToDo:
     case WaitResponse:
     case Popup:
@@ -1542,7 +1544,8 @@ bool IDisPopUp() {    // If ID is popup...
 
 void HMI_SaveProcessID(const uint8_t id) {
   if (checkkey == id) return;
-  if (!IDisPopUp()) { last_checkkey = checkkey; } // if previous is not a popup
+  if (!IDisPopUp(id)) { last_checkkey = checkkey; } // if previous is not a popup
+  else if (checkkey == PlotProcess) { HMI_ReturnScreen(); }
   checkkey = id;
   switch (id) {
     case Popup:
@@ -1721,7 +1724,6 @@ void DWIN_HomingDone() {
       plot.draw(gfrm, _maxtemp, _target);
       DWINUI::Draw_Int(false, 2, HMI_data.StatusTxt_Color, HMI_data.PopupBg_Color, 3, gfrm.x + 80, gfrm.y - DWINUI::fontHeight() - 4, _target);
       DWINUI::Draw_Button(BTN_Continue, 86, 305, true);
-      DWIN_UpdateLCD();
     }
 
     void drawHPlot() {
