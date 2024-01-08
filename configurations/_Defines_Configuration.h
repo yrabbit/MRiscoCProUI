@@ -999,16 +999,15 @@
 // #define HAS_CUSTOM_COLORS 1
 // #define ALT_COLOR_MENU 0
 // #define ACTIVATE_MESH_ITEM
-// #define RUNOUT_TUNE_ITEM
 // #define HS_MENU_ITEM
-// #define PLOT_TUNE_ITEM
-// #define PLR_TUNE_ITEM
-// #define JD_TUNE_ITEM
-// #define ADVK_TUNE_ITEM
+// #define PROUI_ITEM_PLOT
+// #define PROUI_ITEM_PLR
+// #define PROUI_ITEM_JD
+// #define PROUI_ITEM_ADVK
 // #define SHOW_REAL_POS
 // #define CCLOUD_PRINT_SUPPORT
-// #define TRAMWIZ_MENU_ITEM
-// #define MEDIASORT_MENU_ITEM
+// #define PROUI_ITEM_TRAM
+// #define PROUI_MEDIASORT
 // #define ENC_MENU_ITEM
 // #define SHOW_SPEED_IND
 // #define NO_BLINK_IND
