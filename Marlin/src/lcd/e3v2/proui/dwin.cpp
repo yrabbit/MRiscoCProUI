@@ -1500,24 +1500,18 @@ void DWIN_HandleScreen() {
     case SetIntNoDraw:    HMI_SetNoDraw(); break;
     case PrintProcess:    HMI_Printing(); break;
     case Popup:           HMI_Popup(); break;
-    OPTCODE(HAS_BED_PROBE,
-    case Leveling:        OPTCODE(PROUI_EX, HMI_WaitForUser()) break)
     OPTCODE(HAS_LOCKSCREEN,
     case Locked:          HMI_LockScreen(); break)
 
+    #if ALL(HAS_BED_PROBE, PROUI_EX)
+      case Leveling:
+    #endif
     case PrintDone:
     TERN_(HAS_ESDIAG,
     case ESDiagProcess:)
     TERN_(PROUI_ITEM_PLOT,
     case PlotProcess:)
     case WaitResponse:    HMI_WaitForUser(); break;
-
-    case Homing:
-    TERN_(PROUI_PID_TUNE,
-    case PidProcess:)
-    TERN_(MPCTEMP,
-    case MPCProcess:)
-    case NothingToDo:     break;
     default: break;
   }
 }
@@ -1536,6 +1530,8 @@ bool IDisPopUp() {    // If ID is popup...
     case MPCProcess:)
     TERN_(HAS_ESDIAG,
     case ESDiagProcess:)
+    TERN_(PROUI_ITEM_PLOT,
+    case PlotProcess:)
       return true;
     default: break;
   }
@@ -1545,7 +1541,6 @@ bool IDisPopUp() {    // If ID is popup...
 void HMI_SaveProcessID(const uint8_t id) {
   if (checkkey == id) return;
   if (!IDisPopUp()) { last_checkkey = checkkey; } // if previous is not a popup
-  //TERN_(PROUI_ITEM_PLOT, if (checkkey == PlotProcess && (id == Homing || id == WaitResponse || id == Popup)) HMI_ReturnScreen();)
   checkkey = id;
   switch (id) {
     case Popup:
