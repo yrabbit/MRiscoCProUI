@@ -152,26 +152,6 @@
 
 #define BABY_Z_VAR TERN(HAS_BED_PROBE, probe.offset.z, HMI_data.ManualZOffset)
 
-#if ENABLED(PROUI_MEDIASORT) && DISABLED(SDCARD_SORT_ALPHA)
-  #error "PROUI_MEDIASORT requires SDCARD_SORT_ALPHA."
-#endif
-
-#if ENABLED(PROUI_ITEM_PLR) && DISABLED(POWER_LOSS_RECOVERY)
-  #warning "PROUI_ITEM_PLR requires POWER_LOSS_RECOVERY."
-#endif
-
-#if ENABLED(PROUI_ITEM_JD) && DISABLED(HAS_JUNCTION_DEVIATION)
-  #error "PROUI_ITEM_JD requires HAS_JUNCTION_DEVIATION."
-#endif
-
-#if ENABLED(PROUI_ITEM_ADVK) && DISABLED(LIN_ADVANCE)
-  #error "PROUI_ITEM_ADVK requires LIN_ADVANCE."
-#endif
-
-#if ENABLED(LCD_BED_TRAMMING) && DISABLED(BED_TRAMMING_INSET_LFRB)
-  #error "BED_TRAMMING_INSET_LFRB must be defined with LCD_BED_TRAMMING."
-#endif
-
 // Structs
 HMI_value_t HMI_value;
 HMI_flag_t HMI_flag{0};
@@ -1235,8 +1215,8 @@ void Draw_Main_Area() {
     case ESDiagProcess:          Draw_EndStopDiag(); break)
     OPTCODE(PROUI_ITEM_PLOT,
     case PlotProcess:
-      if (HMI_value.tempControl == PID_BED_START) drawBPlot();
-      else drawHPlot(); break)
+      if (HMI_value.tempControl == PID_BED_START) { drawBPlot(); }
+      else { drawHPlot(); } break)
     case Popup:                  Draw_Popup(); break;
     OPTCODE(HAS_LOCKSCREEN,
     case Locked:                 lockScreen.draw(); break)
