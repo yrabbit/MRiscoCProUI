@@ -788,7 +788,7 @@ void unified_bed_leveling::shift_mesh_height() {
         #define HUGE_VALF __FLT_MAX__
       #endif
 
-      TERN_(PROUI_EX, if (ProEx.QuitLeveling()) return DWIN_LevelingDone(););
+      TERN_(PROUI_EX, if (ProEx.QuitLeveling()) return ProEx.LevelingDone();)
 
       best = do_furthest // Points with valid data or HUGE_VALF are skipped
         ? find_furthest_invalid_mesh_point()
@@ -1192,13 +1192,13 @@ bool unified_bed_leveling::G29_parse_parameters() {
   }
 
   #if PROUI_EX // Always start from the center of the bed
-    float sx = X_CENTER - TERN0(HAS_BED_PROBE, probe.offset.x);
-    float sy = Y_CENTER - TERN0(HAS_BED_PROBE, probe.offset.y);
+    float sx = TERN(UBL_HILBERT_CURVE, 0, X_CENTER - TERN0(HAS_BED_PROBE, probe.offset.x));
+    float sy = TERN(UBL_HILBERT_CURVE, 0, Y_CENTER - TERN0(HAS_BED_PROBE, probe.offset.y));
   #else
     param.XY_seen.x = parser.seenval('X');
-    float sx = param.XY_seen.x ? parser.value_float() : current_position.x;
+    float sx = param.XY_seen.x ? parser.value_float() : TERN(UBL_HILBERT_CURVE, 0, X_CENTER - TERN0(HAS_BED_PROBE, probe.offset.x));
     param.XY_seen.y = parser.seenval('Y');
-    float sy = param.XY_seen.y ? parser.value_float() : current_position.y;
+    float sy = param.XY_seen.y ? parser.value_float() : TERN(UBL_HILBERT_CURVE, 0, Y_CENTER - TERN0(HAS_BED_PROBE, probe.offset.y));
 
     if (param.XY_seen.x != param.XY_seen.y) {
       SERIAL_ECHOLNPGM("Both X & Y locations must be specified.\n");
