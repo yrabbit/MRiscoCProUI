@@ -357,7 +357,9 @@ void Draw_MaxAccel_Menu();
 #if ENABLED(CLASSIC_JERK)
   void Draw_MaxJerk_Menu();
 #endif
-void Draw_Steps_Menu();
+#if ENABLED(EDITABLE_STEPS_PER_UNIT)
+  void Draw_Steps_Menu();
+#endif
 #if ANY(HAS_BED_PROBE, BABYSTEPPING)
   void Draw_ZOffsetWiz_Menu();
 #endif

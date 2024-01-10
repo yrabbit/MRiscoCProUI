@@ -142,8 +142,8 @@
 #endif
 
 // Editable temperature limits
-#define MIN_ETEMP  0
-#define MAX_ETEMP  thermalManager.hotend_max_target(0)
+#define MIN_ETEMP   0
+#define MAX_ETEMP   thermalManager.hotend_max_target(0)
 #define MIN_BEDTEMP 0
 #define MAX_BEDTEMP BED_MAX_TARGET
 
@@ -3533,7 +3533,9 @@ void Draw_Motion_Menu() {
     #elif HAS_JUNCTION_DEVIATION
       EDIT_ITEM(ICON_JDmm, MSG_JUNCTION_DEVIATION, onDrawPFloat3Menu, SetJDmm, &planner.junction_deviation_mm);
     #endif
-    MENU_ITEM(ICON_Step, MSG_STEPS_PER_MM, onDrawSubMenu, Draw_Steps_Menu);
+    #if ENABLED(EDITABLE_STEPS_PER_UNIT)
+      MENU_ITEM(ICON_Step, MSG_STEPS_PER_MM, onDrawSubMenu, Draw_Steps_Menu);
+    #endif
     #if ENABLED(SHAPING_MENU)
       MENU_ITEM(ICON_InputShaping, MSG_INPUT_SHAPING, onDrawSubMenu, Draw_InputShaping_Menu);
     #endif
@@ -3693,25 +3695,29 @@ void Draw_MaxAccel_Menu() {
 
 #endif // CLASSIC_JERK
 
-void Draw_Steps_Menu() {
-  checkkey = Menu;
-  if (SET_MENU(StepsMenu, MSG_STEPS_PER_MM, 5)) {
-    BACK_ITEM(Draw_Motion_Menu);
-    #if HAS_X_AXIS
-      EDIT_ITEM(ICON_StepX, MSG_A_STEPS, onDrawPFloat2Menu, SetStepsX, &planner.settings.axis_steps_per_mm[X_AXIS]);
-    #endif
-    #if HAS_Y_AXIS
-      EDIT_ITEM(ICON_StepY, MSG_B_STEPS, onDrawPFloat2Menu, SetStepsY, &planner.settings.axis_steps_per_mm[Y_AXIS]);
-    #endif
-    #if HAS_Z_AXIS
-      EDIT_ITEM(ICON_StepZ, MSG_C_STEPS, onDrawPFloat2Menu, SetStepsZ, &planner.settings.axis_steps_per_mm[Z_AXIS]);
-    #endif
-    #if HAS_HOTEND
-      EDIT_ITEM(ICON_StepE, MSG_E_STEPS, onDrawPFloat2Menu, SetStepsE, &planner.settings.axis_steps_per_mm[E_AXIS]);
-    #endif
+#if ENABLED(EDITABLE_STEPS_PER_UNIT)
+
+  void Draw_Steps_Menu() {
+    checkkey = Menu;
+    if (SET_MENU(StepsMenu, MSG_STEPS_PER_MM, 5)) {
+      BACK_ITEM(Draw_Motion_Menu);
+      #if HAS_X_AXIS
+        EDIT_ITEM(ICON_StepX, MSG_A_STEPS, onDrawPFloat2Menu, SetStepsX, &planner.settings.axis_steps_per_mm[X_AXIS]);
+      #endif
+      #if HAS_Y_AXIS
+        EDIT_ITEM(ICON_StepY, MSG_B_STEPS, onDrawPFloat2Menu, SetStepsY, &planner.settings.axis_steps_per_mm[Y_AXIS]);
+      #endif
+      #if HAS_Z_AXIS
+        EDIT_ITEM(ICON_StepZ, MSG_C_STEPS, onDrawPFloat2Menu, SetStepsZ, &planner.settings.axis_steps_per_mm[Z_AXIS]);
+      #endif
+      #if HAS_HOTEND
+        EDIT_ITEM(ICON_StepE, MSG_E_STEPS, onDrawPFloat2Menu, SetStepsE, &planner.settings.axis_steps_per_mm[E_AXIS]);
+      #endif
+    }
+    UpdateMenu(StepsMenu);
   }
-  UpdateMenu(StepsMenu);
-}
+
+#endif
 
 //=============================================================================
 // UI editable custom colors
