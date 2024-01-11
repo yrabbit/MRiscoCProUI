@@ -498,12 +498,11 @@ void Draw_Print_Labels() {
   TERN_(SHOW_INTERACTION_TIME, DWINUI::Draw_String(251, 173, F("Until Filament Change"));)
 }
 
-static uint8_t _percent_done = 255;
+static uint8_t _percent_done = 242;
 void Draw_Print_ProgressBar() {
-  const uint8_t percent_done = _percent_done;
   DWINUI::Draw_IconWB(ICON_Bar, 15, 93);
-  DWIN_Draw_Rectangle(1, HMI_data.Barfill_Color, 9 + (percent_done * 255), 93, 264, 113);
-  DWINUI::Draw_Int(HMI_data.PercentTxt_Color, HMI_data.Background_Color, 3, 117, 133, percent_done);
+  DWIN_Draw_Rectangle(1, HMI_data.Barfill_Color, 15 + (_percent_done * 242) / 100, 93, 257, 113);
+  DWINUI::Draw_Int(HMI_data.PercentTxt_Color, HMI_data.Background_Color, 3, 117, 133, _percent_done);
   DWINUI::Draw_String(HMI_data.PercentTxt_Color, 142, 133, F("%"));
 }
 
@@ -514,8 +513,8 @@ void Draw_Print_ProgressElapsed() {
   DWINUI::Draw_String(HMI_data.Text_Color, HMI_data.Background_Color, 47, 192, buf);
 }
 
-duration_t _remain_time = 0;
 #if ENABLED(SHOW_REMAINING_TIME)
+  duration_t _remain_time = 0;
   void Draw_Print_ProgressRemain() {
     MString<14> buf;
     buf.setf(F("%02i:%02i "), uint16_t(_remain_time.hour()), uint16_t(_remain_time.minute()));
@@ -1350,16 +1349,16 @@ void EachMomentUpdate() {
     if (checkkey == PrintProcess) { // print process
 
       // Progress percent
-      if (_percent_done != card.percentDone()) {
-        _percent_done = card.percentDone();
-        Draw_Print_ProgressBar();
-      }
+      _percent_done = card.percentDone();
+      Draw_Print_ProgressBar();
 
       // Remaining time
-      if (_remain_time != ui.get_remaining_time()) {
-        _remain_time = ui.get_remaining_time();
-        Draw_Print_ProgressRemain();
-      }
+      #if ENABLED(SHOW_REMAINING_TIME)
+        if (_remain_time != ui.get_remaining_time()) {
+          _remain_time = ui.get_remaining_time();
+          Draw_Print_ProgressRemain();
+        }
+      #endif
 
       #if ENABLED(SHOW_INTERACTION_TIME)
         // Interaction time
