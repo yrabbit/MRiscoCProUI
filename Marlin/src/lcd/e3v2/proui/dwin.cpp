@@ -496,10 +496,10 @@ void DWIN_DrawStatusMessage() {
 void Draw_Print_Labels() {
   DWINUI::Draw_String( 46, 173, GET_TEXT_F(MSG_INFO_PRINT_TIME));
   DWINUI::Draw_String(181, 173, GET_TEXT_F(MSG_REMAINING_TIME));
-  TERN_(SHOW_INTERACTION_TIME, DWINUI::Draw_String(251, 173, F("Until Filament Change"));)
+  TERN_(SHOW_INTERACTION_TIME, DWINUI::Draw_String(100, 215, F("Until Filament Change"));)
 }
 
-static uint8_t _percent_done = 242;
+static uint8_t _percent_done = 100;
 void Draw_Print_ProgressBar() {
   DWINUI::Draw_IconWB(ICON_Bar, 15, 93);
   DWIN_Draw_Rectangle(1, HMI_data.Barfill_Color, 15 + (_percent_done * 242) / 100, 93, 257, 113);
@@ -508,19 +508,19 @@ void Draw_Print_ProgressBar() {
 
 duration_t _printtime = print_job_timer.duration();
 void Draw_Print_ProgressElapsed() {
-  MString<14> buf;
+  char buf[10];
   const bool has_days = (_printtime.value > 60*60*24L);
-  buf.set(_printtime.toDigital(buf, has_days));
-  DWINUI::Draw_String(HMI_data.Text_Color, HMI_data.Background_Color, 65, 192, buf);
+  _printtime.toDigital(buf, has_days);
+  DWINUI::Draw_String(HMI_data.Text_Color, HMI_data.Background_Color, 45, 192, buf);
 }
 
 #if ENABLED(SHOW_REMAINING_TIME)
   duration_t _remain_time = 0;
   void Draw_Print_ProgressRemain() {
-    MString<14> buf;
+    char buf[10];
     const bool has_days = (_remain_time.value > 60*60*24L);
-    buf.set(_remain_time.toDigital(buf, has_days));
-    DWINUI::Draw_String(HMI_data.Text_Color, HMI_data.Background_Color, 200, 192, buf);
+    _remain_time.toDigital(buf, has_days);
+    DWINUI::Draw_String(HMI_data.Text_Color, HMI_data.Background_Color, 181, 192, buf);
   }
 #endif
 
@@ -562,7 +562,7 @@ void Draw_PrintProcess() {
   DWINUI::ClearMainArea();
   DWIN_Print_Header(nullptr);
   Draw_Print_Labels();
-  DWINUI::Draw_Icon(ICON_PrintTime, 15, 173);
+  DWINUI::Draw_Icon(ICON_PrintTime, 15, 171);
   DWINUI::Draw_Icon(ICON_RemainTime, 150, 171);
   Draw_Print_ProgressBar();
   Draw_Print_ProgressElapsed();
@@ -602,7 +602,7 @@ void Draw_PrintDone() {
   if (!haspreview) {
     Draw_Print_ProgressBar();
     Draw_Print_Labels();
-    DWINUI::Draw_Icon(ICON_PrintTime, 15, 173);
+    DWINUI::Draw_Icon(ICON_PrintTime, 15, 171);
     DWINUI::Draw_Icon(ICON_RemainTime, 150, 171);
     Draw_Print_ProgressElapsed();
     Draw_Print_ProgressRemain();
@@ -1351,8 +1351,10 @@ void EachMomentUpdate() {
     if (checkkey == PrintProcess) { // print process
 
       // Progress percent
-      _percent_done = card.percentDone();
-      Draw_Print_ProgressBar();
+      if (_percent_done != card.percentDone()) {
+        _percent_done = card.percentDone();
+        Draw_Print_ProgressBar();
+      }
 
       // Remaining time
       #if ENABLED(SHOW_REMAINING_TIME)
