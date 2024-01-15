@@ -248,7 +248,7 @@ jobs:
         if ($T13); then THMP="13"; else THMP="1"; fi;
         sed -i "s/.*#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
         if [ "$PWR" = true ] && [ "$TP" = true ]; then
-        sed -i "s/.*#define POWER_LOSS_RECOVERY/'\/\/'define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h;
+        sed -i "s/.*#define POWER_LOSS_RECOVERY/\/\/define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h;
         fi;
         pio run
         mkdir temp
@@ -402,9 +402,9 @@ jobs:
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if [ "$IS" = true ] && [ "$TP" = true ]; then
-        sed -i "s/.*#define USE_GRID_MESHVIEWER 1/'\/\/'#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h;
-        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/'\/\/'#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h;
-        sed -i "s/.*#define CAPABILITIES_REPORT/'\/\/'#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h;
+        sed -i "s/.*#define USE_GRID_MESHVIEWER 1/\/\/#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h;
+        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/\/\/#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h;
+        sed -i "s/.*#define CAPABILITIES_REPORT/\/\/#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h;
         fi;
         pio run
         mkdir temp
@@ -626,9 +626,9 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        if [ "$SKR" = V3_0 ]; then AVTMP="V3"
-        elif [ "$SKR" = V2_0 ]; then AVTMP="V2"
-        elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1"
+        if [ "$SKR" = V3_0 ]; then AVTMP="V3"; STMP="STM32G0B1RE"
+        elif [ "$SKR" = V2_0 ]; then AVTMP="V2"; STMP="STM32F103RC"
+        elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1"; STMP="STM32F401RC"
         fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         echo "filename=${DTMP}Aquila_SKR-Mini-E3-${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT
@@ -648,10 +648,6 @@ jobs:
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
-        if [ "$SKR" = V3_0 ]; then STMP="STM32G0B1RE"
-        elif [ "$SKR" = V2_0 ]; then STMP="STM32F103RC"
-        elif [ "$SKR" = V3_0_1 ]; then STMP="STM32F401RC"
-        fi;
         sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/" platformio.ini
         pio run
         mkdir temp
@@ -711,9 +707,9 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        if [ "$SKR" = V3_0 ]; then AVTMP="V3"
-        elif [ "$SKR" = V2_0 ]; then AVTMP="V2"
-        elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1"
+        if [ "$SKR" = V3_0 ]; then AVTMP="V3"; STMP="STM32G0B1RE"
+        elif [ "$SKR" = V2_0 ]; then AVTMP="V2"; STMP="STM32F103RC"
+        elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1"; STMP="STM32F401RC"
         fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         echo "filename=${DTMP}Aquila_SKR-Mini-E3-${AVTMP}_MM-ProUI.bin" >> $GITHUB_OUTPUT
@@ -733,10 +729,6 @@ jobs:
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
-        if [ "$SKR" = V3_0 ]; then STMP="STM32G0B1RE"
-        elif [ "$SKR" = V2_0 ]; then STMP="STM32F103RC"
-        elif [ "$SKR" = V3_0_1 ]; then STMP="STM32F401RC"
-        fi;
         sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/" platformio.ini
         pio run
         mkdir temp
