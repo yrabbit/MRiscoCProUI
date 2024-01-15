@@ -1977,6 +1977,8 @@ void DWIN_SetDataDefaults() {
   #if ENABLED(PROUI_MEDIASORT)
     HMI_data.MediaSort = true;
     card.setSortOn(TERN(SDSORT_REVERSE, AS_REV, AS_FWD));
+  #else
+    card.setSortOn(TERN(SDSORT_REVERSE, AS_REV, AS_FWD));
   #endif
   HMI_data.MediaAutoMount = DISABLED(PROUI_EX);
   #if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
