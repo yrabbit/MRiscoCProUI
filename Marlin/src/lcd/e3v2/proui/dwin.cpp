@@ -771,7 +771,9 @@ void update_variable() {
                _new_hotend_target = _hotendtarget != ht;
     if (_new_hotend_temp) { _hotendtemp = hc; }
     if (_new_hotend_target) { _hotendtarget = ht; }
-    if (thermalManager.degHotendNear(0, ht) || thermalManager.isHeatingHotend(EXT)) {
+
+    // if hotend is near target, or heating, ICON indicates hot
+    if (thermalManager.degHotendNear(EXT, ht) || thermalManager.isHeatingHotend(EXT)) {
       DWIN_Draw_Box(1, HMI_data.Background_Color, 9, 383, 20, 20);
       DWINUI::Draw_Icon(ICON_SetEndTemp, 9, 383);
     }
@@ -788,6 +790,8 @@ void update_variable() {
                _new_bed_target = _bedtarget != bt;
     if (_new_bed_temp) { _bedtemp = bc; }
     if (_new_bed_target) { _bedtarget = bt; }
+
+    // if bed is near target, heating, or if degrees > 44, ICON indicates hot
     if (thermalManager.degBedNear(bt) || thermalManager.isHeatingBed() || (bc > 44)) {
       DWIN_Draw_Box(1, HMI_data.Background_Color, 9, 416, 20, 20);
       DWINUI::Draw_Icon(ICON_BedTemp, 9, 416);
@@ -2298,10 +2302,9 @@ void Goto_ConfirmToPrint() {
 
   void WriteEeprom() {
     DWIN_DrawStatusLine(GET_TEXT_F(MSG_STORE_EEPROM));
-    const bool success = settings.save();
     safe_delay(500);
     DWIN_UpdateLCD();
-    DONE_BUZZ(success);
+    DONE_BUZZ(settings.save());
   }
 
   void ReadEeprom() {
@@ -2694,8 +2697,8 @@ void ApplyMove() {
         ypos = Y_BED_SIZE - lfrb[3];
         break;
       case 4: LCD_MESSAGE(MSG_TRAM_C);
-        xpos = X_BED_SIZE / 2;
-        ypos = Y_BED_SIZE / 2;
+        xpos = X_CENTER;
+        ypos = Y_CENTER;
         break;
     }
     #if HAS_BED_PROBE
@@ -2739,15 +2742,15 @@ void ApplyMove() {
         LCD_MESSAGE_F("Disable manual tramming");
         return;
       }
-      else LCD_MESSAGE_F("Bed Tramming Wizard Start");
+      else LCD_MESSAGE_F("Tramming Wizard Start");
       DWINUI::ClearMainArea();
       MeshViewer.DrawMeshGrid(2, 2);
-      static bed_mesh_t zval = {};
+      bed_mesh_t zval = {0};
       probe.stow();
       zval[0][0] = tram(0, false);  // First tram point can do Homing
+      if (checkkey == Homing) { MeshViewer.DrawMeshGrid(2, 2); }
       checkkey = NothingToDo;       // After home disable user input
-      MeshViewer.DrawMeshGrid(2, 2);
-      MeshViewer.DrawMeshPoint(0, 0, zval[0][0]);
+      MeshViewer.DrawMesh(zval, 2, 2);
       zval[1][0] = tram(1, false);
       MeshViewer.DrawMeshPoint(1, 0, zval[1][0]);
       zval[1][1] = tram(2, false);
@@ -2802,7 +2805,7 @@ void ApplyMove() {
         }
         DWINUI::Draw_CenteredString(120, F("Corners not leveled"));
         DWINUI::Draw_CenteredString(140, F("Knob adjustment required"));
-        DWINUI::Draw_CenteredString((s ? Color_Green : Color_Error_Red), 160, s ? GET_TEXT_F(MSG_TRAMWIZ_LOWER) : GET_TEXT_F(MSG_TRAMWIZ_RAISE));
+        DWINUI::Draw_CenteredString((s ? Color_Green : Color_Error_Red), 160, (s ? GET_TEXT_F(MSG_TRAMWIZ_LOWER) : GET_TEXT_F(MSG_TRAMWIZ_RAISE)));
         DWINUI::Draw_CenteredString(HMI_data.StatusTxt_Color, 180, plabel);
       }
       DWINUI::Draw_Button(BTN_Continue, 86, 305, true);
