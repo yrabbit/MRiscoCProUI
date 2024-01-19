@@ -2117,8 +2117,10 @@ void DWIN_InitScreen() {
     //bedLevelTools.mesh_reset();
     (void)settings.load();
   #endif
-  TERN_(LASER_SYNCHRONOUS_M106_M107, thermalManager.set_fan_speed(0, 0);
-  planner.buffer_sync_block(BLOCK_BIT_SYNC_FANS);)
+  #if ENABLED(LASER_SYNCHRONOUS_M106_M107)  // Zero fans speed at boot with LASER_SYNCHRONOUS_M106_M107
+    thermalManager.zero_fan_speeds();
+    planner.buffer_sync_block(BLOCK_BIT_SYNC_FANS);
+  #endif
   LCD_MESSAGE(WELCOME_MSG);
 }
 
