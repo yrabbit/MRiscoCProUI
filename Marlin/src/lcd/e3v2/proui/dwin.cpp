@@ -1344,8 +1344,8 @@ void EachMomentUpdate() {
       else { DWIN_Print_Finished(); }
     }
 
-    if ((print_job_timer.isPaused() != HMI_flag.pause_flag) && (checkkey != Homing)) {
-      HMI_flag.pause_flag = print_job_timer.isPaused();
+    if ((HMI_flag.pause_flag != printingIsPaused()) && (checkkey != Homing)) {
+      HMI_flag.pause_flag = printingIsPaused();
       DEBUG_ECHOLNPGM("pause_flag: ", HMI_flag.pause_flag);
       if (HMI_flag.pause_flag) { DWIN_Print_Pause(); }
       else if (HMI_flag.abort_flag) { DWIN_Print_Aborted(); }
@@ -3005,9 +3005,9 @@ void onDrawGetColorItem(MenuItemClass* menuitem, int8_t line) {
   const uint8_t i = menuitem->icon;
   uint16_t color;
   switch (i) {
-    case 0: color = RGB(31, 0, 0); break; // Red
-    case 1: color = RGB(0, 63, 0); break; // Green
-    case 2: color = RGB(0, 0, 31); break; // Blue
+    case 0:  color = RGB(31, 0, 0); break; // Red
+    case 1:  color = RGB(0, 63, 0); break; // Green
+    case 2:  color = RGB(0, 0, 31); break; // Blue
     default: color = 0; break;
   }
   DWIN_Draw_Rectangle(0, HMI_data.Highlight_Color, ICOX + 1, MBASE(line) - 1 + 1, ICOX + 18, MBASE(line) - 1 + 18);
@@ -3835,9 +3835,9 @@ void Draw_MaxAccel_Menu() {
     if (SET_MENU(GetColorMenu, MSG_COLORS_GET, 5)) {
       BACK_ITEM(DWIN_ApplyColor);
       MENU_ITEM(ICON_Cancel, MSG_BUTTON_CANCEL, onDrawMenuItem, Draw_SelectColors_Menu);
-      MENU_ITEM(0, MSG_COLORS_RED, onDrawGetColorItem, SetRGBColor);
+      MENU_ITEM(0, MSG_COLORS_RED,   onDrawGetColorItem, SetRGBColor);
       MENU_ITEM(1, MSG_COLORS_GREEN, onDrawGetColorItem, SetRGBColor);
-      MENU_ITEM(2, MSG_COLORS_BLUE, onDrawGetColorItem, SetRGBColor);
+      MENU_ITEM(2, MSG_COLORS_BLUE,  onDrawGetColorItem, SetRGBColor);
     }
     UpdateMenu(GetColorMenu);
     DWIN_Draw_Rectangle(1, *MenuData.P_Int, 20, 315, DWIN_WIDTH - 20, 335);
