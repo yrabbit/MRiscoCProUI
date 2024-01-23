@@ -1048,6 +1048,11 @@
 #endif
 
 //
+// LCD / Controller Pins based on board expansion headers with adapters
+//
+#include "pins_lcd.h"
+
+//
 // Post-process pins according to configured settings
 //
 #include "pins_postprocess.h"
