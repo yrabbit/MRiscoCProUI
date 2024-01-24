@@ -2492,13 +2492,8 @@
   #define HAS_PID_HEATING 1
 #endif
 
-#if ENABLED(DWIN_LCD_PROUI)
-  #if ANY(PIDTEMP, PIDTEMPBED)
-    #define PROUI_PID_TUNE 1
-  #endif
-  #if ANY(PROUI_PID_TUNE, MPC_AUTOTUNE) && DISABLED(DISABLE_TUNING_GRAPH)
-    #define PROUI_TUNING_GRAPH 1
-  #endif
+#if ANY(HAS_PID_HEATING, MPC_AUTOTUNE) && ENABLED(DWIN_LCD_PROUI) && DISABLED(DISABLE_TUNING_GRAPH)
+  #define PROUI_TUNING_GRAPH 1
 #endif
 
 // Thermal protection
@@ -3223,6 +3218,18 @@
 #else
   #undef SOUND_MENU_ITEM   // No buzzer menu item without a buzzer
   #undef SOUND_ON_DEFAULT
+#endif
+
+/**
+ * Make sure DOGLCD_SCK and DOGLCD_MOSI are defined.
+ */
+#if HAS_MARLINUI_U8GLIB
+  #ifndef DOGLCD_SCK
+    #define DOGLCD_SCK  SD_SCK_PIN
+  #endif
+  #ifndef DOGLCD_MOSI
+    #define DOGLCD_MOSI SD_MOSI_PIN
+  #endif
 #endif
 
 /**
