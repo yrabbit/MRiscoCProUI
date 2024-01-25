@@ -1050,12 +1050,21 @@
 #if HAS_DWIN_E3V2 || IS_DWIN_MARLINUI
   #define SERIAL_CATCHALL 0
   #define HAS_LCD_BRIGHTNESS 1
-  #define LCD_BRIGHTNESS_MAX 255
+  #if ENABLED(TJC_DISPLAY)
+    #define LCD_BRIGHTNESS_MIN 6
+    #define LCD_BRIGHTNESS_MAX 40
+  #else
+    #define LCD_BRIGHTNESS_MAX 255
+  #endif
 #endif
 
 #if ENABLED(DWIN_LCD_PROUI)
   #define DO_LIST_BIN_FILES 1
-  #define LCD_BRIGHTNESS_DEFAULT 100
+  #if ENABLED(TJC_DISPLAY)
+    #define LCD_BRIGHTNESS_DEFAULT 16
+  #else
+    #define LCD_BRIGHTNESS_DEFAULT 100
+  #endif
 #endif
 
 // Serial Controllers require LCD_SERIAL_PORT
