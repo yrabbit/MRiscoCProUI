@@ -1667,7 +1667,7 @@
  * A total of 2 does fast/slow probes with a weighted average.
  * A total of 3 or more adds more slow probes, taking the average.
  */
-#define MULTIPLE_PROBING 1
+#define MULTIPLE_PROBING 2
 //#define EXTRA_PROBING  1
 
 /**
@@ -3455,10 +3455,10 @@
   #define HAS_GCODE_PREVIEW 1
   #define DISABLE_TUNING_GRAPH 0// Temp plot graph - PID/MPC Tuning (1624 bytes of flash)
   #define HAS_ESDIAG 1          // View End-stop switch continuity (560 bytes of flash)
-  #define HAS_CGCODE 1          // Extra Gcode options (3320 bytes of flash)
+  //#define HAS_CGCODE 1        // Extra Gcode options (3320 bytes of flash)
   //#define HAS_LOCKSCREEN 1    // Simple lockscreen as to not accidentally change something (568 bytes of flash)
   #define USE_GRID_MESHVIEWER 1 // Enable two mesh graph types : one (1728 bytes of flash)
-  //#define HAS_CUSTOM_COLORS 1 // Able to change display colors (2040 bytes of flash)
+  #define HAS_CUSTOM_COLORS 1   // Able to change display colors (2040 bytes of flash)
   #define ALT_COLOR_MENU 0      // Color palette options >> 0 = Voxelab Default | 1 = Alternate Aquila | 2 = Ender3V2 Default
   #if ENABLED(AUTO_BED_LEVELING_UBL)
     //#define ACTIVATE_MESH_ITEM// Active Mesh Leveling menu option (152 bytes of flash)

@@ -2114,7 +2114,7 @@ void Init(){
     safe_delay(20);
     uVar2 = uVar3;
   } while (uVar3 != 15);
-  char ver[20];
+  char ver[25];
   sprintf(ver, "Version: %s", SHORT_BUILD_VERSION);
   DWINUI::Draw_CenteredString(2, Color_Cyan, 230, TERN(PROUI_EX, F("MRiscoC ProUI"), F("MRiscoC NoPro"))) ;
   DWINUI::Draw_CenteredString((fontid_t)2, Color_White, 260, F(ver));
@@ -2567,13 +2567,13 @@ void ApplyMove() {
     void SetProbeZSpeed()  { SetPIntOnClick(60, 1000); }
     #if DISABLED(BD_SENSOR)
       void ApplyProbeMultiple() { PRO_data.multiple_probing = MenuData.Value; }
-      void SetProbeMultiple()  { SetIntOnClick(0, 4, PRO_data.multiple_probing, ApplyProbeMultiple); }
+      void SetProbeMultiple()  { SetIntOnClick(1, 4, PRO_data.multiple_probing, ApplyProbeMultiple); }
     #endif
   #else
     void SetProbeZSpeed()  { SetPIntOnClick(60, 1000); }
     #if DISABLED(BD_SENSOR)
       void ApplyProbeMultiple() { HMI_data.multiple_probing = MenuData.Value; }
-      void SetProbeMultiple()  { SetIntOnClick(0, 4, HMI_data.multiple_probing, ApplyProbeMultiple); }
+      void SetProbeMultiple()  { SetIntOnClick(1, 4, HMI_data.multiple_probing, ApplyProbeMultiple); }
     #endif
   #endif
 

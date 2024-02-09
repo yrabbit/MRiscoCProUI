@@ -628,7 +628,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_ZPROBE_YOFFSET                 = _UxGT("Probe Y Offset");
   LSTR MSG_ZPROBE_ZOFFSET                 = _UxGT("Z-Offset");
   LSTR MSG_ZPROBE_MARGIN                  = _UxGT("Probe Margin");
-  LSTR MSG_ZPROBE_MULTIPLE                = _UxGT("Extra Probing");
+  LSTR MSG_ZPROBE_MULTIPLE                = _UxGT("Multiple Probing");
   LSTR MSG_Z_FEED_RATE                    = _UxGT("Z Feed Rate");
   LSTR MSG_ENABLE_HS_MODE                 = _UxGT("Enable HS Mode");
   LSTR MSG_MOVE_NOZZLE_TO_BED             = _UxGT("Center Nozzle on Bed");
