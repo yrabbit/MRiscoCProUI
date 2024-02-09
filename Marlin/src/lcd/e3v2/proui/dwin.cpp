@@ -969,11 +969,11 @@ void onClickSDItem() {
     }
     else if ((selected >= 1 + hasUpDir) && (shift_len > MENU_CHAR_LIMIT)) {
       uint8_t shift_new = _MIN(shift_amt + 1, shift_len - MENU_CHAR_LIMIT); // Try to shift by...
-      Draw_SDItem_Shifted(shift_new);             // Draw the item
-      if (shift_new == shift_amt) {               // Scroll reached the end
-        shift_new = -1;                           // Reset
+      Draw_SDItem_Shifted(shift_new); // Draw the item
+      if (shift_new == shift_amt) {   // Scroll reached the end
+        shift_new = -1;               // Reset
       }
-      shift_amt = shift_new;                      // Set new scroll
+      shift_amt = shift_new;          // Set new scroll
     }
   }
 #else
@@ -1104,17 +1104,12 @@ void Draw_Info_Menu() {
 
   #if PROUI_EX
     Init();
-    //preview.drawBootIMG();
   #else
     DWINUI::Draw_CenteredString(198, GET_TEXT_F(MSG_INFO_FWVERSION));
     DWINUI::Draw_CenteredString(218, F(SHORT_BUILD_VERSION));
     DWINUI::Draw_CenteredString(251, GET_TEXT_F(MSG_INFO_BUILD));
     DWINUI::Draw_CenteredString(271, F(DateTime));
   #endif
-// 65+
-// 200
-// 25+
-// 117
     // Draw the face
     // DWINUI::Draw_FillCircle(0xFF0F, 128, 320, 50);
     // Draw the eyes
@@ -1126,8 +1121,6 @@ void Draw_Info_Menu() {
     // DWIN_Draw_Line(0x0000, 80+28, 115+218, 89+28, 124+218);
     // DWIN_Draw_Line(0x0000, 111+28, 124+218, 120+28, 115+218);
     // DWIN_Draw_Line(0x0000, 111+28, 124+218, 89+28, 124+218);
-
-
 }
 
 // Main Process
@@ -1264,16 +1257,6 @@ void HMI_WaitForUser() {
     //idle();
     return ui.refresh_brightness();
   }
-  //if (encoder_diffState == ENCODER_DIFF_ENTER) { wait_for_user = false; }
-  // if (!wait_for_user && HMI_flag.cancel_lev && checkkey == Leveling) {
-  //   #if HAS_BED_PROBE
-  //     TERN(PROUI_EX, ProEx.StopLeveling(), HMI_ReturnScreen());
-  //   #endif
-  //   HMI_flag.cancel_lev = 1;
-  //   HMI_ReturnScreen();
-  //   DWIN_DrawStatusLine("Canceling auto leveling...");
-  //   DWIN_UpdateLCD();
-  // }
   if (!wait_for_user) {
     switch (checkkey) {
       case PrintDone:
@@ -1286,8 +1269,6 @@ void HMI_WaitForUser() {
           DWIN_DrawStatusLine("Canceling auto leveling...");
           DWIN_UpdateLCD();
           break;
-
-          //TERN(PROUI_EX, ProEx.StopLeveling(), HMI_ReturnScreen());
       #endif
       case NothingToDo:
         break;
@@ -1610,12 +1591,8 @@ void DWIN_HomingDone() {
       HMI_flag.cancel_lev = 0;
       HMI_SaveProcessID(Leveling);
       Title.ShowCaption(GET_TEXT_F(MSG_BED_LEVELING));
-      //#if ENABLED(AUTO_BED_LEVELING_UBL)
       MeshViewer.DrawMeshGrid(GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y);
       DWINUI::Draw_Button(BTN_Cancel, 86, 305, true);
-      //#else
-      //  DWIN_Show_Popup(ICON_AutoLeveling, GET_TEXT_F(MSG_BED_LEVELING), GET_TEXT_F(MSG_PLEASE_WAIT), BTN_Cancel);
-      //#endif
     #elif ENABLED(MESH_BED_LEVELING)
       Draw_AdvancedSettings_Menu();
     #endif
@@ -1639,25 +1616,6 @@ void DWIN_HomingDone() {
       #endif
     #endif
   }
-
-// void StopLeveling() {
-//   HMI_flag |= 64;
-//   HMI_flag.cancel_lev = 1;
-//   DWIN_DrawStatusLine("Canceling auto leveling...");
-//   DWIN_UpdateLCD();
-//   return;
-// }
-
-// void LevelingDone() {
-//   wait_for_user = false;
-//   if (HMI_flag.cancel_lev) {
-//     Probe::set_deployed(false, false);
-//     reset_bed_level();
-//     ui.set_status(F("Mesh was cancelled"), false);
-//     return HMI_ReturnScreen();
-//   }
-//   return Goto_MeshViewer(true);
-// }
 
   #if ALL(HAS_MESH, HAS_BED_PROBE)
     void DWIN_LevelingDone() {
@@ -3238,6 +3196,8 @@ void Draw_Control_Menu() {
     #endif
     #if HAS_HOME_OFFSET
       MENU_ITEM(ICON_HomeOffset, MSG_SET_HOME_OFFSETS, onDrawSubMenu, Draw_HomeOffset_Menu);
+    #elif ALL(PROUI_EX, NOZZLE_PARK_FEATURE)
+      MENU_ITEM(ICON_ParkPos, MSG_FILAMENT_PARK_ENABLED, onDrawSubMenu, Draw_ParkPos_Menu);
     #endif
     #if HAS_CUSTOM_COLORS
       MENU_ITEM(ICON_Scolor, MSG_COLORS_SELECT, onDrawSubMenu, Draw_SelectColors_Menu);
@@ -3298,6 +3258,9 @@ void Draw_Move_Menu() {
     checkkey = Menu;
     if (SET_MENU(HomeOffMenu, MSG_SET_HOME_OFFSETS, 6)) {
       BACK_ITEM(Draw_Control_Menu);
+      #if ALL(PROUI_EX, NOZZLE_PARK_FEATURE)
+        MENU_ITEM(ICON_ParkPos, MSG_FILAMENT_PARK_ENABLED, onDrawSubMenu, Draw_ParkPos_Menu);
+      #endif
       #if HAS_X_AXIS
         EDIT_ITEM(ICON_HomeOffsetX, MSG_HOME_OFFSET_X, onDrawPFloatMenu, SetHomeOffsetX, &home_offset.x);
       #endif
@@ -3307,12 +3270,7 @@ void Draw_Move_Menu() {
       #if HAS_Z_AXIS
         EDIT_ITEM(ICON_HomeOffsetZ, MSG_HOME_OFFSET_Z, onDrawPFloatMenu, SetHomeOffsetZ, &home_offset.z);
       #endif
-      #if ALL(PROUI_EX, NOZZLE_PARK_FEATURE)
-        MENU_ITEM(ICON_ParkPos, MSG_FILAMENT_PARK_ENABLED, onDrawSubMenu, Draw_ParkPos_Menu);
-      #endif
-      #if HAS_HOME_OFFSET
-        MENU_ITEM_F(ICON_SetHome, "Set as Home position: 0,0,0", onDrawMenuItem, SetHome);
-      #endif
+      MENU_ITEM_F(ICON_SetHome, "Set as Home position: 0,0,0", onDrawMenuItem, SetHome);
     }
     UpdateMenu(HomeOffMenu);
   }
@@ -3381,11 +3339,12 @@ void Draw_FilSet_Menu() {
 }
 
 #if PROUI_EX
+
   #if ENABLED(NOZZLE_PARK_FEATURE)
     void Draw_ParkPos_Menu() {
       checkkey = Menu;
       if (SET_MENU(ParkPosMenu, MSG_FILAMENT_PARK_ENABLED, 4)) {
-        BACK_ITEM(Draw_HomeOffset_Menu);
+        BACK_ITEM(TERN(HAS_HOME_OFFSET, Draw_HomeOffset_Menu, Draw_Control_Menu));
         EDIT_ITEM(ICON_ParkPosX, MSG_PARK_XPOSITION, onDrawPIntMenu, SetParkPosX, &PRO_data.Park_point.x);
         EDIT_ITEM(ICON_ParkPosY, MSG_PARK_YPOSITION, onDrawPIntMenu, SetParkPosY, &PRO_data.Park_point.y);
         EDIT_ITEM(ICON_ParkPosZ, MSG_PARK_ZRAISE, onDrawPIntMenu, SetParkZRaise, &PRO_data.Park_point.z);
@@ -4324,13 +4283,15 @@ void Draw_MaxAccel_Menu() {
 //=============================================================================
 #if ENABLED(CV_LASER_MODULE)
 
-  // Make the current position 0,0,0
-  void SetHome() {
-    laser_device.homepos += current_position;
-    set_all_homed();
-    gcode.process_subcommands_now(F("G92X0Y0Z0"));
-    ReDrawMenu();
-  }
+  #if HAS_HOME_OFFSET
+    // Make the current position 0,0,0
+    void SetHome() {
+      laser_device.homepos += current_position;
+      set_all_homed();
+      gcode.process_subcommands_now(F("G92X0Y0Z0"));
+      ReDrawMenu();
+    }
+  #endif
 
   void LaserOn(const bool turn_on) {
     laser_device.laser_set(turn_on);
@@ -4369,7 +4330,7 @@ void Draw_MaxAccel_Menu() {
       EDIT_ITEM_F(ICON_LaserFocus, "Laser Focus", onDrawPFloatMenu, SetMoveZ, &current_position.z);
       EDIT_ITEM(ICON_MoveX, MSG_MOVE_X, onDrawPFloatMenu, SetMoveX, &current_position.x);
       EDIT_ITEM(ICON_MoveY, MSG_MOVE_Y, onDrawPFloatMenu, SetMoveY, &current_position.y);
-      MENU_ITEM_F(ICON_SetHome, "Set as Home", onDrawMenuItem, SetHome);
+      TERN_(HAS_HOME_OFFSET, MENU_ITEM_F(ICON_SetHome, "Set as Home position: 0,0,0", onDrawMenuItem, SetHome);)
     }
     UpdateMenu(LaserSettings);
   }

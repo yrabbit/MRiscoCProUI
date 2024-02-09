@@ -269,7 +269,6 @@ jobs:
       matrix:
         chip: [GD32,N32]
         tjc: [true,false]
-        pwr: [true]
         t13: [true,false]
     steps:
     - uses: actions/checkout@v3
@@ -316,10 +315,11 @@ jobs:
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
+        sed -i "s/.*#define USE_GRID_MESHVIEWER 1/\/\/#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h
         sed -i "s/.*#define SHOW_SPEED_IND/\/\/#define SHOW_SPEED_IND/" Marlin/Configuration.h
-        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/\/\/#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
+        sed -i "s/.*#define PROUI_ITEM_PLR/\/\/#define PROUI_ITEM_PLR/" Marlin/Configuration.h
         sed -i "s/.*#define POWER_LOSS_RECOVERY/#define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define CAPABILITIES_REPORT/\/\/#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define NO_HOME_OFFSETS/#define NO_HOME_OFFSETS/" Marlin/Configuration_adv.h
         if ($T13); then THMP="13"; DSMP="425"; else THMP="1"; DSMP="98"; fi;
         sed -i "s/.*#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
         sed -i "s/.*#define DEFAULT_AXIS_STEPS_PER_UNIT.*/#define DEFAULT_AXIS_STEPS_PER_UNIT { 80,80,400,${DSMP} }/" Marlin/Configuration.h
@@ -329,7 +329,6 @@ jobs:
       env:
         AQUILA_VER: ${{ matrix.chip }}
         TJC: ${{ matrix.tjc }}
-        PWR: ${{ matrix.pwr }}
         T13: ${{ matrix.t13 }}
     - name: Get release
       id: get_release
