@@ -26,7 +26,7 @@
 
 ### - Please read this: -
 > [!NOTE]
-Many Updates have been included in the most recent MRiscoCProUI for the **2024-January** release.
+Many Updates have been included in the most recent MRiscoCProUI for the **2024-February** release.
 This release has many changes to the **UI**.
 New ICON's have been added, and old ones enhanced. Whoever edited them before saved directly as .*JPG* which in many editors lowers the quality of the image. I painstakingly remastered almost every single one; preserving the original quality.
 
@@ -108,9 +108,9 @@ The Precompiled binary files of this firmware can work with STM32 (STM32F103RET6
 ## Donations
 
 Please consider making a donation, as large or as small and as often as you'd like.
-Thank you for your support, I receive donations through  
-[Ko-fi](https://ko-fi.com/classicrocker883)  
-[Venmo](https://venmo.com/u/andrewleduc88)  
+Thank you for your support, I receive donations through
+[Ko-fi](https://ko-fi.com/classicrocker883)
+[Venmo](https://venmo.com/u/andrewleduc88)
 [Paypal](https://www.paypal.com/paypalme/andrewleduc)
 
 [<img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif">](https://www.paypal.com/donate/?business=PFNSKQX9WQQ8W&no_recurring=0&currency_code=USD)  **PayPal**
