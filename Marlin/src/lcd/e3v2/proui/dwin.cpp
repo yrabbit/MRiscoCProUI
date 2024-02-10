@@ -285,9 +285,7 @@ MenuClass *PIDMenu = nullptr;
   #if ENABLED(PROUI_MESH_EDIT)
     MenuClass *EditMeshMenu = nullptr;
   #endif
-  #if PROUI_EX
-    MenuClass *MeshInsetMenu = nullptr;
-  #endif
+  MenuClass *MeshInsetMenu = nullptr;
 #endif
 #if ENABLED(SHAPING_MENU)
   MenuClass *InputShapingMenu = nullptr;
@@ -1995,7 +1993,7 @@ void DWIN_SetDataDefaults() {
     card.setSortOn(TERN(SDSORT_REVERSE, AS_REV, AS_FWD));
   #endif
   HMI_data.MediaAutoMount = DISABLED(PROUI_EX);
-  #if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)// NoPro Mesh_Inset workaround
+  #if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
     HMI_data.z_after_homing = DEF_Z_AFTER_HOMING;
   #endif
   IF_DISABLED(HAS_BED_PROBE, HMI_data.ManualZOffset = 0;)
@@ -2383,7 +2381,7 @@ void AutoHome() { queue.inject_P(G28_STR); }
   void HomeX() { queue.inject(F("G28X")); }
   void HomeY() { queue.inject(F("G28Y")); }
   void HomeZ() { queue.inject(F("G28Z")); }
-  #if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)// NoPro Mesh_Inset workaround
+  #if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
     void ApplyZAfterHoming() { HMI_data.z_after_homing = MenuData.Value; }
     void SetZAfterHoming() { SetIntOnClick(0, 20, HMI_data.z_after_homing, ApplyZAfterHoming); }
   #endif
@@ -4082,7 +4080,7 @@ void Draw_MaxAccel_Menu() {
         MENU_ITEM(ICON_Park, MSG_FILAMENT_PARK_ENABLED, onDrawMenuItem, ParkHead);
       #endif
       MENU_ITEM(ICON_MoveZ, MSG_TOOL_CHANGE_ZLIFT, onDrawMenuItem, RaiseHead);
-      #if ENABLED(MESH_BED_LEVELING)// NoPro Mesh_Inset workaround
+      #if ENABLED(MESH_BED_LEVELING)
         EDIT_ITEM(ICON_ZAfterHome, MSG_Z_AFTER_HOME, onDrawPInt8Menu, SetZAfterHoming, &HMI_data.z_after_homing);
       #endif
     }
@@ -4223,10 +4221,10 @@ void Draw_MaxAccel_Menu() {
       #endif
       #if PROUI_EX
         MENU_ITEM(ICON_MeshPoints, MSG_MESH_POINTS, onDrawMeshPoints, SetMeshPoints);
-        MENU_ITEM(ICON_ProbeMargin, MSG_MESH_INSET, onDrawSubMenu, Draw_MeshInset_Menu);
       #else
         EDIT_ITEM(ICON_MeshPoints, MSG_MESH_POINTS, onDrawPInt8Menu, SetMeshPoints, &HMI_data.grid_max_points);
       #endif
+      MENU_ITEM(ICON_ProbeMargin, MSG_MESH_INSET, onDrawSubMenu, Draw_MeshInset_Menu);
       #if ALL(HAS_HEATED_BED, PREHEAT_BEFORE_LEVELING)
         EDIT_ITEM(ICON_Temperature, MSG_UBL_SET_TEMP_BED, onDrawPIntMenu, SetBedLevT, &HMI_data.BedLevT);
       #endif
@@ -4259,22 +4257,20 @@ void Draw_MaxAccel_Menu() {
     }
   #endif
 
-  #if PROUI_EX
-    void Draw_MeshInset_Menu() {
-      checkkey = Menu;
-      if (SET_MENU(MeshInsetMenu, MSG_MESH_INSET, 7)) {
-        BACK_ITEM(Draw_MeshSet_Menu);
-        EDIT_ITEM(ICON_Box, MSG_MESH_MIN_X, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_min_x);
-        EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_X, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_max_x);
-        EDIT_ITEM(ICON_Box, MSG_MESH_MIN_Y, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_min_y);
-        EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_Y, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_max_y);
-        MENU_ITEM(ICON_AxisC, MSG_MESH_AMAX, onDrawMenuItem, MaxMeshArea);
-        MENU_ITEM(ICON_SetHome, MSG_MESH_CENTER, onDrawMenuItem, CenterMeshArea);
-      }
-      UpdateMenu(MeshInsetMenu);
-      LCD_MESSAGE_F("..Center Area sets mesh equidistant by greatest inset from edge.");
+  void Draw_MeshInset_Menu() {
+    checkkey = Menu;
+    if (SET_MENU(MeshInsetMenu, MSG_MESH_INSET, 7)) {
+      BACK_ITEM(Draw_MeshSet_Menu);
+      EDIT_ITEM(ICON_Box, MSG_MESH_MIN_X, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_min_x);
+      EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_X, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_max_x);
+      EDIT_ITEM(ICON_Box, MSG_MESH_MIN_Y, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_min_y);
+      EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_Y, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_max_y);
+      MENU_ITEM(ICON_AxisC, MSG_MESH_AMAX, onDrawMenuItem, MaxMeshArea);
+      MENU_ITEM(ICON_SetHome, MSG_MESH_CENTER, onDrawMenuItem, CenterMeshArea);
     }
-  #endif
+    UpdateMenu(MeshInsetMenu);
+    LCD_MESSAGE_F("..Center Area sets mesh equidistant by greatest inset from edge.");
+  }
 
 #endif  // HAS_MESH
 
