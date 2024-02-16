@@ -3368,10 +3368,10 @@ void MarlinSettings::reset() {
   // MESH_INSET workaround
   //
   #if ALL(DWIN_LCD_PROUI, HAS_MESH)
-    ui.mesh_inset_min_x = MESH_INSET;
-    ui.mesh_inset_max_x = (X_BED_SIZE - MESH_INSET);
-    ui.mesh_inset_min_y = MESH_INSET;
-    ui.mesh_inset_max_y = (Y_BED_SIZE - MESH_INSET);
+    ui.mesh_inset_min_x = DEF_MESH_MIN_X;
+    ui.mesh_inset_max_x = DEF_MESH_MAX_X;
+    ui.mesh_inset_min_y = DEF_MESH_MIN_Y;
+    ui.mesh_inset_max_y = DEF_MESH_MAX_Y;
   #endif
 
   //
