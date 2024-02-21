@@ -1873,7 +1873,7 @@ void DWIN_Print_Finished() {
     #endif
   }
   if (!HMI_flag.abort_flag) {
-    set_bed_leveling_enabled(false);
+    TERN_(HAS_LEVELING, set_bed_leveling_enabled(false);)
     DisableMotors();
   }
   HMI_flag.abort_flag = false;
