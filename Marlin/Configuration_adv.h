@@ -1851,7 +1851,7 @@
 
   //#define SD_REPRINT_LAST_SELECTED_FILE // On print completion open the LCD Menu and select the same file
 
-  //#define AUTO_REPORT_SD_STATUS         // Auto-report media status with 'M27 S<seconds>'
+  #define AUTO_REPORT_SD_STATUS           // Auto-report media status with 'M27 S<seconds>' (416 bytes of flash)
 
   /**
    * Support for USB thumb drives using an Arduino USB Host Shield or
@@ -2356,7 +2356,7 @@
  * Control extrusion rate based on instantaneous extruder velocity. Can be used to correct for
  * underextrusion at high extruder speeds that are otherwise well-behaved (i.e., not skipping).
  */
-//#define NONLINEAR_EXTRUSION
+//#define NONLINEAR_EXTRUSION // (560 bytes of flash)
 
 // @section leveling
 
