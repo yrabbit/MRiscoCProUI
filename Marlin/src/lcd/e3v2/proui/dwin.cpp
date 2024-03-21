@@ -621,7 +621,7 @@ void Goto_PrintDone() {
 void Draw_Main_Menu() {
   DWINUI::ClearMainArea();
   #if ENABLED(CV_LASER_MODULE)
-    Title.ShowCaption(laser_device.is_laser_device() ? F("Laser Engraver") : CUSTOM_MACHINE_NAME);
+    Title.ShowCaption(laser_device.is_laser_device() ? "Laser Engraver" : CUSTOM_MACHINE_NAME);
   #else
     Title.ShowCaption(CUSTOM_MACHINE_NAME);
   #endif
@@ -2385,7 +2385,7 @@ void AutoHome() { queue.inject_P(G28_STR); }
   #endif
 #endif
 
-#if HAS_HOME_OFFSET
+#if HAS_HOME_OFFSET && DISABLED(CV_LASER_MODULE)
   // Apply workspace offset, making the current position 0,0,0
   void SetHome() {
     queue.inject(F("G92X0Y0Z0"));
@@ -4273,6 +4273,7 @@ void Draw_MaxAccel_Menu() {
       laser_device.homepos += current_position;
       set_all_homed();
       gcode.process_subcommands_now(F("G92X0Y0Z0"));
+      DONE_BUZZ(true);
       ReDrawMenu();
     }
   #endif
@@ -4329,11 +4330,11 @@ void Draw_MaxAccel_Menu() {
       MENU_ITEM_F(ICON_LaserRunRange, "Run Range", onDrawMenuItem, LaserRunRange);
     }
     UpdateMenu(LaserPrintMenu);
-    char buf[23], str_1[5], str_2[5];
-    sprintf_P(buf, PSTR("XMIN: %s XMAX: %s"), dtostrf(LASER_XMIN, 1, 1, str_1), dtostrf(LASER_XMAX, 1, 1, str_2));
-    DWINUI::Draw_String(LBLX, MBASE(4) + 10, buf);
-    sprintf_P(buf, PSTR("YMIN: %s YMAX: %s"), dtostrf(LASER_YMIN, 1, 1, str_1), dtostrf(LASER_YMAX, 1, 1, str_2));
-    DWINUI::Draw_String(LBLX, MBASE(5) - 10, buf);
+    // char buf[23], str_1[5], str_2[5];
+    // sprintf_P(buf, PSTR("XMIN: %s XMAX: %s"), dtostrf(LASER_XMIN, 1, 1, str_1), dtostrf(LASER_XMAX, 1, 1, str_2));
+    // DWINUI::Draw_String(LBLX, MBASE(4) + 10, buf);
+    // sprintf_P(buf, PSTR("YMIN: %s YMAX: %s"), dtostrf(LASER_YMIN, 1, 1, str_1), dtostrf(LASER_YMAX, 1, 1, str_2));
+    // DWINUI::Draw_String(LBLX, MBASE(5) - 10, buf);
   }
 
 #endif // CV_LASER_MODULE

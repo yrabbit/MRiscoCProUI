@@ -430,6 +430,9 @@ void Draw_MaxAccel_Menu();
   void LaserOn(const bool turn_on);
   void Draw_LaserSettings_Menu();
   void Draw_LaserPrint_Menu();
+  #if HAS_HOME_OFFSET
+    void SetHome();
+  #endif
 #endif
 
 // ToolBar
