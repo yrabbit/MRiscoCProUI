@@ -196,6 +196,7 @@ typedef struct {
   int16_t PidCycles;
   celsius_t HotendPidT;
   celsius_t BedPidT;
+  OPTCODE(PIDTEMPCHAMBER, celsius_t ChamberPIDT = DEF_CHAMBERPIDT)
   celsius_t ExtMinT;
   celsius_t BedLevT;
   bool Baud250K;
@@ -204,7 +205,6 @@ typedef struct {
   bool FullManualTramming;
   bool MediaSort;
   bool MediaAutoMount;
-  bool AdaptiveStepSmoothing;
   bool EnablePreview;
   uint8_t z_after_homing;
   uint32_t Led_Color;

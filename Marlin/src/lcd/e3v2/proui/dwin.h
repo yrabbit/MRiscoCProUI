@@ -69,9 +69,11 @@ enum processID : uint8_t {
 
 #if ANY(HAS_PID_HEATING, MPC_AUTOTUNE)
   enum tempcontrol_t : uint8_t {
+    AUTOTUNE_DONE,
     #if HAS_PID_HEATING
-      PID_EXTR_START,
-      PID_BED_START,
+      OPTITEM(PIDTEMP, PID_EXTR_START)
+      OPTITEM(PIDTEMPBED, PID_BED_START)
+      OPTITEM(PIDTEMPCHAMBER, PID_CHAMBER_START)
       PID_BAD_HEATER_ID,
       PID_TEMP_TOO_HIGH,
       PID_TUNING_TIMEOUT,
@@ -81,7 +83,6 @@ enum processID : uint8_t {
       MPC_TEMP_ERROR,
       MPC_INTERRUPTED,
     #endif
-    AUTOTUNE_DONE
   };
 #endif
 
@@ -126,7 +127,7 @@ inline bool Host_Printing() { return Printing() && !IS_SD_FILE_OPEN(); }
 
 // Popups
 #if HAS_HOTEND || HAS_HEATED_BED
-  void DWIN_Popup_Temperature(const int_fast8_t heater_id, const bool toohigh);
+  void DWIN_Popup_Temperature(const int_fast8_t heater_id, const uint8_t state);
 #endif
 #if ENABLED(POWER_LOSS_RECOVERY)
   void Popup_PowerLossRecovery();
@@ -147,6 +148,7 @@ uint32_t GetHash(char * str);
   void dwinDrawPlot(tempcontrol_t result);
   void drawHPlot();
   void drawBPlot();
+  void drawCPlot();
 #endif
 #if ENABLED(ENC_MENU_ITEM)
   void SetEncRateA();
@@ -367,6 +369,12 @@ void Draw_MaxAccel_Menu();
     #if ANY(PID_AUTOTUNE_MENU, PID_EDIT_MENU)
       void Draw_BedPID_Menu();
     #endif
+  #endif
+  #if ENABLED(PIDTEMPCHAMBER)
+    #if ENABLED(PID_AUTOTUNE_MENU)
+      void ChamberPID();
+    #endif
+    void Draw_ChamberPID_Menu();
   #endif
 #endif
 

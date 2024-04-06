@@ -22,7 +22,10 @@
 
 #include "../../../inc/MarlinConfigPre.h"
 
-// #define DEBUG_DWIN 1
+//#define DEBUG_DWIN 1
+//#define TJC_DISPLAY           // Enable for TJC display
+//#define DACAI_DISPLAY         // Enable for DACAI display
+//#define TITLE_CENTERED        // Center Menu Title Text
 
 #if HAS_MESH
   #define PROUI_MESH_EDIT     // Add a menu to edit mesh inset + points
@@ -68,6 +71,7 @@
 #if CASELIGHT_USES_BRIGHTNESS
   #define Def_CaseLight_Brightness 255
 #endif
+
 #ifdef Z_AFTER_HOMING
   #define DEF_Z_AFTER_HOMING Z_AFTER_HOMING
 #else
@@ -75,6 +79,11 @@
 #endif
 #define DEF_HOTENDPIDT PREHEAT_1_TEMP_HOTEND
 #define DEF_BEDPIDT PREHEAT_1_TEMP_BED
+#ifdef PREHEAT_1_TEMP_CHAMBER
+  #define DEF_CHAMBERPIDT PREHEAT_1_TEMP_CHAMBER
+#else
+  #define DEF_CHAMBERPIDT 0
+#endif
 #define DEF_PIDCYCLES 5
 #define EXT active_extruder
 

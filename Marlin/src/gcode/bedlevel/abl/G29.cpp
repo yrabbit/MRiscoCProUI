@@ -445,6 +445,8 @@ G29_TYPE GcodeSuite::G29() {
         if (!abl.dryrun) probe.preheat_for_probing(LEVELING_NOZZLE_TEMP,
           #if ALL(DWIN_LCD_PROUI, HAS_HEATED_BED)
             HMI_data.BedLevT
+          #elif ENABLED(EXTENSIBLE_UI)
+            ExtUI::getLevelingBedTemp()
           #else
             LEVELING_BED_TEMP
           #endif

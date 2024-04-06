@@ -146,6 +146,8 @@
 #define MAX_ETEMP   thermalManager.hotend_max_target(EXT)
 #define MIN_BEDTEMP 0
 #define MAX_BEDTEMP BED_MAX_TARGET
+#define MIN_CHAMBERTEMP 0
+#define MAX_CHAMBERTEMP CHAMBER_MAX_TARGET
 
 #define DWIN_VAR_UPDATE_INTERVAL         500
 #define DWIN_UPDATE_INTERVAL             1000
@@ -254,6 +256,9 @@ MenuClass *PIDMenu = nullptr;
 #endif
 #if ENABLED(PIDTEMPBED) && ANY(PID_EDIT_MENU, PID_AUTOTUNE_MENU)
   MenuClass *BedPIDMenu = nullptr;
+#endif
+#if ENABLED(PIDTEMPCHAMBER) && ANY(PID_EDIT_MENU, PID_AUTOTUNE_MENU)
+  MenuClass *ChamberPIDMenu = nullptr;
 #endif
 #if CASELIGHT_USES_BRIGHTNESS
   MenuClass *CaseLightMenu = nullptr;
@@ -403,12 +408,21 @@ void Popup_window_PauseOrStop() {
   }
 }
 
-#if HAS_HOTEND || HAS_HEATED_BED
-  void DWIN_Popup_Temperature(const int_fast8_t heater_id, const bool toohigh) {
-    FSTR_P const heaterstr = (heater_id == H_BED) ? GET_TEXT_F(MSG_BED_TEMPERATURE) : GET_TEXT_F(MSG_NOZZLE_TEMPERATURE),
-                 lowhighstr = toohigh ? GET_TEXT_F(MSG_TOO_HIGH) : GET_TEXT_F(MSG_TOO_LOW);
+#if HAS_HOTEND || HAS_HEATED_BED || HAS_HEATED_CHAMBER
+  void DWIN_Popup_Temperature(const int_fast8_t heater_id, const uint8_t state) {
     HMI_SaveProcessID(WaitResponse);
-    DWIN_Show_Popup((toohigh ? ICON_TempTooHigh : ICON_TempTooLow), heaterstr, lowhighstr, BTN_Continue);
+    FSTR_P heaterstr = nullptr;
+    if      (TERN0(HAS_HEATED_CHAMBER, heater_id == H_CHAMBER)) heaterstr = F("Chamber");
+    else if (TERN0(HAS_HEATED_BED,     heater_id == H_BED))     heaterstr = F("Bed");
+    else if (TERN0(HAS_HOTEND,         heater_id >= 0))         heaterstr = F("Nozzle");
+    FSTR_P errorstr;
+    uint8_t icon;
+    switch (state) {
+      case 0:  errorstr = GET_TEXT_F(MSG_TEMP_TOO_LOW);       icon = ICON_TempTooLow;  break;
+      case 1:  errorstr = GET_TEXT_F(MSG_TEMP_TOO_HIGH);      icon = ICON_TempTooHigh; break;
+      default: errorstr = GET_TEXT_F(MSG_ERR_HEATING_FAILED); icon = ICON_Info_1; break; // May be thermal runaway, temp malfunction, etc.
+    }
+      DWIN_Show_Popup(icon, heaterstr, errorstr, BTN_Continue);
   }
 #endif
 
@@ -537,6 +551,8 @@ void ICON_ResumeOrPause() {
 }
 
 // Update filename on print
+// Print a string (up to 30 characters) in the header,
+// e.g., The filename or string sent with M75.
 void DWIN_Print_Header(PGM_P const cstr/*=nullptr*/) {
   static char headertxt[31] = "";  // Print header text
   if (cstr) {
@@ -581,8 +597,8 @@ void Goto_PrintProcess() {
 }
 
 void Draw_PrintDone() {
-  ui.set_progress_done();
-  ui.reset_remaining_time();
+  TERN_(SET_PROGRESS_PERCENT, ui.set_progress_done();)
+  TERN_(SET_REMAINING_TIME, ui.reset_remaining_time();)
   Title.ShowCaption(GET_TEXT_F(MSG_PRINT_DONE));
   DWINUI::ClearMainArea();
   DWIN_Print_Header();
@@ -1397,8 +1413,8 @@ void EachMomentUpdate() {
       Draw_Print_ProgressElapsed();
 
     }
-    #if ENABLED(POWER_LOSS_RECOVERY)
-      else if (DWIN_lcd_sd_status && recovery.dwin_flag) { // resume print before power off
+    #if HAS_PLR_UI_FLAG
+      else if (DWIN_lcd_sd_status && recovery.ui_flag_resume) { // resume print before power off
         return Goto_PowerLossRecovery();
       }
     #endif // POWER_LOSS_RECOVERY
@@ -1438,7 +1454,7 @@ void EachMomentUpdate() {
   }
 
   void Goto_PowerLossRecovery() {
-    recovery.dwin_flag = false;
+    recovery.ui_flag_resume = false;
     LCD_MESSAGE(MSG_CONTINUE_PRINT_JOB);
     Goto_Popup(Popup_PowerLossRecovery, OnClick_PowerLossRecovery);
   }
@@ -1728,6 +1744,9 @@ void DWIN_HomingDone() {
     void drawBPlot() {
       TERN_(PIDTEMPBED, dwinDrawPlot(PID_BED_START);)
     }
+    void drawCPlot() {
+      TERN_(PIDTEMPCHAMBER, dwinDrawPlot(PIDTEMPCHAMBER_START));
+    }
 
   #endif // PROUI_ITEM_PLOT
 #endif // PROUI_TUNING_GRAPH
@@ -1737,8 +1756,9 @@ void DWIN_HomingDone() {
   void DWIN_M303(const int c, const heater_id_t hid, const celsius_t temp) {
     HMI_data.PidCycles = c;
     switch (hid) {
-      OPTCODE(PIDTEMP,    case 0 ... HOTENDS - 1: HMI_data.HotendPidT = temp; break)
-      OPTCODE(PIDTEMPBED, case H_BED:             HMI_data.BedPidT = temp;    break)
+      OPTCODE(PIDTEMP,    case 0 ... HOTENDS - 1: HMI_data.HotendPidT = temp;  break)
+      OPTCODE(PIDTEMPBED, case H_BED:             HMI_data.BedPidT = temp;     break)
+      OPTCODE(PIDTEMPCHAMBER, case H_CHAMBER:     HMI_data.ChamberPIDT = temp; break)
       default: break;
     }
   }
@@ -1972,6 +1992,7 @@ void DWIN_SetDataDefaults() {
   DWINUI::SetColors(HMI_data.Text_Color, HMI_data.Background_Color, HMI_data.TitleBg_Color);
   TERN_(PIDTEMP, HMI_data.HotendPidT = DEF_HOTENDPIDT;)
   TERN_(PIDTEMPBED, HMI_data.BedPidT = DEF_BEDPIDT;)
+  TERN_(PIDTEMPCHAMBER, HMI_data.ChamberPIDT = DEF_CHAMBERPIDT);
   TERN_(HAS_PID_HEATING, HMI_data.PidCycles = DEF_PIDCYCLES;)
   #if ENABLED(PREVENT_COLD_EXTRUSION)
     HMI_data.ExtMinT = EXTRUDE_MINTEMP;
@@ -2009,7 +2030,6 @@ void DWIN_SetDataDefaults() {
       );
     #endif
   #endif
-  TERN_(ADAPTIVE_STEP_SMOOTHING, HMI_data.AdaptiveStepSmoothing = true;)
   TERN_(HAS_GCODE_PREVIEW, HMI_data.EnablePreview = true;)
   #if PROUI_EX
     PRO_data.x_bed_size = DEF_X_BED_SIZE;
@@ -2156,8 +2176,6 @@ void MarlinUI::update() {
   EachMomentUpdate();   // Status update
   DWIN_HandleScreen();  // Rotary encoder update
 }
-
-void MarlinUI::refresh() { /* Nothing to see here */ }
 
 #if HAS_LCD_BRIGHTNESS
   void MarlinUI::_set_brightness() { DWIN_LCD_Brightness(backlight ? brightness : 0); }
@@ -3491,9 +3509,9 @@ void Draw_Tune_Menu() {
   UpdateMenu(TuneMenu);
 }
 
-#if ENABLED(ADAPTIVE_STEP_SMOOTHING)
+#if ENABLED(ADAPTIVE_STEP_SMOOTHING_TOGGLE)
   void SetAdaptiveStepSmoothing() {
-    Toggle_Chkb_Line(HMI_data.AdaptiveStepSmoothing);
+    Toggle_Chkb_Line(stepper.adaptive_step_smoothing_enabled);
   }
 #endif
 
@@ -3589,8 +3607,8 @@ void Draw_Motion_Menu() {
     #if ENABLED(LIN_ADVANCE)
       EDIT_ITEM(ICON_MaxAccelerated, MSG_ADVANCE_K, onDrawPFloat3Menu, SetLA_K, &planner.extruder_advance_K[EXT]);
     #endif
-    #if ENABLED(ADAPTIVE_STEP_SMOOTHING)
-      EDIT_ITEM(ICON_CloseMotor, MSG_STEP_SMOOTHING, onDrawChkbMenu, SetAdaptiveStepSmoothing, &HMI_data.AdaptiveStepSmoothing);
+    #if ENABLED(ADAPTIVE_STEP_SMOOTHING_TOGGLE)
+      EDIT_ITEM(ICON_CloseMotor, MSG_STEP_SMOOTHING, onDrawChkbMenu, SetAdaptiveStepSmoothing, &stepper.adaptive_step_smoothing_enabled);
     #endif
   }
   UpdateMenu(MotionMenu);
@@ -4030,6 +4048,33 @@ void Draw_MaxAccel_Menu() {
   }
 
 #endif // PIDTEMPBED
+
+#if ENABLED(PIDTEMPCHAMBER) && ANY(PID_AUTOTUNE_MENU, PID_EDIT_MENU)
+
+  #if ENABLED(PID_AUTOTUNE_MENU)
+    void ChamberPID() { SetPID(HMI_data.ChamberPIDT, H_CHAMBER); }
+    void SetChamberPIDT() { SetPIntOnClick(MIN_CHAMBERTEMP, MAX_CHAMBERTEMP); }
+  #endif
+
+  void Draw_ChamberPID_Menu() {
+    checkkey = Menu;
+    if (SET_MENU_F(BedPIDMenu, STR_CHAMBER_PID " Settings", 7)) {
+      BACK_ITEM(Return_PID_Menu);
+      #if ENABLED(PID_AUTOTUNE_MENU)
+        MENU_ITEM_F(ICON_PIDBed, STR_CHAMBER_PID, onDrawMenuItem, ChamberPID);
+        EDIT_ITEM(ICON_Temperature, MSG_TEMPERATURE, onDrawPIntMenu, SetBedPidT, &HMI_data.ChamberPIDT);
+        EDIT_ITEM(ICON_PIDCycles, MSG_PID_CYCLE, onDrawPIntMenu, SetPidCycles, &HMI_data.PidCycles);
+      #endif
+      #if ENABLED(PID_EDIT_MENU)
+        EDIT_ITEM(ICON_PIDValue, MSG_PID_SET_KP, onDrawPFloat2Menu, SetKp, &thermalManager.temp_bed.pid.Kp);
+        EDIT_ITEM(ICON_PIDValue, MSG_PID_SET_KI, onDrawPIDi, SetKi, &thermalManager.temp_bed.pid.Ki);
+        EDIT_ITEM(ICON_PIDValue, MSG_PID_SET_KD, onDrawPIDd, SetKd, &thermalManager.temp_bed.pid.Kd);
+      #endif
+    }
+    UpdateMenu(ChamberPIDMenu);
+  }
+
+#endif // PIDTEMPCHAMBER
 
 //=============================================================================
 //
