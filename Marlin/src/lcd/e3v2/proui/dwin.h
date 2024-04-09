@@ -62,12 +62,12 @@ enum processID : uint8_t {
   PlotProcess,
   WaitResponse,
   Homing,
-  PidProcess,
+  PIDProcess,
   MPCProcess,
   NothingToDo
 };
 
-#if ANY(HAS_PID_HEATING, MPC_AUTOTUNE)
+#if ANY(HAS_PID_HEATING, MPCTEMP)
   enum tempcontrol_t : uint8_t {
     AUTOTUNE_DONE,
     #if HAS_PID_HEATING
@@ -78,7 +78,7 @@ enum processID : uint8_t {
       PID_TEMP_TOO_HIGH,
       PID_TUNING_TIMEOUT,
     #endif
-    #if ENABLED(MPC_AUTOTUNE)
+    #if ENABLED(MPCTEMP)
       MPCTEMP_START,
       MPC_TEMP_ERROR,
       MPC_INTERRUPTED,
@@ -352,7 +352,7 @@ void Draw_MaxAccel_Menu();
 #if HAS_PID_HEATING
   #include "../../../module/temperature.h"
   void DWIN_M303(const int c, const heater_id_t hid, const celsius_t temp);
-  void DWIN_PidTuning(tempcontrol_t result);
+  void DWIN_PIDTuning(tempcontrol_t result);
   void Draw_PID_Menu();
   #if ENABLED(PIDTEMP)
     #if ENABLED(PID_AUTOTUNE_MENU)
@@ -405,16 +405,4 @@ void Draw_MaxAccel_Menu();
 
 #if DEBUG_DWIN
   void DWIN_Debug(PGM_P msg);
-#endif
-
-#if HAS_MESH
-  #undef  MESH_MIN_X
-  #undef  MESH_MAX_X
-  #undef  MESH_MIN_Y
-  #undef  MESH_MAX_Y
-  #include "../../marlinui.h"
-  #define MESH_MIN_X ui.mesh_inset_min_x
-  #define MESH_MAX_X ui.mesh_inset_max_x
-  #define MESH_MIN_Y ui.mesh_inset_min_y
-  #define MESH_MAX_Y ui.mesh_inset_max_y
 #endif

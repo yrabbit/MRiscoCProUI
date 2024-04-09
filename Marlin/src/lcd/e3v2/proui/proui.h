@@ -193,22 +193,28 @@ typedef struct {
   uint16_t Indicator_Color;
   uint16_t Coordinate_Color;
   uint16_t Bottom_Color;
-  int16_t PidCycles;
-  celsius_t HotendPidT;
-  celsius_t BedPidT;
-  OPTCODE(PIDTEMPCHAMBER, celsius_t ChamberPIDT = DEF_CHAMBERPIDT)
-  celsius_t ExtMinT;
-  celsius_t BedLevT;
-  bool Baud250K;
-  bool CalcAvg;
-  bool SpdInd;
-  bool FullManualTramming;
+  float mesh_min_x = DEF_MESH_MIN_X;
+  float mesh_max_x = DEF_MESH_MAX_X;
+  float mesh_min_y = DEF_MESH_MIN_Y;
+  float mesh_max_y = DEF_MESH_MAX_Y;
+  int16_t PIDCycles;
+  OPTCODE(PIDTEMP, celsius_t HotendPIDT)
+  OPTCODE(PIDTEMPBED, celsius_t BedPIDT)
+  OPTCODE(PIDTEMPCHAMBER, celsius_t ChamberPIDT)
+  OPTCODE(PREVENT_COLD_EXTRUSION, celsius_t ExtMinT)
+  OPTCODE(PREHEAT_BEFORE_LEVELING, celsius_t BedLevT)
+  OPTCODE(BAUD_RATE_GCODE, bool Baud250K)
+  OPTCODE(HAS_BED_PROBE, bool CalcAvg)
+  OPTCODE(SHOW_SPEED_IND, bool SpdInd)
+  OPTCODE(HAS_BED_PROBE, bool FullManualTramming)
   bool MediaSort;
   bool MediaAutoMount;
   bool EnablePreview;
-  uint8_t z_after_homing;
-  uint32_t Led_Color;
-  float ManualZOffset;
+  OPTCODE(MESH_BED_LEVELING, uint8_t z_after_homing)
+  #if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
+    uint32_t Led_Color;
+  #endif
+  IF_DISABLED(HAS_BED_PROBE, float ManualZOffset;)
 #if !PROUI_EX
   TERN_(PROUI_GRID_PNTS, uint8_t grid_max_points = DEF_GRID_MAX_POINTS;)
   IF_DISABLED(BD_SENSOR, uint8_t multiple_probing = MULTIPLE_PROBING;)

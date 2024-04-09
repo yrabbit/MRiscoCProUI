@@ -68,13 +68,6 @@ constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
   float MarlinUI::screw_pos = BED_SCREW_INSET;
 #endif
 
-#if ALL(DWIN_LCD_PROUI, HAS_MESH)
-  float MarlinUI::mesh_inset_min_x = DEF_MESH_MIN_X;
-  float MarlinUI::mesh_inset_max_x = DEF_MESH_MAX_X;
-  float MarlinUI::mesh_inset_min_y = DEF_MESH_MIN_Y;
-  float MarlinUI::mesh_inset_max_y = DEF_MESH_MAX_Y;
-#endif
-
 #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
   uint16_t MarlinUI::enc_rateA = 135;
   uint16_t MarlinUI::enc_rateB = 25;
@@ -1594,12 +1587,12 @@ void MarlinUI::host_notify(const char * const cstr) {
    *
    * @param pfmt    A constant format P-string
    */
-  void MarlinUI::status_printf_P(int8_t level, PGM_P const fmt, ...) {
+  void MarlinUI::status_printf(int8_t level, FSTR_P const pfmt, ...) {
     if (set_alert_level(level)) return;
 
     va_list args;
-    va_start(args, fmt);
-    vsnprintf_P(status_message, MAX_MESSAGE_LENGTH, fmt, args);
+    va_start(args, pfmt);
+    vsnprintf_P(status_message, MAX_MESSAGE_LENGTH, FTOP(pfmt), args);
     va_end(args);
 
     host_notify(status_message);
@@ -1672,14 +1665,14 @@ void MarlinUI::host_notify(const char * const cstr) {
   void MarlinUI::_set_status_and_level(const char * const ustr, const int8_t=0, const bool pgm) {
     pgm ? host_notify_P(ustr) : host_notify(ustr);
   }
-  void MarlinUI::status_printf_P(int8_t level, PGM_P const fmt, ...) {
+  void MarlinUI::status_printf(int8_t level, FSTR_P const pfmt, ...) {
     if (set_alert_level(level)) return;
 
     MString<30> msg;
 
     va_list args;
-    va_start(args, fmt);
-    vsnprintf_P(&msg, 30, fmt, args);
+    va_start(args, pfmt);
+    vsnprintf_P(&msg, 30, FTOP(pfmt), args);
     va_end(args);
 
     host_notify(msg);

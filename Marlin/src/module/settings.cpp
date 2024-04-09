@@ -609,16 +609,6 @@ typedef struct SettingsDataStruct {
   #endif
 
   //
-  // MESH_INSET workaround
-  //
-  #if ALL(DWIN_LCD_PROUI, HAS_MESH)
-    float ui_mesh_inset_min_x;
-    float ui_mesh_inset_max_x;
-    float ui_mesh_inset_min_y;
-    float ui_mesh_inset_max_y;
-  #endif
-
-  //
   // Encoder Rate
   //
   #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
@@ -1701,16 +1691,6 @@ void MarlinSettings::postprocess() {
     //
     #ifdef BED_SCREW_INSET
       EEPROM_WRITE(ui.screw_pos);
-    #endif
-
-    //
-    // MESH_INSET workaround
-    //
-    #if ALL(DWIN_LCD_PROUI, HAS_MESH)
-      EEPROM_WRITE(ui.mesh_inset_min_x);
-      EEPROM_WRITE(ui.mesh_inset_max_x);
-      EEPROM_WRITE(ui.mesh_inset_min_y);
-      EEPROM_WRITE(ui.mesh_inset_max_y);
     #endif
 
     //
@@ -2835,20 +2815,6 @@ void MarlinSettings::postprocess() {
         #endif
 
         //
-        // MESH_INSET workaround
-        //
-        #if HAS_MESH
-          _FIELD_TEST(ui_mesh_inset_min_x);
-          EEPROM_READ(ui.mesh_inset_min_x);
-          _FIELD_TEST(ui_mesh_inset_max_x);
-          EEPROM_READ(ui.mesh_inset_max_x);
-          _FIELD_TEST(ui_mesh_inset_min_y);
-          EEPROM_READ(ui.mesh_inset_min_y);
-          _FIELD_TEST(ui_mesh_inset_max_y);
-          EEPROM_READ(ui.mesh_inset_max_y);
-        #endif
-
-        //
         // Encoder Rate
         //
         #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
@@ -3392,16 +3358,6 @@ void MarlinSettings::reset() {
   //
   #ifdef BED_SCREW_INSET
     ui.screw_pos = BED_SCREW_INSET;
-  #endif
-
-  //
-  // MESH_INSET workaround
-  //
-  #if ALL(DWIN_LCD_PROUI, HAS_MESH)
-    ui.mesh_inset_min_x = DEF_MESH_MIN_X;
-    ui.mesh_inset_max_x = DEF_MESH_MAX_X;
-    ui.mesh_inset_min_y = DEF_MESH_MIN_Y;
-    ui.mesh_inset_max_y = DEF_MESH_MAX_Y;
   #endif
 
   //

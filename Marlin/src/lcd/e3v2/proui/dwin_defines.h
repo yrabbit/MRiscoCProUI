@@ -74,16 +74,22 @@
 
 #ifdef Z_AFTER_HOMING
   #define DEF_Z_AFTER_HOMING Z_AFTER_HOMING
-#else
-  #define DEF_Z_AFTER_HOMING 0
+#elif ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
+  #define DEF_Z_AFTER_HOMING 10
+#endif
+
+#ifndef PREHEAT_1_TEMP_HOTEND
+  #define PREHEAT_1_TEMP_HOTEND 210
+#endif
+#ifndef PREHEAT_1_TEMP_BED
+  #define PREHEAT_1_TEMP_BED 60
+#endif
+#ifndef PREHEAT_1_TEMP_CHAMBER
+  #define PREHEAT_1_TEMP_CHAMBER 35
 #endif
 #define DEF_HOTENDPIDT PREHEAT_1_TEMP_HOTEND
 #define DEF_BEDPIDT PREHEAT_1_TEMP_BED
-#ifdef PREHEAT_1_TEMP_CHAMBER
-  #define DEF_CHAMBERPIDT PREHEAT_1_TEMP_CHAMBER
-#else
-  #define DEF_CHAMBERPIDT 0
-#endif
+#define DEF_CHAMBERPIDT PREHEAT_1_TEMP_CHAMBER
 #define DEF_PIDCYCLES 5
 #define EXT active_extruder
 
@@ -129,10 +135,6 @@
     #undef GRID_MAX_POINTS_X
     #undef GRID_MAX_POINTS_Y
     #undef GRID_MAX_POINTS
-    // #undef MESH_MIN_X
-    // #undef MESH_MAX_X
-    // #undef MESH_MIN_Y
-    // #undef MESH_MAX_Y
   #endif
   #if HAS_BED_PROBE
     #undef Z_PROBE_FEEDRATE_SLOW
@@ -150,17 +152,15 @@
   #if HAS_MESH
     #define GRID_MAX_POINTS_X PRO_data.grid_max_points
     #define GRID_MAX_POINTS_Y PRO_data.grid_max_points
-    #define GRID_MAX_POINTS (PRO_data.grid_max_points * PRO_data.grid_max_points)
-    // #define MESH_MIN_X PRO_data.mesh_min_x
-    // #define MESH_MAX_X PRO_data.mesh_max_x
-    // #define MESH_MIN_Y PRO_data.mesh_min_y
-    // #define MESH_MAX_Y PRO_data.mesh_max_y
+    #define GRID_MAX_POINTS  (PRO_data.grid_max_points * PRO_data.grid_max_points)
   #endif
   #if HAS_BED_PROBE
     #define Z_PROBE_FEEDRATE_SLOW PRO_data.zprobefeedslow
   #endif
   #define INVERT_E0_DIR PRO_data.Invert_E0
+
 #else
+
   #include <stddef.h>
   #include "../../../core/types.h"
   #include "proui.h"
@@ -181,3 +181,14 @@
   #define INVERT_E0_DIR HMI_data.Invert_E0
 
 #endif // PROUI_EX
+
+#if HAS_MESH
+  #undef  MESH_MIN_X
+  #undef  MESH_MAX_X
+  #undef  MESH_MIN_Y
+  #undef  MESH_MAX_Y
+  #define MESH_MIN_X HMI_data.mesh_min_x
+  #define MESH_MAX_X HMI_data.mesh_max_x
+  #define MESH_MIN_Y HMI_data.mesh_min_y
+  #define MESH_MAX_Y HMI_data.mesh_max_y
+#endif

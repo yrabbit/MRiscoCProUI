@@ -200,13 +200,6 @@ public:
     static float screw_pos; // bed corner screw inset
   #endif
 
-  #if ALL(DWIN_LCD_PROUI, HAS_MESH) // workaround for mesh inset not saving on restart
-    static float mesh_inset_min_x;
-    static float mesh_inset_max_x;
-    static float mesh_inset_min_y;
-    static float mesh_inset_max_y;
-  #endif
-
   #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
     static uint16_t enc_rateA;
     static uint16_t enc_rateB;
@@ -512,9 +505,7 @@ public:
    *
    * @param pfmt    A constant format P-string
    */
-  static void status_printf_P(int8_t level, PGM_P const pfmt, ...);
-
-  static void status_printf(int8_t level, FSTR_P const ffmt, ...) { status_printf_P(level, FTOP(ffmt)); }
+  static void status_printf(int8_t level, FSTR_P const pfmt, ...);
 
   // Periodic or as-needed display update
   static void update() IF_DISABLED(HAS_UI_UPDATE, {});
