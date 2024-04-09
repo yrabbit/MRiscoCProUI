@@ -427,9 +427,6 @@ jobs:
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
   Build-UBL-NoPro-A:          # UBL NoPro for Aquila
-  # if [ "$IS" = true ] && [ "$TP" = true ]; then
-  # sed -i "s/.*#define PREHEAT_2_LABEL/\/\/#define PREHEAT_2_LABEL/" Marlin/Configuration.h;
-  # fi;
     name: Build UBL NoPro Files A
     runs-on: ubuntu-latest
     strategy:
@@ -487,6 +484,7 @@ jobs:
         sed -i "s/.*#define CAPABILITIES_REPORT/${ITEMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
         sed -i "s/.*#define NOZZLE_CLEAN_FEATURE/${ITEMP}#define NOZZLE_CLEAN_FEATURE/" Marlin/Configuration.h;
         sed -i "s/.*#define USE_GRID_MESHVIEWER 1/${ITEMP}#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h;
+        sed -i "s/.*#define SHOW_SPEED_IND/${ITEMP}#define SHOW_SPEED_IND/" Marlin/Configuration.h;
         if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
