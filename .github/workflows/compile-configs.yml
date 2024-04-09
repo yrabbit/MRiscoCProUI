@@ -485,6 +485,7 @@ jobs:
         sed -i "s/.*#define PREHEAT_2_LABEL/${ITEMP}#define PREHEAT_2_LABEL/" Marlin/Configuration.h;
         sed -i "s/.*#define NOZZLE_CLEAN_FEATURE/${ITEMP}#define NOZZLE_CLEAN_FEATURE/" Marlin/Configuration.h;
         sed -i "s/.*#define HAS_CGCODE 1/${ITEMP}#define HAS_CGCODE 1/" Marlin/Configuration.h;
+        sed -i "s/.*#define SHOW_SPEED_IND/${ITEMP}#define SHOW_SPEED_IND/" Marlin/Configuration.h;
         if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
