@@ -727,7 +727,7 @@ volatile bool Temperature::raw_temps_ready = false;
     TERN_(HAS_FAN_LOGIC, fan_update_ms = next_temp_ms + fan_update_interval_ms);
 
     TERN_(EXTENSIBLE_UI, ExtUI::onPIDTuning(ischamber ? ExtUI::pidresult_t::PID_CHAMBER_STARTED : isbed ? ExtUI::pidresult_t::PID_BED_STARTED : ExtUI::pidresult_t::PID_STARTED));
-    TERN_(DWIN_LCD_PROUI, DWIN_PIDTuning(TERN_(PIDTEMPCHAMBER, ischamber ? PID_CHAMBER_START :) TERN_(PIDTEMPBED, isbed ? PID_BED_START :) TERN_(PIDTEMP, PID_EXTR_START)));
+    TERN_(DWIN_LCD_PROUI, DWIN_PIDTuning(TERN_(PIDTEMPCHAMBER, ischamber ? PID_CHAMBER_START :) TERN_(PIDTEMPBED, isbed ? PID_BED_START :) TERN(PIDTEMP, PID_EXTR_START, AUTOTUNE_DONE)));
 
     if (target > GHV(CHAMBER_MAX_TARGET, BED_MAX_TARGET, hotend_max_target(heater_id))) {
       SERIAL_ECHOPGM(STR_PID_AUTOTUNE); SERIAL_ECHOLNPGM(STR_PID_TEMP_TOO_HIGH);
