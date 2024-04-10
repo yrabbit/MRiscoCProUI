@@ -218,9 +218,9 @@ jobs:
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
-        if ($T13); then TTMP=-SpriteT13; else TTMP=; fi;
-        if ($MP); then MPTMP=-MP; else MPTMP=; fi;
-        echo "filename=${DTMP}Aquila${TTMP}_${AVTMP}_UBL-ProUI${TPTMP}${MPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($T13); then TTMP=_SPRT13; else TTMP=; fi;
+        if ($MP); then MPTMP=_MP; else MPTMP=; fi;
+        echo "filename=${DTMP}Aquila${TTMP}${MPTMP}_${AVTMP}_UBL-ProUI${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -268,8 +268,8 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-UBL-ProUI-PWRLOSS-A:            # UBL Pro PWRLOSS for Aquila
-    name: Build UBL Pro PWRLOSS Files A
+  Build-UBL-ProUI-PLR-A:            # UBL Pro PLR for Aquila
+    name: Build UBL Pro PLR Files A
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -310,9 +310,9 @@ jobs:
       run: |
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
-        if ($T13); then TTMP=-SpriteT13; else TTMP=; fi;
-        if ($MP); then MPTMP=-MP; else MPTMP=; fi;
-        echo "filename=${DTMP}Aquila${TTMP}_${AVTMP}_UBL-ProUI-PWRLOSS${MPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($T13); then TTMP=_SPRT13; else TTMP=; fi;
+        if ($MP); then MPTMP=_MP; else MPTMP=; fi;
+        echo "filename=${DTMP}Aquila${TTMP}${MPTMP}_${AVTMP}_UBL-ProUI-PLR.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -357,11 +357,12 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-UBL-ProUI-A-Induct:            # UBL Pro for Aquila X3/S2
-    name: Build UBL Pro Files A Induct
+  Build-UBL-ProUI-A-IND:            # UBL Pro for Aquila X3/S2
+    name: Build UBL Pro Files A IND
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        chip: [427,422,GD32,N32]
         pwr: [true,false]
     steps:
     - uses: actions/checkout@v4
@@ -394,23 +395,30 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        if ($PWR); then PLTMP=-PWRLOSS; else PLTMP=; fi;
-        echo "filename=Aquila_Induct_N32_UBL-ProUI${PLTMP}.bin" >> $GITHUB_OUTPUT
+        if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; STMP="STM32F103RE_creality"; DBORD='CREALITY_V427'
+        elif [ "$AQUILA_VER" = 422 ]; then AVTMP="422"; STMP="STM32F103RE_creality"; DBORD='CREALITY_V422'
+        elif [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; STMP="GD32F103RC_voxelab_maple"; DBORD='VOXELAB_AQUILA'
+        elif [ "$AQUILA_VER" = N32 ]; then AVTMP="N32"; STMP="N32F103RC_voxelab_maple"; DBORD='VOXELAB_AQUILA'
+        fi;
+        if ($PWR); then PLTMP=-PLR; else PLTMP=; fi;
+        echo "filename=Aquila_IND_${AVTMP}_UBL-ProUI${PLTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
         cp configurations/Voxelab\ Aquila/X3/Configuration.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/X3/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/X3/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = N32G455RE_voxelab_maple/" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = ${STMP}/" platformio.ini
+        sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         if ($PWR); then PLMP='\/\/'; PRMP=; else PLMP=; PRMP='\/\/'; fi;
         sed -i "s/.*#define HAS_CUSTOM_COLORS 1/${PLMP}#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
         sed -i "s/.*#define POWER_LOSS_RECOVERY/${PRMP}#define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h
         sed -i "s/.*#define CAPABILITIES_REPORT/${PLMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
         pio run
         mkdir temp
-        mv .pio/build/N32G455RE_voxelab_maple/*.bin temp/build.bin
+        mv .pio/build/${STMP}/*.bin temp/build.bin
       env:
+        AQUILA_VER: ${{ matrix.chip }}
         PWR: ${{ matrix.pwr }}
     - name: Get release
       id: get_release
@@ -1066,9 +1074,9 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
-        if ($T13); then TTMP=-SpriteT13; else TTMP=; fi;
-        if ($MP); then MPTMP=-MP; else MPTMP=; fi;
-        echo "filename=${DTMP}Aquila${TTMP}_${AVTMP}_UBL-ProUI${ISTMP}${TPTMP}${MPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($T13); then TTMP=_SPRT13; else TTMP=; fi;
+        if ($MP); then MPTMP=_MP; else MPTMP=; fi;
+        echo "filename=${DTMP}Aquila${TTMP}${MPTMP}_${AVTMP}_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
