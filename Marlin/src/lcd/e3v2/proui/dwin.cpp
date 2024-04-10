@@ -1762,7 +1762,7 @@ void DWIN_HomingDone() {
       TERN_(PIDTEMPBED, dwinDrawPlot(PID_BED_START);)
     }
     void drawCPlot() {
-      TERN_(PIDTEMPCHAMBER, dwinDrawPlot(PID_CHAMBER_START));
+      TERN_(PIDTEMPCHAMBER, dwinDrawPlot(PID_CHAMBER_START);)
     }
 
   #endif // PROUI_ITEM_PLOT
@@ -1936,10 +1936,11 @@ void DWIN_Print_Finished() {
 // Print was aborted
 void DWIN_Print_Aborted() {
   DEBUG_ECHOLNPGM("DWIN_Print_Aborted");
+  TERN_(SAVED_POSITIONS, queue.inject(F("G60 S0"));)
   #ifdef EVENT_GCODE_SD_ABORT
     queue.inject(F(EVENT_GCODE_SD_ABORT));
   #endif
-  TERN_(HOST_PROMPT_SUPPORT, hostui.notify(GET_TEXT_F(MSG_PRINT_ABORTED)));
+  TERN_(HOST_PROMPT_SUPPORT, hostui.notify(GET_TEXT_F(MSG_PRINT_ABORTED));)
   LCD_MESSAGE_F("Print Aborted");
   RaiseHead();
   DWIN_Print_Finished();
@@ -2019,7 +2020,7 @@ void DWIN_SetDataDefaults() {
   DWINUI::SetColors(HMI_data.Text_Color, HMI_data.Background_Color, HMI_data.TitleBg_Color);
   TERN_(PIDTEMP, HMI_data.HotendPIDT = DEF_HOTENDPIDT;)
   TERN_(PIDTEMPBED, HMI_data.BedPIDT = DEF_BEDPIDT;)
-  TERN_(PIDTEMPCHAMBER, HMI_data.ChamberPIDT = DEF_CHAMBERPIDT);
+  TERN_(PIDTEMPCHAMBER, HMI_data.ChamberPIDT = DEF_CHAMBERPIDT;)
   TERN_(HAS_PID_HEATING, HMI_data.PIDCycles = DEF_PIDCYCLES;)
   #if ENABLED(PREVENT_COLD_EXTRUSION)
     HMI_data.ExtMinT = EXTRUDE_MINTEMP;
@@ -2166,7 +2167,7 @@ void Init(){
   } while (uVar3 != 15);
   char ver[25];
   sprintf(ver, "Version: %s", SHORT_BUILD_VERSION);
-  DWINUI::Draw_CenteredString(2, Color_Cyan, 230, TERN(PROUI_EX, F("MRiscoC ProUI"), F("MRiscoC NoPro"))) ;
+  DWINUI::Draw_CenteredString(2, Color_Cyan, 230, TERN(PROUI_EX, F("MRiscoC ProUI"), F("MRiscoC NoPro")));
   DWINUI::Draw_CenteredString((fontid_t)2, Color_White, 260, F(ver));
   DWINUI::Draw_CenteredString(false, 1, Color_White, DWINUI::backcolor, 280, DateTime);
   DWINUI::Draw_CenteredString(2, 0xffe0, 305, F("ClassicRocker883"));
@@ -2447,7 +2448,7 @@ void AutoHome() { queue.inject_P(G28_STR); }
 
 #if HAS_ZOFFSET_ITEM
 
-  void ApplyZOffset() { TERN_(EEPROM_SETTINGS, settings.save()); }
+  void ApplyZOffset() { TERN_(EEPROM_SETTINGS, settings.save();) }
   void LiveZOffset() {
     #if ANY(BABYSTEP_ZPROBE_OFFSET, JUST_BABYSTEP)
       const_float_t step_zoffset = round((MenuData.Value / 100.0f) * planner.settings.axis_steps_per_mm[Z_AXIS]) - babystep.accum;
@@ -2462,7 +2463,7 @@ void AutoHome() { queue.inject_P(G28_STR); }
   }
 
   void SetMoveZto0() {
-    TERN_(HAS_LEVELING, set_bed_leveling_enabled(false));
+    TERN_(HAS_LEVELING, set_bed_leveling_enabled(false);)
     gcode.process_subcommands_now(TS(F("G28XYO\nG28Z\nG0F5000X"), X_CENTER, F("Y"), Y_CENTER, F("\nG0Z0F300\nM400")));
     ui.reset_status();
   }
@@ -2715,7 +2716,7 @@ void ApplyMove() {
 #endif
 
 #if HAS_FAN
-  void ApplyFanSpeed() { thermalManager.set_fan_speed(0, MenuData.Value); TERN_(LASER_SYNCHRONOUS_M106_M107, planner.buffer_sync_block(BLOCK_BIT_SYNC_FANS));}
+  void ApplyFanSpeed() { thermalManager.set_fan_speed(0, MenuData.Value); TERN_(LASER_SYNCHRONOUS_M106_M107, planner.buffer_sync_block(BLOCK_BIT_SYNC_FANS);)}
   void SetFanSpeed() { SetIntOnClick(0, 255, thermalManager.fan_speed[EXT], ApplyFanSpeed); }
 #endif
 
@@ -3022,7 +3023,7 @@ void ApplyMaxAccel() { planner.set_max_acceleration(HMI_value.axis, MenuData.Val
     void SetMaxJerkE() { HMI_value.axis = E_AXIS; SetFloatOnClick(min_jerk_edit_values.e, max_jerk_edit_values.e, UNITFDIGITS, planner.max_jerk.e, ApplyMaxJerk); }
   #endif
 #elif HAS_JUNCTION_DEVIATION
-  void ApplyJDmm() { TERN_(LIN_ADVANCE, planner.recalculate_max_e_jerk()); }
+  void ApplyJDmm() { TERN_(LIN_ADVANCE, planner.recalculate_max_e_jerk();) }
   void SetJDmm() { SetPFloatOnClick(MIN_JD_MM, MAX_JD_MM, 3, ApplyJDmm); }
 #endif
 
