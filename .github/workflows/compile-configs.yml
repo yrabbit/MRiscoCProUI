@@ -500,8 +500,8 @@ jobs:
         sed -i "s/.*#define NOZZLE_CLEAN_FEATURE/${ITEMP}#define NOZZLE_CLEAN_FEATURE/" Marlin/Configuration.h
         sed -i "s/.*#define USE_GRID_MESHVIEWER 1/${ITEMP}#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h
         sed -i "s/.*#define SHOW_SPEED_IND/${ITEMP}#define SHOW_SPEED_IND/" Marlin/Configuration.h
-        if [ "$IS" = true ] && [ "$AQUILA_VER" = N32 ]; then
-        sed -i "s/.*#define G26_MESH_VALIDATION/\/\/#define G26_MESH_VALIDATION/" Marlin/Configuration.h
+        if [[ $IS == true && $AQUILA_VER == "N32" ]]; then
+          sed -i "s/.*#define G26_MESH_VALIDATION/\/\/#define G26_MESH_VALIDATION/" Marlin/Configuration.h
         fi;
         if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
