@@ -367,6 +367,7 @@ jobs:
     strategy:
       matrix:
         chip: [GD32,N32]
+        tjc: [true,false]
         pwr: [true,false]
     steps:
     - uses: actions/checkout@v4
@@ -422,6 +423,7 @@ jobs:
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
+        TJC: ${{ matrix.tjc }}
         PWR: ${{ matrix.pwr }}
     - name: Get release
       id: get_release
@@ -498,6 +500,8 @@ jobs:
         sed -i "s/.*#define NOZZLE_CLEAN_FEATURE/${ITEMP}#define NOZZLE_CLEAN_FEATURE/" Marlin/Configuration.h;
         sed -i "s/.*#define USE_GRID_MESHVIEWER 1/${ITEMP}#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h;
         sed -i "s/.*#define SHOW_SPEED_IND/${ITEMP}#define SHOW_SPEED_IND/" Marlin/Configuration.h;
+        if [ "$IS" = true ] && [ "$AQUILA_VER" = N32 ]; then
+        sed -i "s/.*#define G26_MESH_VALIDATION/\/\/#define G26_MESH_VALIDATION/" Marlin/Configuration.h fi;
         if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
