@@ -497,16 +497,17 @@ jobs:
         sed -i "s/.*#define INPUT_SHAPING_X/${STEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
         sed -i "s/.*#define INPUT_SHAPING_Y/${STEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         sed -i "s/.*#define CAPABILITIES_REPORT/${ITEMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define NOZZLE_CLEAN_FEATURE/${ITEMP}#define NOZZLE_CLEAN_FEATURE/" Marlin/Configuration.h;
-        sed -i "s/.*#define USE_GRID_MESHVIEWER 1/${ITEMP}#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h;
-        sed -i "s/.*#define SHOW_SPEED_IND/${ITEMP}#define SHOW_SPEED_IND/" Marlin/Configuration.h;
+        sed -i "s/.*#define NOZZLE_CLEAN_FEATURE/${ITEMP}#define NOZZLE_CLEAN_FEATURE/" Marlin/Configuration.h
+        sed -i "s/.*#define USE_GRID_MESHVIEWER 1/${ITEMP}#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h
+        sed -i "s/.*#define SHOW_SPEED_IND/${ITEMP}#define SHOW_SPEED_IND/" Marlin/Configuration.h
         if [ "$IS" = true ] && [ "$AQUILA_VER" = N32 ]; then
-        sed -i "s/.*#define G26_MESH_VALIDATION/\/\/#define G26_MESH_VALIDATION/" Marlin/Configuration.h fi;
+        sed -i "s/.*#define G26_MESH_VALIDATION/\/\/#define G26_MESH_VALIDATION/" Marlin/Configuration.h
+        fi;
         if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
-        sed -i "s/.*#define G26_MESH_VALIDATION/${PTEMP}#define G26_MESH_VALIDATION/" Marlin/Configuration.h;
-        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/${PTEMP}#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h;
+        sed -i "s/.*#define G26_MESH_VALIDATION/${PTEMP}#define G26_MESH_VALIDATION/" Marlin/Configuration.h
+        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/${PTEMP}#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
         sed -i "s/.*#define CAPABILITIES_REPORT/${PTEMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
