@@ -2029,6 +2029,7 @@ void DWIN_SetDataDefaults() {
   #if ALL(HAS_HEATED_BED, PREHEAT_BEFORE_LEVELING)
     HMI_data.BedLevT = LEVELING_BED_TEMP;
   #endif
+  TERN_(PROUI_ITEM_ENC, ui.rev_rate = false;)
   TERN_(BAUD_RATE_GCODE, HMI_data.Baud250K = (BAUDRATE == 250000);)
   TERN_(HAS_BED_PROBE, HMI_data.CalcAvg = true;)
   TERN_(SHOW_SPEED_IND, HMI_data.SpdInd = false;)
@@ -3076,6 +3077,9 @@ void ApplyMaxAccel() { planner.set_max_acceleration(HMI_value.axis, MenuData.Val
 #if ENABLED(ENC_MENU_ITEM)
   void SetEncRateA() { SetPIntOnClick(ui.enc_rateB + 1, 1000); }
   void SetEncRateB() { SetPIntOnClick(11, ui.enc_rateA - 1); }
+#endif
+#if ENABLED(PROUI_ITEM_ENC)
+  void SetRevRate() { Toggle_Chkb_Line(ui.rev_rate); }
 #endif
 
 #if HAS_TOOLBAR
@@ -4570,7 +4574,7 @@ void Draw_AdvancedSettings_Menu() {
 #else // Default-No Probe
 void Draw_AdvancedSettings_Menu() {
   checkkey = Menu;
-  if (SET_MENU(AdvancedSettings, MSG_ADVANCED_SETTINGS, 18)) {
+  if (SET_MENU(AdvancedSettings, MSG_ADVANCED_SETTINGS, 19)) {
     BACK_ITEM(Goto_Main_Menu);
     #if ENABLED(EEPROM_SETTINGS)
       MENU_ITEM(ICON_ReadEEPROM, MSG_LOAD_EEPROM, onDrawMenuItem, ReadEeprom);
@@ -4615,6 +4619,9 @@ void Draw_AdvancedSettings_Menu() {
       EDIT_ITEM_F(ICON_Motion, "Enc steps/sec 100x", onDrawPIntMenu, SetEncRateA, &ui.enc_rateA);
       EDIT_ITEM_F(ICON_Motion, "Enc steps/sec 10x", onDrawPIntMenu, SetEncRateB, &ui.enc_rateB);
     #endif
+    #if ENABLED(PROUI_ITEM_ENC)
+      EDIT_ITEM_F(ICON_Motion, "Reverse Encoder", onDrawChkbMenu, SetRevRate, &ui.rev_rate);
+    #endif
   }
   ui.reset_status(true);
   UpdateMenu(AdvancedSettings);
@@ -4623,7 +4630,7 @@ void Draw_AdvancedSettings_Menu() {
 
 void Draw_Advanced_Menu() { // From Control_Menu (Control) || Default-NP AdvancedSettings_Menu (Level)
   checkkey = Menu;
-  if (SET_MENU(AdvancedMenu, MSG_ADVANCED_SETTINGS, 18)) {
+  if (SET_MENU(AdvancedMenu, MSG_ADVANCED_SETTINGS, 19)) {
     BACK_ITEM(Draw_Control_Menu);
     #if ENABLED(EEPROM_SETTINGS)
       MENU_ITEM(ICON_ReadEEPROM, MSG_LOAD_EEPROM, onDrawMenuItem, ReadEeprom);
@@ -4667,6 +4674,9 @@ void Draw_Advanced_Menu() { // From Control_Menu (Control) || Default-NP Advance
     #if ALL(ENCODER_RATE_MULTIPLIER, ENC_MENU_ITEM)
       EDIT_ITEM_F(ICON_Motion, "Enc steps/sec 100x", onDrawPIntMenu, SetEncRateA, &ui.enc_rateA);
       EDIT_ITEM_F(ICON_Motion, "Enc steps/sec 10x", onDrawPIntMenu, SetEncRateB, &ui.enc_rateB);
+    #endif
+    #if ENABLED(PROUI_ITEM_ENC)
+      EDIT_ITEM_F(ICON_Motion, "Reverse Encoder", onDrawChkbMenu, SetRevRate, &ui.rev_rate);
     #endif
   }
   ui.reset_status(true);

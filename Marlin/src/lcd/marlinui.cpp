@@ -68,9 +68,12 @@ constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
   float MarlinUI::screw_pos = BED_SCREW_INSET;
 #endif
 
-#if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
+#if ALL(ENCODER_RATE_MULTIPLIER, ENC_MENU_ITEM)
   uint16_t MarlinUI::enc_rateA = 135;
   uint16_t MarlinUI::enc_rateB = 25;
+#endif
+#if ENABLED(PROUI_ITEM_ENC)
+  bool MarlinUI::rev_rate = false;
 #endif
 
 #if HAS_STATUS_MESSAGE

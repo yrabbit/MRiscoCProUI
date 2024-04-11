@@ -611,9 +611,12 @@ typedef struct SettingsDataStruct {
   //
   // Encoder Rate
   //
-  #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
+  #if ALL(ENCODER_RATE_MULTIPLIER, ENC_MENU_ITEM)
     uint16_t enc_rateA;
     uint16_t enc_rateB;
+  #endif
+  #if ENABLED(PROUI_ITEM_ENC)
+    bool rev_rate;
   #endif
 
   //
@@ -1696,9 +1699,12 @@ void MarlinSettings::postprocess() {
     //
     // Encoder Rate
     //
-    #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
+    #if ALL(ENCODER_RATE_MULTIPLIER, ENC_MENU_ITEM)
       EEPROM_WRITE(ui.enc_rateA);
       EEPROM_WRITE(ui.enc_rateB);
+    #endif
+    #if ENABLED(PROUI_ITEM_ENC)
+      EEPROM_WRITE(ui.rev_rate);
     #endif
 
     //
@@ -2817,11 +2823,15 @@ void MarlinSettings::postprocess() {
         //
         // Encoder Rate
         //
-        #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
+        #if ALL(ENCODER_RATE_MULTIPLIER, ENC_MENU_ITEM)
           _FIELD_TEST(enc_rateA);
           EEPROM_READ(ui.enc_rateA);
           _FIELD_TEST(enc_rateB);
           EEPROM_READ(ui.enc_rateB);
+        #endif
+        #if ENABLED(PROUI_ITEM_ENC)
+          _FIELD_TEST(rev_rate);
+          EEPROM_READ(ui.rev_rate);
         #endif
 
       #endif // DWIN_LCD_PROUI
@@ -3363,9 +3373,12 @@ void MarlinSettings::reset() {
   //
   // Encoder Rate
   //
-  #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
+  #if ALL(ENCODER_RATE_MULTIPLIER, ENC_MENU_ITEM)
     ui.enc_rateA = 135;
     ui.enc_rateB = 25;
+  #endif
+  #if ENABLED(PROUI_ITEM_ENC)
+    ui.rev_rate = false;
   #endif
 
   //

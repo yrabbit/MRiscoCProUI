@@ -200,9 +200,12 @@ public:
     static float screw_pos; // bed corner screw inset
   #endif
 
-  #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
+  #if ALL(ENCODER_RATE_MULTIPLIER, ENC_MENU_ITEM)
     static uint16_t enc_rateA;
     static uint16_t enc_rateB;
+  #endif
+  #if ENABLED(PROUI_ITEM_ENC)
+    static bool rev_rate;
   #endif
 
   static void init();

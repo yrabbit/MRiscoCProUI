@@ -154,6 +154,9 @@ uint32_t GetHash(char * str);
   void SetEncRateA();
   void SetEncRateB();
 #endif
+#if ENABLED(PROUI_ITEM_ENC)
+  void SetRevRate();
+#endif
 #if ALL(HAS_BLTOUCH_HS_MODE, HS_MENU_ITEM)
   void SetHSMode();
 #endif
