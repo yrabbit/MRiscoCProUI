@@ -398,7 +398,7 @@ jobs:
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($PWR); then PLTMP=-PLR; else PLTMP=; fi;
-        echo "filename={DTMP}Aquila_IND_${AVTMP}_UBL-ProUI${PLTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Aquila_IND_${AVTMP}_UBL-ProUI${PLTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -1256,14 +1256,14 @@ jobs:
       run: |
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; DBORD='CREALITY_V427'; else AVTMP="422"; DBORD='CREALITY_V422'; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
-        echo "filename={DTMP}Aquila_IND_${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Aquila_IND_${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
         cp configurations/Voxelab\ Aquila\ 427/UBL/Configuration.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila\ 427/UBL/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila\ 427/UBL/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = ${STMP}/" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/" platformio.ini
         sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         sed -i "s/.*#define Z_MIN_PROBE_PIN.*/#define Z_MIN_PROBE_PIN PB0/" Marlin/Configuration.h
         sed -i "/.*#define Z_MIN_PROBE_PIN.*/a\#define SERVO0_PIN PB1" Marlin/Configuration.h
@@ -1275,7 +1275,7 @@ jobs:
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
         pio run
         mkdir temp
-        mv .pio/build/${STMP}/*.bin temp/build.bin
+        mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
         TJC: ${{ matrix.tjc }}
