@@ -369,6 +369,7 @@ void unified_bed_leveling::G29() {
         if (closest.pos.x < 0) { invalidate_all = true; break; }
         z_values[closest.pos.x][closest.pos.y] = NAN;
         TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(closest.pos, 0.0f));
+        TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(closest.pos.x, closest.pos.y, 0.0f);)
       }
     }
     if (invalidate_all) {
@@ -398,6 +399,7 @@ void unified_bed_leveling::G29() {
                       p2 = 0.5f * (GRID_MAX_POINTS_Y) - y;
           z_values[x][y] += 2.0f * HYPOT(p1, p2);
           TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(x, y, z_values[x][y]));
+          TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(x, y, z_values[x][y]);)
         }
         break;
 
@@ -409,6 +411,8 @@ void unified_bed_leveling::G29() {
           #if ENABLED(EXTENSIBLE_UI)
             ExtUI::onMeshUpdate(x, x, z_values[x][x]);
             ExtUI::onMeshUpdate(x, x2, z_values[x][x2]);
+          #elif ENABLED(DWIN_LCD_PROUI)
+            DWIN_MeshUpdate(x, x2, z_values[x][x2]);
           #endif
         }
         break;
@@ -419,6 +423,7 @@ void unified_bed_leveling::G29() {
           for (uint8_t y = (GRID_MAX_POINTS_Y) / 3; y < 2 * (GRID_MAX_POINTS_Y) / 3; y++) { // the center of the bed
             z_values[x][y] += parser.seen_test('C') ? param.C_constant : 9.99f;
             TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(x, y, z_values[x][y]));
+            TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(x, y, z_values[x][y]);)
           }
         break;
     }
@@ -555,6 +560,7 @@ void unified_bed_leveling::G29() {
               else {
                 z_values[cpos.x][cpos.y] = param.C_constant;
                 TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(cpos, param.C_constant));
+                TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(cpos.x, cpos.y, param.C_constant);)
               }
             }
           }
@@ -733,6 +739,7 @@ void unified_bed_leveling::adjust_mesh_to_mean(const bool cflag, const_float_t o
       if (!isnan(z_values[x][y])) {
         z_values[x][y] -= mean + offset;
         TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(x, y, z_values[x][y]));
+        TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(x, y, z_values[x][y]);)
       }
 }
 
@@ -744,6 +751,7 @@ void unified_bed_leveling::shift_mesh_height() {
     if (!isnan(z_values[x][y])) {
       z_values[x][y] += param.C_constant;
       TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(x, y, z_values[x][y]));
+      TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(x, y, z_values[x][y]);)
     }
 }
 
@@ -1441,6 +1449,7 @@ bool unified_bed_leveling::smart_fill_one(const uint8_t x, const uint8_t y, cons
       if (!isnan(v2)) {
         z_values[x][y] = v1 < v2 ? v1 : v1 + v1 - v2;
         TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(x, y, z_values[x][y]));
+        TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(x, y, z_values[x][y]);)
         return true;
       }
     }
@@ -1531,14 +1540,20 @@ void unified_bed_leveling::smart_mesh_fill() {
       }
     }
     else { // !do_3_pt_leveling
-
-      #ifndef G29J_MESH_TILT_MARGIN
-        #define G29J_MESH_TILT_MARGIN 0
+      #if PROUI_EX
+        const float x_min = probe.min_x(),
+                    x_max = probe.max_x(),
+                    y_min = probe.min_y(),
+                    y_max = probe.max_y(),
+      #else
+        #ifndef G29J_MESH_TILT_MARGIN
+          #define G29J_MESH_TILT_MARGIN 0
+        #endif
+        const float x_min = _MAX((X_MIN_POS) + (G29J_MESH_TILT_MARGIN), MESH_MIN_X, probe.min_x()),
+                    x_max = _MIN((X_MAX_POS) - (G29J_MESH_TILT_MARGIN), MESH_MAX_X, probe.max_x()),
+                    y_min = _MAX((Y_MIN_POS) + (G29J_MESH_TILT_MARGIN), MESH_MIN_Y, probe.min_y()),
+                    y_max = _MIN((Y_MAX_POS) - (G29J_MESH_TILT_MARGIN), MESH_MAX_Y, probe.max_y()),
       #endif
-      const float x_min = _MAX((X_MIN_POS) + (G29J_MESH_TILT_MARGIN), MESH_MIN_X, probe.min_x()),
-                  x_max = _MIN((X_MAX_POS) - (G29J_MESH_TILT_MARGIN), MESH_MAX_X, probe.max_x()),
-                  y_min = _MAX((Y_MIN_POS) + (G29J_MESH_TILT_MARGIN), MESH_MIN_Y, probe.min_y()),
-                  y_max = _MIN((Y_MAX_POS) - (G29J_MESH_TILT_MARGIN), MESH_MAX_Y, probe.max_y()),
                   dx = (x_max - x_min) / (param.J_grid_size - 1),
                   dy = (y_max - y_min) / (param.J_grid_size - 1);
 
@@ -1640,6 +1655,7 @@ void unified_bed_leveling::smart_mesh_fill() {
 
       z_values[i][j] = mz - lsf_results.D;
       TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(i, j, z_values[i][j]));
+      TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(i, j, z_values[i][j]);)
     }
 
     if (DEBUGGING(LEVELING)) {
@@ -1731,6 +1747,7 @@ void unified_bed_leveling::smart_mesh_fill() {
           const float ez = -lsf_results.D - lsf_results.A * ppos.x - lsf_results.B * ppos.y;
           z_values[ix][iy] = ez;
           TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(ix, iy, z_values[ix][iy]));
+          TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(ix, iy, z_values[ix][iy]);)
           idle(); // housekeeping
         }
       }

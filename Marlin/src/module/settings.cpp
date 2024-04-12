@@ -980,7 +980,7 @@ void MarlinSettings::postprocess() {
       #if ENABLED(MESH_BED_LEVELING)
         #if ANY(PROUI_EX, PROUI_GRID_PNTS)
           static_assert(
-            sizeof(bedlevel.z_values) == GRID_LIMIT * GRID_LIMIT * sizeof(bedlevel.z_values[0][0]),
+            sizeof(bedlevel.z_values) == (GRID_LIMIT * GRID_LIMIT) * sizeof(bedlevel.z_values[0][0]),
             "MBL Z array is the wrong size."
           );
         #else
@@ -1049,7 +1049,7 @@ void MarlinSettings::postprocess() {
       #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
         #if ANY(PROUI_EX, PROUI_GRID_PNTS)
           static_assert(
-            sizeof(bedlevel.z_values) == GRID_LIMIT * GRID_LIMIT * sizeof(bedlevel.z_values[0][0]),
+            sizeof(bedlevel.z_values) == (GRID_LIMIT * GRID_LIMIT) * sizeof(bedlevel.z_values[0][0]),
             "Bilinear Z array is the wrong size."
           );
         #else
@@ -2805,12 +2805,12 @@ void MarlinSettings::postprocess() {
       // DWIN ProUI User Data
       //
       #if ENABLED(DWIN_LCD_PROUI)
-      {
-        const char dwin_data[eeprom_data_size] = { 0 };
-        _FIELD_TEST(dwin_data);
-        EEPROM_READ(dwin_data);
-        if (!validating) DWIN_CopySettingsFrom(dwin_data);
-      }
+        {
+          const char dwin_data[eeprom_data_size] = { 0 };
+          _FIELD_TEST(dwin_data);
+          EEPROM_READ(dwin_data);
+          if (!validating) DWIN_CopySettingsFrom(dwin_data);
+        }
 
         //
         // BED_SCREW_INSET
