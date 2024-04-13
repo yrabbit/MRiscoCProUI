@@ -866,7 +866,8 @@ namespace LanguageNarrow_en {
   LSTR MSG_TMC_ACURRENT                   = STR_A _UxGT("Driver Current");
   LSTR MSG_TMC_BCURRENT                   = STR_B _UxGT("Driver Current");
   LSTR MSG_TMC_CCURRENT                   = STR_C _UxGT("Driver Current");
-  LSTR MSG_TMC_ECURRENT                   = _UxGT("E Driver Current");
+  LSTR MSG_TMC_ECURRENT                   = STR_E _UxGT("Driver Current");
+  LSTR MSG_TMC_ENCURRENT                  = _UxGT("* Driver Current");
   LSTR MSG_TMC_HYBRID_THRS                = _UxGT("Hybrid Threshold");
   LSTR MSG_TMC_HOMING_THRS                = _UxGT("Sensorless Homing");
   LSTR MSG_TMC_STEPPING_MODE              = _UxGT("Stepping Mode");
@@ -1038,6 +1039,11 @@ namespace LanguageWide_en {
     LSTR MSG_OPTION_DISABLED                = _UxGT("Option Disabled");
     LSTR MSG_DISABLE_MANUAL_TRAMMING        = _UxGT("Disable manual tramming");
     LSTR MSG_TRAMMING_WIZARD_START          = _UxGT("Tramming Wizard Start");
+    LSTR MSG_TMC_ASTEALTH                   = _UxGT(STR_A " " STR_TMC_STEALTH);
+    LSTR MSG_TMC_BSTEALTH                   = _UxGT(STR_B " " STR_TMC_STEALTH);
+    LSTR MSG_TMC_CSTEALTH                   = _UxGT(STR_C " " STR_TMC_STEALTH);
+    LSTR MSG_TMC_ESTEALTH                   = _UxGT(STR_E " " STR_TMC_STEALTH);
+    LSTR MSG_TMC_ENSTEALTH                  = _UxGT(* " " STR_TMC_STEALTH);
   #endif // LCD_WIDTH >= 20 || HAS_DWIN_E3V2
 }
 
