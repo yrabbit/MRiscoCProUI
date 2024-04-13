@@ -4353,7 +4353,7 @@ void Draw_MaxAccel_Menu() {
 #if HAS_MESH
   void Draw_MeshSet_Menu() {
     checkkey = Menu;
-    if (SET_MENU(MeshMenu, MSG_MESH_LEVELING, 7)) {
+    if (SET_MENU(MeshMenu, MSG_MESH_SETTINGS, 7)) {
       BACK_ITEM(Draw_AdvancedSettings_Menu);
       #if ENABLED(ACTIVATE_MESH_ITEM)
         EDIT_ITEM(ICON_UBLActive, MSG_ACTIVATE_MESH, onDrawChkbMenu, SetMeshActive, &planner.leveling_active);
@@ -4561,7 +4561,7 @@ void Draw_AdvancedSettings_Menu() {
       MENU_ITEM(ICON_Tilt, MSG_UBL_TILT_MESH, onDrawMenuItem, UBLMeshTilt);
       MENU_ITEM(ICON_Probe, MSG_ZPROBE_SETTINGS, onDrawSubMenu, Draw_ProbeSet_Menu);
     #endif
-    MENU_ITEM(ICON_PrintSize, MSG_MESH_LEVELING, onDrawSubMenu, Draw_MeshSet_Menu);
+    MENU_ITEM(ICON_PrintSize, MSG_MESH_SETTINGS, onDrawSubMenu, Draw_MeshSet_Menu);
     MENU_ITEM(ICON_MeshViewer, MSG_MESH_VIEW, onDrawSubMenu, DWIN_MeshViewer);
     #if USE_GRID_MESHVIEWER
       EDIT_ITEM(ICON_PrintSize, MSG_CHANGE_MESH, onDrawChkbMenu, SetViewMesh, &bedLevelTools.view_mesh);
@@ -4591,7 +4591,7 @@ void Draw_AdvancedSettings_Menu() {
       MENU_ITEM(ICON_Level, MSG_AUTO_MESH, onDrawMenuItem, AutoLevStart);
       MENU_ITEM(ICON_Probe, MSG_ZPROBE_SETTINGS, onDrawSubMenu, Draw_ProbeSet_Menu);
     #endif
-    MENU_ITEM(ICON_PrintSize, MSG_MESH_LEVELING, onDrawSubMenu, Draw_MeshSet_Menu);
+    MENU_ITEM(ICON_PrintSize, MSG_MESH_SETTINGS, onDrawSubMenu, Draw_MeshSet_Menu);
     MENU_ITEM(ICON_MeshViewer, MSG_MESH_VIEW, onDrawSubMenu, DWIN_MeshViewer);
     #if USE_GRID_MESHVIEWER
       EDIT_ITEM(ICON_PrintSize, MSG_CHANGE_MESH, onDrawChkbMenu, SetViewMesh, &bedLevelTools.view_mesh);
@@ -4608,12 +4608,12 @@ void Draw_AdvancedSettings_Menu() {
 #elif ENABLED(MESH_BED_LEVELING)
 void Draw_AdvancedSettings_Menu() {
   checkkey = Menu;
-  if (SET_MENU(AdvancedSettings, MSG_UBL_MESH_LEVELING, 10)) {
+  if (SET_MENU(AdvancedSettings, MSG_MESH_LEVELING, 10)) {
     BACK_ITEM(Goto_Main_Menu);
     MENU_ITEM(ICON_ManualMesh, MSG_UBL_CONTINUE_MESH, onDrawMenuItem, ManualMeshStart);
     MMeshMoveZItem = EDIT_ITEM(ICON_Zoffset, MSG_MESH_EDIT_Z, onDrawPFloat2Menu, SetMMeshMoveZ, &current_position.z);
     MENU_ITEM(ICON_AxisD, MSG_LEVEL_BED_NEXT_POINT, onDrawMenuItem, ManualMeshContinue);
-    MENU_ITEM(ICON_PrintSize, MSG_MESH_LEVELING, onDrawSubMenu, Draw_MeshSet_Menu);
+    MENU_ITEM(ICON_PrintSize, MSG_MESH_SETTINGS, onDrawSubMenu, Draw_MeshSet_Menu);
     MENU_ITEM(ICON_MeshViewer, MSG_MESH_VIEW, onDrawSubMenu, DWIN_MeshViewer);
     #if USE_GRID_MESHVIEWER
       EDIT_ITEM(ICON_PrintSize, MSG_CHANGE_MESH, onDrawChkbMenu, SetViewMesh, &bedLevelTools.view_mesh);
@@ -4685,59 +4685,63 @@ void Draw_AdvancedSettings_Menu() {
 }
 #endif
 
-void Draw_Advanced_Menu() { // From Control_Menu (Control) || Default-NP AdvancedSettings_Menu (Level)
-  checkkey = Menu;
-  if (SET_MENU(AdvancedMenu, MSG_ADVANCED_SETTINGS, 19)) {
-    BACK_ITEM(Draw_Control_Menu);
-    #if ENABLED(EEPROM_SETTINGS)
-      MENU_ITEM(ICON_ReadEEPROM, MSG_LOAD_EEPROM, onDrawMenuItem, ReadEeprom);
-      MENU_ITEM(ICON_ResetEEPROM, MSG_RESTORE_DEFAULTS, onDrawMenuItem, ResetEeprom);
-    #endif
-    #if HAS_LCD_BRIGHTNESS
-      EDIT_ITEM(ICON_Brightness, MSG_BRIGHTNESS, onDrawPInt8Menu, SetBrightness, &ui.brightness);
-    #endif
-    #if ENABLED(EDITABLE_DISPLAY_TIMEOUT)
-      EDIT_ITEM(ICON_RemainTime, MSG_SCREEN_TIMEOUT, onDrawPInt8Menu, SetTimer, &ui.backlight_timeout_minutes);
-    #endif
-    #if BED_SCREW_INSET
-      EDIT_ITEM(ICON_ProbeMargin, MSG_SCREW_INSET, onDrawPFloatMenu, SetRetractSpeed, &ui.screw_pos);
-    #endif
-    #if ALL(PROUI_ITEM_PLR, POWER_LOSS_RECOVERY)
-      EDIT_ITEM(ICON_Pwrlossr, MSG_OUTAGE_RECOVERY, onDrawChkbMenu, SetPwrLossr, &recovery.enabled);
-    #endif
-    #if ENABLED(SHOW_SPEED_IND)
-      EDIT_ITEM(ICON_MaxSpeed, MSG_SPEED_IND, onDrawChkbMenu, SetSpdInd, &HMI_data.SpdInd);
-    #endif
-    #if ENABLED(SOUND_MENU_ITEM)
-      EDIT_ITEM(ICON_Sound, MSG_TICK, onDrawChkbMenu, SetEnableTick, &ui.tick_on);
-      EDIT_ITEM(ICON_Sound, MSG_SOUND, onDrawChkbMenu, SetEnableSound, &ui.sound_on);
-    #endif
-    #if HAS_GCODE_PREVIEW
-      EDIT_ITEM(ICON_File, MSG_HAS_PREVIEW, onDrawChkbMenu, SetPreview, &HMI_data.EnablePreview);
-    #endif
-    #if ENABLED(BAUD_RATE_GCODE)
-      EDIT_ITEM(ICON_SetBaudRate, MSG_250K_BAUD, onDrawChkbMenu, SetBaudRate, &HMI_data.Baud250K);
-    #endif
-    #if ENABLED(PROUI_MEDIASORT)
-      EDIT_ITEM(ICON_File, MSG_MEDIA_SORT, onDrawChkbMenu, SetMediaSort, &HMI_data.MediaSort);
-    #endif
-    EDIT_ITEM(ICON_File, MSG_MEDIA_UPDATE, onDrawChkbMenu, SetMediaAutoMount, &HMI_data.MediaAutoMount);
-    #if HAS_TRINAMIC_CONFIG
-      MENU_ITEM(ICON_TMCSet, MSG_TMC_DRIVERS, onDrawSubMenu, Draw_TrinamicConfig_menu);
-    #endif
-    #if ENABLED(PRINTCOUNTER)
-      MENU_ITEM(ICON_PrintStatsReset, MSG_INFO_PRINT_COUNT_RESET, onDrawSubMenu, printStatsReset);
-    #endif
-    #if ALL(ENCODER_RATE_MULTIPLIER, ENC_MENU_ITEM)
-      EDIT_ITEM_F(ICON_Motion, "Enc steps/sec 100x", onDrawPIntMenu, SetEncRateA, &ui.enc_rateA);
-      EDIT_ITEM_F(ICON_Motion, "Enc steps/sec 10x", onDrawPIntMenu, SetEncRateB, &ui.enc_rateB);
-    #endif
-    #if ENABLED(PROUI_ITEM_ENC)
-      EDIT_ITEM_F(ICON_Motion, "Reverse Encoder", onDrawChkbMenu, SetRevRate, &ui.rev_rate);
-    #endif
+#if HAS_BED_PROBE || defined(MESH_BED_LEVELING)
+
+  void Draw_Advanced_Menu() { // From Control_Menu (Control) || Default-NP AdvancedSettings_Menu (Level)
+    checkkey = Menu;
+    if (SET_MENU(AdvancedMenu, MSG_ADVANCED_SETTINGS, 19)) {
+      BACK_ITEM(Draw_Control_Menu);
+      #if ENABLED(EEPROM_SETTINGS)
+        MENU_ITEM(ICON_ReadEEPROM, MSG_LOAD_EEPROM, onDrawMenuItem, ReadEeprom);
+        MENU_ITEM(ICON_ResetEEPROM, MSG_RESTORE_DEFAULTS, onDrawMenuItem, ResetEeprom);
+      #endif
+      #if HAS_LCD_BRIGHTNESS
+        EDIT_ITEM(ICON_Brightness, MSG_BRIGHTNESS, onDrawPInt8Menu, SetBrightness, &ui.brightness);
+      #endif
+      #if ENABLED(EDITABLE_DISPLAY_TIMEOUT)
+        EDIT_ITEM(ICON_RemainTime, MSG_SCREEN_TIMEOUT, onDrawPInt8Menu, SetTimer, &ui.backlight_timeout_minutes);
+      #endif
+      #if BED_SCREW_INSET
+        EDIT_ITEM(ICON_ProbeMargin, MSG_SCREW_INSET, onDrawPFloatMenu, SetRetractSpeed, &ui.screw_pos);
+      #endif
+      #if ALL(PROUI_ITEM_PLR, POWER_LOSS_RECOVERY)
+        EDIT_ITEM(ICON_Pwrlossr, MSG_OUTAGE_RECOVERY, onDrawChkbMenu, SetPwrLossr, &recovery.enabled);
+      #endif
+      #if ENABLED(SHOW_SPEED_IND)
+        EDIT_ITEM(ICON_MaxSpeed, MSG_SPEED_IND, onDrawChkbMenu, SetSpdInd, &HMI_data.SpdInd);
+      #endif
+      #if ENABLED(SOUND_MENU_ITEM)
+        EDIT_ITEM(ICON_Sound, MSG_TICK, onDrawChkbMenu, SetEnableTick, &ui.tick_on);
+        EDIT_ITEM(ICON_Sound, MSG_SOUND, onDrawChkbMenu, SetEnableSound, &ui.sound_on);
+      #endif
+      #if HAS_GCODE_PREVIEW
+        EDIT_ITEM(ICON_File, MSG_HAS_PREVIEW, onDrawChkbMenu, SetPreview, &HMI_data.EnablePreview);
+      #endif
+      #if ENABLED(BAUD_RATE_GCODE)
+        EDIT_ITEM(ICON_SetBaudRate, MSG_250K_BAUD, onDrawChkbMenu, SetBaudRate, &HMI_data.Baud250K);
+      #endif
+      #if ENABLED(PROUI_MEDIASORT)
+        EDIT_ITEM(ICON_File, MSG_MEDIA_SORT, onDrawChkbMenu, SetMediaSort, &HMI_data.MediaSort);
+      #endif
+      EDIT_ITEM(ICON_File, MSG_MEDIA_UPDATE, onDrawChkbMenu, SetMediaAutoMount, &HMI_data.MediaAutoMount);
+      #if HAS_TRINAMIC_CONFIG
+        MENU_ITEM(ICON_TMCSet, MSG_TMC_DRIVERS, onDrawSubMenu, Draw_TrinamicConfig_menu);
+      #endif
+      #if ENABLED(PRINTCOUNTER)
+        MENU_ITEM(ICON_PrintStatsReset, MSG_INFO_PRINT_COUNT_RESET, onDrawSubMenu, printStatsReset);
+      #endif
+      #if ALL(ENCODER_RATE_MULTIPLIER, ENC_MENU_ITEM)
+        EDIT_ITEM_F(ICON_Motion, "Enc steps/sec 100x", onDrawPIntMenu, SetEncRateA, &ui.enc_rateA);
+        EDIT_ITEM_F(ICON_Motion, "Enc steps/sec 10x", onDrawPIntMenu, SetEncRateB, &ui.enc_rateB);
+      #endif
+      #if ENABLED(PROUI_ITEM_ENC)
+        EDIT_ITEM_F(ICON_Motion, "Reverse Encoder", onDrawChkbMenu, SetRevRate, &ui.rev_rate);
+      #endif
+    }
+    ui.reset_status(true);
+    UpdateMenu(AdvancedMenu);
   }
-  ui.reset_status(true);
-  UpdateMenu(AdvancedMenu);
-}
+
+#endif
 
 #endif // DWIN_LCD_PROUI

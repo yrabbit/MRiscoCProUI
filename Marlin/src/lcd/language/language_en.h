@@ -249,7 +249,6 @@ namespace LanguageNarrow_en {
   LSTR MSG_G26_CANCELED                   = _UxGT("G26 Canceled");
   LSTR MSG_G26_LEAVING                    = _UxGT("Leaving G26");
   LSTR MSG_UBL_CONTINUE_MESH              = _UxGT("Continue Bed Mesh");
-  LSTR MSG_UBL_MESH_LEVELING              = _UxGT("Mesh Leveling");
   LSTR MSG_UBL_3POINT_MESH_LEVELING       = _UxGT("3-Point Leveling");
   LSTR MSG_UBL_GRID_MESH_LEVELING         = _UxGT("Grid Mesh Leveling");
   LSTR MSG_UBL_MESH_LEVEL                 = _UxGT("Level Mesh");
@@ -691,9 +690,10 @@ namespace LanguageNarrow_en {
   LSTR MSG_LINEAR_LEVELING                = _UxGT("Linear Leveling");
   LSTR MSG_BILINEAR_LEVELING              = _UxGT("Bilinear Leveling");
   LSTR MSG_UBL_LEVELING                   = _UxGT("Unified Bed Leveling");
-  LSTR MSG_MESH_LEVELING                  = _UxGT("Mesh Settings");
+  LSTR MSG_MESH_LEVELING                  = _UxGT("Mesh Leveling");
   LSTR MSG_MESH_DONE                      = _UxGT("Mesh probing done");
   LSTR MSG_MESH_POINTS                    = _UxGT("Mesh Points");
+  LSTR MSG_MESH_SETTINGS                  = _UxGT("Mesh Settings");
   LSTR MSG_INFO_STATS_MENU                = _UxGT("Printer Stats");
   LSTR MSG_RESET_STATS                    = _UxGT("Reset Print Stats?");
   LSTR MSG_INFO_BOARD_MENU                = _UxGT("Board Info");
