@@ -145,6 +145,7 @@ void BedLevelToolsClass::ProbeXY() {
 }
 
 void BedLevelToolsClass::mesh_reset() {
+  set_bed_leveling_enabled(false);
   ZERO(bedlevel.z_values);
   TERN_(AUTO_BED_LEVELING_BILINEAR, bedlevel.refresh_bed_level();)
 }

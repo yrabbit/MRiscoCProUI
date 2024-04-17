@@ -1043,7 +1043,7 @@ namespace LanguageWide_en {
     LSTR MSG_TMC_BSTEALTH                   = _UxGT(STR_B " " STR_TMC_STEALTH);
     LSTR MSG_TMC_CSTEALTH                   = _UxGT(STR_C " " STR_TMC_STEALTH);
     LSTR MSG_TMC_ESTEALTH                   = _UxGT(STR_E " " STR_TMC_STEALTH);
-    LSTR MSG_TMC_ENSTEALTH                  = _UxGT(* " " STR_TMC_STEALTH);
+    LSTR MSG_TMC_ENSTEALTH                  = _UxGT("* " STR_TMC_STEALTH);
   #endif // LCD_WIDTH >= 20 || HAS_DWIN_E3V2
 }
 

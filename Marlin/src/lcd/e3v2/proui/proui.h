@@ -193,10 +193,6 @@ typedef struct {
   uint16_t Indicator_Color;
   uint16_t Coordinate_Color;
   uint16_t Bottom_Color;
-  float mesh_min_x = DEF_MESH_MIN_X;
-  float mesh_max_x = DEF_MESH_MAX_X;
-  float mesh_min_y = DEF_MESH_MIN_Y;
-  float mesh_max_y = DEF_MESH_MAX_Y;
   int16_t PIDCycles;
   OPTCODE(PIDTEMP, celsius_t HotendPIDT)
   OPTCODE(PIDTEMPBED, celsius_t BedPIDT)
@@ -211,15 +207,25 @@ typedef struct {
   bool MediaAutoMount;
   bool EnablePreview;
   OPTCODE(MESH_BED_LEVELING, uint8_t z_after_homing)
-  #if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
-    uint32_t Led_Color;
-  #endif
+#if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
+  uint32_t Led_Color;
+#endif
   IF_DISABLED(HAS_BED_PROBE, float ManualZOffset;)
+#if ENABLED(PROUI_MESH_EDIT)
+  float mesh_min_x = DEF_MESH_MIN_X;
+  float mesh_max_x = DEF_MESH_MAX_X;
+  float mesh_min_y = DEF_MESH_MIN_Y;
+  float mesh_max_y = DEF_MESH_MAX_Y;
+#endif
 #if !PROUI_EX
   TERN_(PROUI_GRID_PNTS, uint8_t grid_max_points = DEF_GRID_MAX_POINTS;)
+#if HAS_BED_PROBE
   IF_DISABLED(BD_SENSOR, uint8_t multiple_probing = MULTIPLE_PROBING;)
   uint16_t zprobeFeed = DEF_Z_PROBE_FEEDRATE_SLOW ;
+#endif
+#if HAS_EXTRUDERS
   bool Invert_E0 = DEF_INVERT_E0_DIR;
+#endif
 #endif
 } HMI_data_t;
 

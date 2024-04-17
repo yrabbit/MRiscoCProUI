@@ -120,7 +120,8 @@ public:
     static void set_store_from_mesh(const bed_mesh_t &in_values, mesh_store_t &stored_values);
     static void set_mesh_from_store(const mesh_store_t &stored_values, bed_mesh_t &out_values);
   #endif
-  #if DISABLED(PROUI_EX)
+
+  #if DISABLED(DWIN_LCD_PROUI)
     static const bed_mesh_t _mesh_index_to_xpos,
                             _mesh_index_to_ypos;
   #endif
@@ -293,15 +294,19 @@ public:
 
   static constexpr float get_z_offset() { return 0.0f; }
 
-  #if PROUI_EX
-    static float get_mesh_x(const uint8_t i);
-    static float get_mesh_y(const uint8_t i);
+  #if ENABLED(DWIN_LCD_PROUI)
+    static float get_mesh_x(const uint8_t i) {
+      return MESH_MIN_X + i * (MESH_X_DIST);
+    }
+    static float get_mesh_y(const uint8_t j) {
+      return MESH_MIN_Y + j * (MESH_Y_DIST);
+    }
   #else
     static float get_mesh_x(const uint8_t i) {
       return i < (GRID_MAX_POINTS_X) ? pgm_read_float(&_mesh_index_to_xpos[i]) : MESH_MIN_X + i * (MESH_X_DIST);
     }
-    static float get_mesh_y(const uint8_t i) {
-      return i < (GRID_MAX_POINTS_Y) ? pgm_read_float(&_mesh_index_to_ypos[i]) : MESH_MIN_Y + i * (MESH_Y_DIST);
+    static float get_mesh_y(const uint8_t j) {
+      return j < (GRID_MAX_POINTS_Y) ? pgm_read_float(&_mesh_index_to_ypos[j]) : MESH_MIN_Y + j * (MESH_Y_DIST);
     }
   #endif
 

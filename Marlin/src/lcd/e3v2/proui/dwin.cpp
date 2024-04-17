@@ -288,8 +288,6 @@ MenuClass *PIDMenu = nullptr;
   MenuClass *MeshMenu = nullptr;
   #if ENABLED(PROUI_MESH_EDIT)
     MenuClass *EditMeshMenu = nullptr;
-  #endif
-  #if PROUI_EX
     MenuClass *MeshInsetMenu = nullptr;
   #endif
 #endif
@@ -1428,6 +1426,7 @@ void EachMomentUpdate() {
         return Goto_PowerLossRecovery();
       }
     #endif // POWER_LOSS_RECOVERY
+
   }
   DWIN_UpdateLCD();
 }
@@ -1922,9 +1921,9 @@ void DWIN_Print_Finished() {
     #endif
   }
   if (!HMI_flag.abort_flag) {
-    TERN_(HAS_LEVELING, set_bed_leveling_enabled(false);)
     DisableMotors();
   }
+  TERN_(HAS_LEVELING, set_bed_leveling_enabled(false);)
   HMI_flag.abort_flag = false;
   HMI_flag.pause_flag = false;
   wait_for_heatup = false;
@@ -2016,18 +2015,6 @@ void DWIN_Print_Aborted() {
   }
 #endif
 
-// Max X Mesh Inset does not save after restart - it is limited by Probe offset. TODO: this is just a temp workaround,
- #if PROUI_EX && HAS_MESH
-  void SetMeshArea() {
-    PRO_data.mesh_min_x = HMI_data.mesh_min_x;
-    PRO_data.mesh_max_x = HMI_data.mesh_max_x;
-    PRO_data.mesh_min_y = HMI_data.mesh_min_y;
-    PRO_data.mesh_max_y = HMI_data.mesh_max_y;
-    ProEx.ApplyMeshLimits();
-    ReDrawMenu();
-  }
-#endif
-
 void DWIN_SetDataDefaults() {
   DEBUG_ECHOLNPGM("DWIN_SetDataDefaults");
   DWIN_SetColorDefaults();
@@ -2074,7 +2061,7 @@ void DWIN_SetDataDefaults() {
     #endif
   #endif
   TERN_(HAS_GCODE_PREVIEW, HMI_data.EnablePreview = true;)
-  #if HAS_MESH
+  #if ENABLED(PROUI_MESH_EDIT)
     HMI_data.mesh_min_x = DEF_MESH_MIN_X;
     HMI_data.mesh_max_x = DEF_MESH_MAX_X;
     HMI_data.mesh_min_y = DEF_MESH_MIN_Y;
@@ -2090,10 +2077,10 @@ void DWIN_SetDataDefaults() {
     PRO_data.z_max_pos  = DEF_Z_MAX_POS;
     #if HAS_MESH
       PRO_data.grid_max_points = DEF_GRID_MAX_POINTS;
-      PRO_data.mesh_min_x = DEF_MESH_MIN_X;
-      PRO_data.mesh_max_x = DEF_MESH_MAX_X;
-      PRO_data.mesh_min_y = DEF_MESH_MIN_Y;
-      PRO_data.mesh_max_y = DEF_MESH_MAX_Y;
+      // PRO_data.mesh_min_x = DEF_MESH_MIN_X;
+      // PRO_data.mesh_max_x = DEF_MESH_MAX_X;
+      // PRO_data.mesh_min_y = DEF_MESH_MIN_Y;
+      // PRO_data.mesh_max_y = DEF_MESH_MAX_Y;
     #endif
     #if HAS_BED_PROBE
       PRO_data.zprobefeedslow = DEF_Z_PROBE_FEEDRATE_SLOW;
@@ -4259,36 +4246,9 @@ void Draw_MaxAccel_Menu() {
       SetOnClick(SetIntNoDraw, GRID_MIN, GRID_LIMIT, 0, PRO_data.grid_max_points, ApplyMeshPoints, LiveMeshPoints);
       ProEx.DrawMeshPoints(true, CurrentMenu->line(), PRO_data.grid_max_points);
     }
-    void SetMeshInset()  { SetPFloatOnClick(0, _MAX(X_BED_SIZE, Y_BED_SIZE), UNITFDIGITS, SetMeshArea, ProEx.ApplyMeshLimits);  }
-    // void ApplyMeshInset() { reset_bed_level(); ReDrawItem(); }
-    // void SetXMeshInset()  { SetPFloatOnClick(0, X_BED_SIZE, UNITFDIGITS, ApplyMeshInset);  }
-    // void SetYMeshInset()  { SetPFloatOnClick(0, Y_BED_SIZE, UNITFDIGITS, ApplyMeshInset);  }
-    void MaxMeshArea() {
-      PRO_data.mesh_min_x = HMI_data.mesh_min_x = 0;
-      PRO_data.mesh_max_x = HMI_data.mesh_max_x = X_BED_SIZE;
-      PRO_data.mesh_min_y = HMI_data.mesh_min_y = 0;
-      PRO_data.mesh_max_y = HMI_data.mesh_max_y = Y_BED_SIZE;
-      reset_bed_level();
-      ProEx.ApplyMeshLimits();
-      ReDrawMenu();
-    }
-    void CenterMeshArea() {
-      float max = (MESH_MIN_X + MESH_MIN_Y) * 0.5;
-      if (max < X_BED_SIZE - MESH_MAX_X) { max = X_BED_SIZE - MESH_MAX_X; }
-      if (max < MESH_MIN_Y) { max = MESH_MIN_Y; }
-      if (max < Y_BED_SIZE - MESH_MAX_Y) { max = Y_BED_SIZE - MESH_MAX_Y; }
-      PRO_data.mesh_min_x = HMI_data.mesh_min_x = max;
-      PRO_data.mesh_max_x = HMI_data.mesh_max_x = X_BED_SIZE - max;
-      PRO_data.mesh_min_y = HMI_data.mesh_min_y = max;
-      PRO_data.mesh_max_y = HMI_data.mesh_max_y = Y_BED_SIZE - max;
-      reset_bed_level();
-      ProEx.ApplyMeshLimits();
-      ReDrawMenu();
-    }
   #elif PROUI_GRID_PNTS
     void ApplyMeshPoints() { HMI_data.grid_max_points = MenuData.Value; }
     void SetMeshPoints() { SetIntOnClick(GRID_MIN, GRID_LIMIT, HMI_data.grid_max_points, ApplyMeshPoints); }
-    // void SetMeshPoints() { SetPIntOnClick(GRID_MIN, GRID_LIMIT); }
   #endif
 
   #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
@@ -4297,7 +4257,6 @@ void Draw_MaxAccel_Menu() {
   #endif
 
   #if ENABLED(ACTIVATE_MESH_ITEM)
-
     void SetMeshActive() {
       const bool val = planner.leveling_active;
       set_bed_leveling_enabled(!planner.leveling_active);
@@ -4314,7 +4273,6 @@ void Draw_MaxAccel_Menu() {
       #endif
       Show_Chkb_Line(planner.leveling_active);
     }
-
   #endif
 
   #if ALL(HAS_HEATED_BED, PREHEAT_BEFORE_LEVELING)
@@ -4327,7 +4285,7 @@ void Draw_MaxAccel_Menu() {
     void ApplyEditMeshX() { bedLevelTools.mesh_x = MenuData.Value; if (AutoMovToMesh) { bedLevelTools.MoveToXY(); } }
     void ApplyEditMeshY() { bedLevelTools.mesh_y = MenuData.Value; if (AutoMovToMesh) { bedLevelTools.MoveToXY(); } }
     void LiveEditMesh()  { ((MenuItemPtrClass*)EditZValueItem)->value = &bedlevel.z_values[HMI_value.Select ? bedLevelTools.mesh_x : MenuData.Value][HMI_value.Select ? MenuData.Value : bedLevelTools.mesh_y]; EditZValueItem->redraw(); }
-    void LiveEditMeshZ() { *MenuData.P_Float = MenuData.Value / POW(10, 3); if (AutoMovToMesh) { bedLevelTools.MoveToZ(); } }
+    void LiveEditMeshZ() { *MenuData.P_Float = MenuData.Value / POW(10, 3); }
     void SetEditMeshX() { HMI_value.Select = 0; SetIntOnClick(0, GRID_MAX_POINTS_X - 1, bedLevelTools.mesh_x, ApplyEditMeshX, LiveEditMesh); }
     void SetEditMeshY() { HMI_value.Select = 1; SetIntOnClick(0, GRID_MAX_POINTS_Y - 1, bedLevelTools.mesh_y, ApplyEditMeshY, LiveEditMesh); }
     void SetEditZValue() { SetPFloatOnClick(Z_OFFSET_MIN, Z_OFFSET_MAX, 3, nullptr, LiveEditMeshZ); if (AutoMovToMesh) { bedLevelTools.MoveToXYZ(); } }
@@ -4346,6 +4304,32 @@ void Draw_MaxAccel_Menu() {
       else { HMI_ReturnScreen(); }
     }
     void ResetMesh() { Goto_Popup(Popup_ResetMesh, OnClick_ResetMesh); }
+
+    // Mesh Inset
+    void ApplyMeshInset() { reset_bed_level(); ReDrawItem(); }
+    void SetXMeshInset()  { SetPFloatOnClick(0, X_BED_SIZE, UNITFDIGITS, ApplyMeshInset);  }
+    void SetYMeshInset()  { SetPFloatOnClick(0, Y_BED_SIZE, UNITFDIGITS, ApplyMeshInset);  }
+    void MaxMeshArea() {
+      HMI_data.mesh_min_x = 0;
+      HMI_data.mesh_max_x = X_BED_SIZE;
+      HMI_data.mesh_min_y = 0;
+      HMI_data.mesh_max_y = Y_BED_SIZE;
+      reset_bed_level();
+      ReDrawMenu();
+    }
+    void CenterMeshArea() {
+      float max = (MESH_MIN_X + MESH_MIN_Y) * 0.5;
+      if (max < X_BED_SIZE - MESH_MAX_X) { max = X_BED_SIZE - MESH_MAX_X; }
+      if (max < MESH_MIN_Y) { max = MESH_MIN_Y; }
+      if (max < Y_BED_SIZE - MESH_MAX_Y) { max = Y_BED_SIZE - MESH_MAX_Y; }
+      HMI_data.mesh_min_x = max;
+      HMI_data.mesh_max_x = X_BED_SIZE - max;
+      HMI_data.mesh_min_y = max;
+      HMI_data.mesh_max_y = Y_BED_SIZE - max;
+      reset_bed_level();
+      ReDrawMenu();
+    }
+
   #endif
 
 #endif // HAS_MESH
@@ -4360,9 +4344,11 @@ void Draw_MaxAccel_Menu() {
       #endif
       #if PROUI_EX
         MENU_ITEM(ICON_MeshPoints, MSG_MESH_POINTS, onDrawMeshPoints, SetMeshPoints);
-        MENU_ITEM(ICON_ProbeMargin, MSG_MESH_INSET, onDrawSubMenu, Draw_MeshInset_Menu);
       #elif PROUI_GRID_PNTS
         EDIT_ITEM(ICON_MeshPoints, MSG_MESH_POINTS, onDrawPInt8Menu, SetMeshPoints, &HMI_data.grid_max_points);
+      #endif
+      #if ENABLED(PROUI_MESH_EDIT)
+        MENU_ITEM(ICON_ProbeMargin, MSG_MESH_INSET, onDrawSubMenu, Draw_MeshInset_Menu);
       #endif
       #if ALL(HAS_HEATED_BED, PREHEAT_BEFORE_LEVELING)
         EDIT_ITEM(ICON_Temperature, MSG_UBL_SET_TEMP_BED, onDrawPIntMenu, SetBedLevT, &HMI_data.BedLevT);
@@ -4395,17 +4381,15 @@ void Draw_MaxAccel_Menu() {
       }
       UpdateMenu(EditMeshMenu);
     }
-  #endif
 
-  #if PROUI_EX
     void Draw_MeshInset_Menu() {
       checkkey = Menu;
       if (SET_MENU(MeshInsetMenu, MSG_MESH_INSET, 7)) {
         BACK_ITEM(Draw_MeshSet_Menu);
-        EDIT_ITEM(ICON_Box, MSG_MESH_MIN_X, onDrawPFloatMenu, SetMeshInset, &HMI_data.mesh_min_x);
-        EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_X, onDrawPFloatMenu, SetMeshInset, &HMI_data.mesh_max_x);
-        EDIT_ITEM(ICON_Box, MSG_MESH_MIN_Y, onDrawPFloatMenu, SetMeshInset, &HMI_data.mesh_min_y);
-        EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_Y, onDrawPFloatMenu, SetMeshInset, &HMI_data.mesh_max_y);
+        EDIT_ITEM(ICON_Box, MSG_MESH_MIN_X, onDrawPFloatMenu, SetXMeshInset, &HMI_data.mesh_min_x);
+        EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_X, onDrawPFloatMenu, SetXMeshInset, &HMI_data.mesh_max_x);
+        EDIT_ITEM(ICON_Box, MSG_MESH_MIN_Y, onDrawPFloatMenu, SetYMeshInset, &HMI_data.mesh_min_y);
+        EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_Y, onDrawPFloatMenu, SetYMeshInset, &HMI_data.mesh_max_y);
         MENU_ITEM(ICON_AxisC, MSG_MESH_AMAX, onDrawMenuItem, MaxMeshArea);
         MENU_ITEM(ICON_SetHome, MSG_MESH_CENTER, onDrawMenuItem, CenterMeshArea);
       }
@@ -4598,8 +4582,8 @@ void Draw_AdvancedSettings_Menu() {
     #endif
     #if ENABLED(PROUI_MESH_EDIT)
       MENU_ITEM(ICON_MeshEdit, MSG_EDIT_MESH, onDrawSubMenu, Draw_EditMesh_Menu);
+      MENU_ITEM(ICON_MeshReset, MSG_MESH_RESET, onDrawMenuItem, ResetMesh);
     #endif
-    MENU_ITEM(ICON_MeshReset, MSG_MESH_RESET, onDrawMenuItem, ResetMesh);
   }
   ui.reset_status(true);
   UpdateMenu(AdvancedSettings);
@@ -4618,11 +4602,11 @@ void Draw_AdvancedSettings_Menu() {
     #if USE_GRID_MESHVIEWER
       EDIT_ITEM(ICON_PrintSize, MSG_CHANGE_MESH, onDrawChkbMenu, SetViewMesh, &bedLevelTools.view_mesh);
     #endif
+    MENU_ITEM(ICON_MeshSave, MSG_UBL_SAVE_MESH, onDrawMenuItem, SaveMesh);
     #if ENABLED(PROUI_MESH_EDIT)
       MENU_ITEM(ICON_MeshEdit, MSG_EDIT_MESH, onDrawSubMenu, Draw_EditMesh_Menu);
+      MENU_ITEM(ICON_MeshReset, MSG_MESH_RESET, onDrawMenuItem, ResetMesh);
     #endif
-    MENU_ITEM(ICON_MeshSave, MSG_UBL_SAVE_MESH, onDrawMenuItem, SaveMesh);
-    MENU_ITEM(ICON_MeshReset, MSG_MESH_RESET, onDrawMenuItem, ResetMesh);
   }
   ui.reset_status(true);
   UpdateMenu(AdvancedSettings);

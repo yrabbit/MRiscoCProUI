@@ -23,15 +23,15 @@
 #include "../../../inc/MarlinConfigPre.h"
 
 //#define DEBUG_DWIN 1
-//#define TJC_DISPLAY           // Enable for TJC display
-//#define DACAI_DISPLAY         // Enable for DACAI display
-//#define TITLE_CENTERED        // Center Menu Title Text
+//#define TJC_DISPLAY         // Enable for TJC display
+//#define DACAI_DISPLAY       // Enable for DACAI display
+//#define TITLE_CENTERED      // Center Menu Title Text
 
 #if HAS_MESH
   #define PROUI_MESH_EDIT     // Add a menu to edit mesh inset + points
   #if ENABLED(PROUI_MESH_EDIT)
-    #define Z_OFFSET_MIN -3.0
-    #define Z_OFFSET_MAX  3.0
+    #define Z_OFFSET_MIN -3.0 // (mm)
+    #define Z_OFFSET_MAX  3.0 // (mm)
   #endif
 #endif
 
@@ -135,10 +135,10 @@
     #undef GRID_MAX_POINTS_X
     #undef GRID_MAX_POINTS_Y
     #undef GRID_MAX_POINTS
-    #undef MESH_MIN_X
-    #undef MESH_MAX_X
-    #undef MESH_MIN_Y
-    #undef MESH_MAX_Y
+    // #undef MESH_MIN_X
+    // #undef MESH_MAX_X
+    // #undef MESH_MIN_Y
+    // #undef MESH_MAX_Y
   #endif
   #if HAS_BED_PROBE
     #undef Z_PROBE_FEEDRATE_SLOW
@@ -157,10 +157,10 @@
     #define GRID_MAX_POINTS_X PRO_data.grid_max_points
     #define GRID_MAX_POINTS_Y PRO_data.grid_max_points
     #define GRID_MAX_POINTS  (PRO_data.grid_max_points * PRO_data.grid_max_points)
-    #define MESH_MIN_X (float)PRO_data.mesh_min_x
-    #define MESH_MAX_X (float)PRO_data.mesh_max_x
-    #define MESH_MIN_Y (float)PRO_data.mesh_min_y
-    #define MESH_MAX_Y (float)PRO_data.mesh_max_y
+    // #define MESH_MIN_X (float)PRO_data.mesh_min_x
+    // #define MESH_MAX_X (float)PRO_data.mesh_max_x
+    // #define MESH_MIN_Y (float)PRO_data.mesh_min_y
+    // #define MESH_MAX_Y (float)PRO_data.mesh_max_y
   #endif
   #if HAS_BED_PROBE
     #define Z_PROBE_FEEDRATE_SLOW PRO_data.zprobefeedslow
@@ -172,7 +172,17 @@
   #include <stddef.h>
   #include "../../../core/types.h"
   #include "proui.h"
-
+// ProUI extra feature redefines
+  #if HAS_MESH
+    #undef  MESH_MIN_X
+    #undef  MESH_MAX_X
+    #undef  MESH_MIN_Y
+    #undef  MESH_MAX_Y
+    #define MESH_MIN_X HMI_data.mesh_min_x
+    #define MESH_MAX_X HMI_data.mesh_max_x
+    #define MESH_MIN_Y HMI_data.mesh_min_y
+    #define MESH_MAX_Y HMI_data.mesh_max_y
+  #endif
   #if PROUI_GRID_PNTS
     #undef  GRID_MAX_POINTS_X
     #undef  GRID_MAX_POINTS_Y
@@ -185,7 +195,9 @@
     #undef Z_PROBE_FEEDRATE_SLOW
     #define Z_PROBE_FEEDRATE_SLOW HMI_data.zprobeFeed
   #endif
-  #undef INVERT_E0_DIR
-  #define INVERT_E0_DIR HMI_data.Invert_E0
-
+  #if HAS_EXTRUDERS
+    #undef INVERT_E0_DIR
+    #define INVERT_E0_DIR HMI_data.Invert_E0
+  #endif
 #endif // PROUI_EX
+

@@ -838,8 +838,8 @@ void unified_bed_leveling::shift_mesh_height() {
       );
     #endif
 
+    TERN_(DWIN_LCD_PROUI, EXIT_PROBE_MESH:);
     restore_ubl_active_state();
-    TERN_(DWIN_LCD_PROUI, EXIT_PROBE_MESH: DWIN_LevelingDone());
   }
 
 #endif // HAS_BED_PROBE
@@ -1798,8 +1798,8 @@ void unified_bed_leveling::smart_mesh_fill() {
     SERIAL_EOL();
 
     SERIAL_ECHOPGM("Y-Axis Mesh Points at: ");
-    for (uint8_t i = 0; i < GRID_MAX_POINTS_Y; ++i) {
-      SERIAL_ECHO(p_float_t(LOGICAL_Y_POSITION(get_mesh_y(i)), 3), F("  "));
+    for (uint8_t j = 0; j < GRID_MAX_POINTS_Y; ++j) {
+      SERIAL_ECHO(p_float_t(LOGICAL_Y_POSITION(get_mesh_y(j)), 3), F("  "));
       serial_delay(25);
     }
     SERIAL_EOL();
