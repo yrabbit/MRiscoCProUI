@@ -2653,12 +2653,6 @@ void ApplyMove() {
 
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
 
-  // Popup on pause
-  void DWIN_Popup_Pause(FSTR_P const fmsg, uint8_t button/*=0*/) {
-    HMI_SaveProcessID(button ? WaitResponse : NothingToDo);
-    DWIN_Show_Popup(ICON_Pause_1, GET_TEXT_F(MSG_ADVANCED_PAUSE), fmsg, button);
-  }
-
   void Draw_Popup_FilamentPurge() {
     DWIN_Draw_Popup(ICON_AutoLeveling, GET_TEXT_F(MSG_ADVANCED_PAUSE), GET_TEXT_F(MSG_FILAMENT_CHANGE_PURGE_CONTINUE));
     DWINUI::Draw_Button(BTN_Purge, 26, 280);
