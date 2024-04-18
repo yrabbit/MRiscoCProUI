@@ -24,7 +24,7 @@
  * feature/pause.cpp - Pause feature support functions
  * This may be combined with related G-codes if features are consolidated.
  *
- * Note: Calls to ui.pause_show_message are passed to either ExtUI or MarlinUI.
+ * NOTE: Calls to ui.pause_show_message are passed to either ExtUI or MarlinUI.
  */
 
 #include "../inc/MarlinConfigPre.h"

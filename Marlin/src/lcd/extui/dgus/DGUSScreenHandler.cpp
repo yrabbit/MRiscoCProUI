@@ -152,16 +152,18 @@ void DGUSScreenHandler::percentageToUint8(DGUS_VP_Variable &var, void *val_ptr) 
 }
 
 // Sends a (RAM located) string to the DGUS Display
-// (Note: The DGUS Display does not clear after the \0, you have to
-// overwrite the remainings with spaces.// var.size has the display buffer size!
+/// NOTE: The DGUS Display does not clear after the \0, you have to
+// overwrite the remainings with spaces.
+// var.size has the display buffer size!
 void DGUSScreenHandler::sendStringToDisplay(DGUS_VP_Variable &var) {
   char *tmp = (char*) var.memadr;
   dgus.writeVariable(var.VP, tmp, var.size, true);
 }
 
 // Sends a (flash located) string to the DGUS Display
-// (Note: The DGUS Display does not clear after the \0, you have to
-// overwrite the remainings with spaces.// var.size has the display buffer size!
+/// NOTE: The DGUS Display does not clear after the \0, you have to
+// overwrite the remainings with spaces.
+// var.size has the display buffer size!
 void DGUSScreenHandler::sendStringToDisplayPGM(DGUS_VP_Variable &var) {
   char *tmp = (char*) var.memadr;
   dgus.writeVariablePGM(var.VP, tmp, var.size, true);

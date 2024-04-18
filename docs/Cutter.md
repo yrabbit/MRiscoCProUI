@@ -14,7 +14,7 @@ With dynamic inline power mode, F-Value feedrate sets are processed with cutter.
 
 Irrespective of what laser power value source is used, the final laser output pin is always updated using the laser/spindle code. Specifically the apply_power(value) call is used to set the laser or spindle output. This call permits safe power control in the event that a sensor fault occurs.
 
-Note: Spindle operation is not selectable with G-Codes at this time.
+**Note**: Spindle operation is not selectable with G-Codes at this time.
 
 The following flow charts depict the flow control logic for spindle and laser operations in the code base.
 

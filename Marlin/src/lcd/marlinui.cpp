@@ -1074,7 +1074,7 @@ void MarlinUI::init() {
               int32_t encoder_multiplier = 1;
 
               if (encoder_multiplier_enabled) {
-                // Note that the rate is always calculated between two passes through the
+                /// NOTE: that the rate is always calculated between two passes through the
                 // loop and that the abs of the encoderDiff value is tracked.
                 static millis_t encoder_mult_prev_ms = 0;
                 const float encoderStepRate = ((float(abs_diff) / float(epps)) * 1000.0f) / float(ms - encoder_mult_prev_ms);
@@ -1231,7 +1231,7 @@ void MarlinUI::init() {
           //#elif PIN_EXIST(LCD_BACKLIGHT) && ENABLED(CR10_STOCKDISPLAY)
             WRITE(LCD_BACKLIGHT_PIN, LOW); // Backlight off
           #endif
-          // TODO: Backlight off (add function to turn off backlight for LCD-12864)
+          /// TODO: Backlight off (add function to turn off backlight for LCD-12864)
           backlight_off_ms = 0;
         }
       #elif HAS_DISPLAY_SLEEP

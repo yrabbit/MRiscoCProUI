@@ -81,7 +81,7 @@
  * Select the serial port on the board to use for communication with the host.
  * This allows the connection of wireless adapters (for instance) to non-default port pins.
  * Serial port -1 is the USB emulated serial port, if available.
- * Note: The first serial port (-1 or 0) will always be used by the Arduino bootloader.
+ * NOTE: The first serial port (-1 or 0) will always be used by the Arduino bootloader.
  *
  * :[-1, 0, 1, 2, 3, 4, 5, 6, 7]
  */
@@ -878,7 +878,7 @@
 
 /**
  * Prevent a single extrusion longer than EXTRUDE_MAXLENGTH.
- * Note: For Bowden Extruders make this large enough to allow load/unload.
+ * NOTE: For Bowden Extruders make this large enough to allow load/unload.
  */
 #define PREVENT_LENGTHY_EXTRUDE
 #define EXTRUDE_MAXLENGTH 1000
@@ -1239,7 +1239,7 @@
  *
  * These settings can be reset by M502
  *
- * Note that if EEPROM is enabled, saved values will override these.
+ * NOTE: if EEPROM is enabled, saved values will override these.
  */
 
 /**
@@ -1973,7 +1973,7 @@
 
   // Commands to execute on filament runout.
   // With multiple runout sensors use the %c placeholder for the current tool in commands (e.g., "M600 T%c")
-  // NOTE: After 'M412 H1' the host handles filament runout and this script does not apply.
+  /// NOTE: After 'M412 H1' the host handles filament runout and this script does not apply.
   #define FILAMENT_RUNOUT_SCRIPT "M600"
 
   // After a runout is detected, continue printing this length of filament
@@ -2663,7 +2663,7 @@
 /**
  * LCD Character Set
  *
- * Note: This option is NOT applicable to Graphical Displays.
+ * NOTE: This option is NOT applicable to Graphical Displays.
  *
  * All character-based LCDs provide ASCII plus one of these
  * language extensions:
@@ -2792,7 +2792,7 @@
 // The duration and frequency for the UI feedback sound.
 // Set these to 0 to disable audio feedback in the LCD menus.
 //
-// Note: Test audio output with the G-Code:
+/// NOTE: Test audio output with the G-Code:
 //  M300 S<frequency Hz> P<duration ms>
 //
 #define LCD_FEEDBACK_FREQUENCY_DURATION_MS 2
@@ -2820,7 +2820,7 @@
 // RepRapDiscount Smart Controller.
 // https://reprap.org/wiki/RepRapDiscount_Smart_Controller
 //
-// Note: Usually sold with a white PCB.
+/// NOTE: Usually sold with a white PCB.
 //
 //#define REPRAP_DISCOUNT_SMART_CONTROLLER
 
@@ -2858,7 +2858,7 @@
 // GADGETS3D G3D LCD/SD Controller
 // https://reprap.org/wiki/RAMPS_1.3/1.4_GADGETS3D_Shield_with_Panel
 //
-// Note: Usually sold with a blue PCB.
+/// NOTE: Usually sold with a blue PCB.
 //
 //#define G3D_PANEL
 
@@ -2894,7 +2894,7 @@
 //
 // CONTROLLER TYPE: I2C
 //
-// Note: These controllers require the installation of Arduino's LiquidCrystal_I2C
+/// NOTE: These controllers require the installation of Arduino's LiquidCrystal_I2C
 // library. For more info: https://github.com/kiyoshigawa/LiquidCrystal_I2C
 //
 
@@ -2923,10 +2923,10 @@
 // PANELOLU2 LCD with status LEDs,
 // separate encoder and click inputs.
 //
-// Note: This controller requires Arduino's LiquidTWI2 library v1.2.3 or later.
+/// NOTE: This controller requires Arduino's LiquidTWI2 library v1.2.3 or later.
 // For more info: https://github.com/lincomatic/LiquidTWI2
 //
-// Note: The PANELOLU2 encoder click input can either be directly connected to
+/// NOTE: The PANELOLU2 encoder click input can either be directly connected to
 // a pin (if BTN_ENC defined to != -1) or read through I2C (when BTN_ENC == -1).
 //
 //#define LCD_I2C_PANELOLU2
@@ -2973,7 +2973,7 @@
 // IMPORTANT: The U8glib library is required for Graphical Display!
 //            https://github.com/olikraus/U8glib_Arduino
 //
-// NOTE: If the LCD is unresponsive you may need to reverse the plugs.
+/// NOTE: If the LCD is unresponsive you may need to reverse the plugs.
 //
 
 //
@@ -3697,7 +3697,8 @@
  * Set this manually if there are extra servos needing manual control.
  * Set to 0 to turn off servo support.
  */
-//#define NUM_SERVOS 3 // Note: Servo index starts with 0 for M280-M282 commands
+//#define NUM_SERVOS 3
+/// NOTE: Servo index starts with 0 for M280-M282 commands
 
 // (ms) Delay before the next move will start, to give the servo time to reach its target angle.
 // 300ms is a good value but you can try less delay.

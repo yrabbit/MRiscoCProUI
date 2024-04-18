@@ -487,7 +487,7 @@ void PrintJobRecovery::resume() {
   #if HAS_LEVELING
     // Restore Z fade and possibly re-enable bed leveling compensation.
     // Leveling may already be enabled due to the ENABLE_LEVELING_AFTER_G28 option.
-    // TODO: Add a G28 parameter to leave leveling disabled.
+    /// TODO: Add a G28 parameter to leave leveling disabled.
     PROCESS_SUBCOMMANDS_NOW(TS(F("M420S"), '0' + (char)info.flag.leveling, 'Z', p_float_t(info.fade, 1)));
 
     #if !HOMING_Z_DOWN

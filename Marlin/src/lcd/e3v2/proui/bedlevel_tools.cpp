@@ -236,7 +236,8 @@ bool BedLevelToolsClass::meshValidate() {
     } // GRID_LOOP
   }
 
-  void BedLevelToolsClass::Set_Mesh_Viewer_Status() { // TODO: draw gradient with values as a legend instead
+  void BedLevelToolsClass::Set_Mesh_Viewer_Status() {
+    /// TODO: draw gradient with values as a legend instead
     float v_max = abs(get_max_value()), v_min = abs(get_min_value()), rmax = _MAX(v_min, v_max), rmin = _MIN(v_min, v_max);
     if (rmax > 3e+10f) { rmax = 0.0000001f; }
     if (rmin > 3e+10f) { rmin = 0.0000001f; }

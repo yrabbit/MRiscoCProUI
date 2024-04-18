@@ -753,7 +753,7 @@ void Stepper::apply_directions() {
    *  blk->final_rate       [VF] = The ending steps per second  (=velocity)
    *  and the count of events completed (step_events_completed) [CS] (=distance until now)
    *
-   *  Note the abbreviations we use in the following formulae are between []s
+   *  NOTE: the abbreviations we use in the following formulae are between []s
    *
    *  For Any 32bit CPU:
    *
@@ -1418,7 +1418,8 @@ void Stepper::apply_directions() {
     }
 
     FORCE_INLINE int32_t Stepper::_eval_bezier_curve(const uint32_t curr_step) {
-      #if (defined(__arm__) || defined(__thumb__)) && __ARM_ARCH >= 6 && !defined(STM32G0B1xx) // TODO: Test define STM32G0xx versus STM32G0B1xx
+      #if (defined(__arm__) || defined(__thumb__)) && __ARM_ARCH >= 6 && !defined(STM32G0B1xx)
+      /// TODO: Test define STM32G0xx versus STM32G0B1xx
 
         // For ARM Cortex M3/M4 CPUs, we have the optimized assembler version, that takes 43 cycles to execute
         uint32_t flo = 0;
@@ -1449,7 +1450,7 @@ void Stepper::apply_directions() {
             [flo]"+r"( flo ) ,
             [fhi]"+r"( fhi ) ,
             [ahi]"+r"( ahi ) ,
-            [A]"+r"( A ) ,  // <== Note: Even if A, B, C, and t registers are INPUT ONLY
+            [A]"+r"( A ) ,  // <== NOTE: Even if A, B, C, and t registers are INPUT ONLY
             [B]"+r"( B ) ,  //  GCC does bad optimizations on the code if we list them as
             [C]"+r"( C ) ,  //  such, breaking this function. So, to avoid that problem,
             [t]"+r"( t )    //  we list all registers as input-outputs.
@@ -1582,7 +1583,8 @@ void Stepper::isr() {
           NOLESS(nextMainISR, (BABYSTEP_TICKS) / 8);      // FULL STOP for 125µs after a baby-step
 
         if (nextBabystepISR != BABYSTEP_NEVER)            // Avoid baby-stepping too close to axis Stepping
-          NOLESS(nextBabystepISR, nextMainISR / 2);       // TODO: Only look at axes enabled for baby-stepping
+          NOLESS(nextBabystepISR, nextMainISR / 2);
+          /// TODO: Only look at axes enabled for baby-stepping
       #endif
 
       // Get the interval to the next ISR call
@@ -2046,7 +2048,7 @@ void Stepper::pulse_phase_isr() {
 
     TERN_(I2S_STEPPER_STREAM, i2s_push_sample());
 
-    // TODO: need to deal with MINIMUM_STEPPER_PULSE over i2s
+    /// TODO: need to deal with MINIMUM_STEPPER_PULSE over i2s
     #if ISR_MULTI_STEPS
       START_TIMED_PULSE();
       AWAIT_HIGH_PULSE();
@@ -2724,7 +2726,8 @@ hal_timer_t Stepper::block_phase_isr() {
         }
       #endif
 
-      if ( ENABLED(DUAL_X_CARRIAGE) // TODO: Find out why this fixes "jittery" small circles
+      if ( ENABLED(DUAL_X_CARRIAGE)
+        /// TODO: Find out why this fixes "jittery" small circles
         || current_block->direction_bits != last_direction_bits
         || TERN(MIXING_EXTRUDER, false, stepper_extruder != last_moved_extruder)
       ) {

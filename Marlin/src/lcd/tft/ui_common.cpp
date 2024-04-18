@@ -253,7 +253,7 @@ void drawBtn(const int x, const int y, const char *label, intptr_t data, const M
   tft.set_background(COLOR_BACKGROUND);
   tft.add_image(0, 0, btnimg, bgColor, COLOR_BACKGROUND, COLOR_DARKGREY);
 
-  // TODO: Make an add_text() taking a font arg
+  /// TODO: Make an add_text() taking a font arg
   if (label) {
     tft_string.set(label);
     tft_string.trim();

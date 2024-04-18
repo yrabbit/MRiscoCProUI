@@ -115,7 +115,7 @@ typedef struct {
   bool abort_flag:1;    // sd or host was aborted
   bool pause_flag:1;    // printing is paused
   bool select_flag:1;   // Popup button selected
-  bool cancel_lev:1; // cancel current abl
+  bool cancel_lev:1;    // cancel current abl
 } HMI_flag_t;
 
 extern HMI_flag_t HMI_flag;
@@ -262,7 +262,6 @@ void DWIN_SetDataDefaults();
 void DWIN_RebootScreen();
 
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
-  void DWIN_Popup_Pause(FSTR_P const fmsg, uint8_t button=0);
   void Draw_Popup_FilamentPurge();
   void Goto_FilamentPurge();
 #endif

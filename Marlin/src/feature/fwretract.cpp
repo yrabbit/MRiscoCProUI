@@ -87,7 +87,7 @@ void FWRetract::reset() {
  *
  * To simplify the logic, doubled retract/recover moves are ignored.
  *
- * Note: Auto-retract will apply the set Z hop in addition to any Z hop
+ * NOTE: Auto-retract will apply the set Z hop in addition to any Z hop
  *       included in the G-code. Use M207 Z0 to to prevent double hop.
  */
 void FWRetract::retract(const bool retracting E_OPTARG(bool swapping/*=false*/)) {

@@ -440,7 +440,8 @@ namespace ExtUI {
   #ifdef __SAM3X8E__
     uint32_t safe_millis();
   #else
-    FORCE_INLINE uint32_t safe_millis() { return millis(); } // TODO: Implement for AVR
+    /// TODO: Implement for AVR
+    FORCE_INLINE uint32_t safe_millis() { return millis(); }
   #endif
 
   void delay_us(uint32_t us);

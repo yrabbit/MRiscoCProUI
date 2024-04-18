@@ -32,6 +32,7 @@ inline void Draw_Select_Highlight(const bool sel) { Draw_Select_Highlight(sel, 2
 void DWIN_Popup_ConfirmCancel(const uint8_t icon, FSTR_P const fmsg2);
 void Goto_Popup(const popupDrawFunc_t fnDraw, const popupClickFunc_t fnClick=nullptr, const popupChangeFunc_t fnChange=nullptr);
 void HMI_Popup();
+void DWIN_Popup_Pause(FSTR_P const fmsg, uint8_t button=0);
 
 inline void Draw_Popup_Bkgd() {
   DWIN_Draw_Rectangle(1, HMI_data.PopupBg_Color, 14, 60, 258, 330);

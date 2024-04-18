@@ -1065,7 +1065,7 @@ void Planner::reverse_pass(const_float_t safe_exit_speed_sqr) {
 
   // Reverse Pass: Coarsely maximize all possible deceleration curves back-planning from the last
   // block in buffer. Cease planning when the last optimal planned or tail pointer is reached.
-  // NOTE: Forward pass will later refine and correct the reverse pass to create an optimal plan.
+  /// NOTE: Forward pass will later refine and correct the reverse pass to create an optimal plan.
   const block_t *next = nullptr;
   while (block_index != planned_block_index) {
 
@@ -1146,24 +1146,25 @@ void Planner::forward_pass_kernel(const block_t * const previous, block_t * cons
 
 /**
  * recalculate() needs to go over the current plan twice.
- * Once in reverse and once forward. This implements the forward pass.
+ * Once in reverse and once forward. This implements forward_pass().
  */
 void Planner::forward_pass() {
 
   // Forward Pass: Forward plan the acceleration curve from the planned pointer onward.
   // Also scans for optimal plan breakpoints and appropriately updates the planned pointer.
 
-  // Begin at buffer planned pointer. Note that block_buffer_planned can be modified
-  //  by the stepper ISR,  so read it ONCE. It it guaranteed that block_buffer_planned
-  //  will never lead head, so the loop is safe to execute. Also note that the forward
-  //  pass will never modify the values at the tail.
+  // Begin at buffer planned pointer.
+  /// NOTE: block_buffer_planned can be modified by the stepper ISR,
+  //  so read it ONCE. It is guaranteed that block_buffer_planned
+  //  will never lead head, so the loop is safe to execute.
+  /// NOTE: forward_pass() will never modify the values at the tail.
   uint8_t block_index = block_buffer_planned;
 
   block_t *block;
   const block_t * previous = nullptr;
   while (block_index != block_buffer_head) {
 
-    // Perform the forward pass
+    // Perform the Forward Pass
     block = &block_buffer[block_index];
 
     // Only process movement blocks
@@ -1234,7 +1235,7 @@ void Planner::recalculate_trapezoids(const_float_t safe_exit_speed_sqr) {
           if (!stepper.is_block_busy(block)) {
             // Block is not BUSY, we won the race against the Stepper ISR:
 
-            // NOTE: Entry and exit factors always > 0 by all previous logic operations.
+            /// NOTE: Entry and exit factors always > 0 by all previous logic operations.
             const float nomr = 1.0f / block->nominal_speed;
             calculate_trapezoid_for_block(block, current_entry_speed * nomr, next_entry_speed * nomr);
           }
@@ -1684,9 +1685,10 @@ void Planner::check_axes_activity() {
 
 void Planner::quick_stop() {
 
-  // Remove all the queued blocks. Note that this function is NOT
-  // called from the Stepper ISR, so we must consider tail as readonly!
-  // that is why we set head to tail - But there is a race condition that
+  // Remove all the queued blocks.
+  /// NOTE: this function is NOT called from the Stepper ISR,
+  // so we must consider tail as readonly!
+  // That is why we set head to tail - But there is a race condition that
   // must be handled: The tail could change between the read and the assignment
   // so this must be enclosed in a critical section
 
@@ -2401,7 +2403,7 @@ bool Planner::_populate_block(
       const feedRate_t max_vfr = volumetric_extruder_feedrate_limit[extruder]
                                  * TERN(HAS_MIXER_SYNC_CHANNEL, MIXING_STEPPERS, 1);
 
-      // TODO: Doesn't work properly for joined segments. Set MIN_STEPS_PER_SEGMENT 1 as workaround.
+      /// TODO: Doesn't work properly for joined segments. Set MIN_STEPS_PER_SEGMENT 1 as workaround.
 
       if (block->steps.a || block->steps.b || block->steps.c) {
 
@@ -2637,7 +2639,7 @@ bool Planner::_populate_block(
     // Skip first block or when previous_nominal_speed is used as a flag for homing and offset cycles.
     if (moves_queued && !UNEAR_ZERO(previous_nominal_speed)) {
       // Compute cosine of angle between previous and current path. (prev_unit_vec is negative)
-      // NOTE: Max junction velocity is computed without sin() or acos() by trig half angle identity.
+      /// NOTE: Max junction velocity is computed without sin() or acos() by trig half angle identity.
       float junction_cos_theta = LOGICAL_AXIS_GANG(
                                  + (-prev_unit_vec.e * unit_vec.e),
                                  + (-prev_unit_vec.x * unit_vec.x),
@@ -2651,7 +2653,7 @@ bool Planner::_populate_block(
                                  + (-prev_unit_vec.w * unit_vec.w)
                                );
 
-      // NOTE: Computed without any expensive trig, sin() or acos(), by trig half angle identity of cos(theta).
+      /// NOTE: Computed without any expensive trig, sin() or acos(), by trig half angle identity of cos(theta).
       if (junction_cos_theta > 0.999999f) {
         // For a 0 degree acute junction, just set minimum junction speed.
         vmax_junction_sqr = minimum_planner_speed_sqr;
@@ -2751,7 +2753,7 @@ bool Planner::_populate_block(
                                   + t * ( 84.31466202f ) ))))),
                             junction_theta = RADIANS(90) + neg * asinx; // acos(-t)
 
-                // NOTE: junction_theta bottoms out at 0.033 which avoids divide by 0.
+                /// NOTE: junction_theta bottoms out at 0.033 which avoids divide by 0.
 
               #endif
 

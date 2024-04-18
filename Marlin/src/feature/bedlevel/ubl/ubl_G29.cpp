@@ -82,7 +82,7 @@
  *   A     Activate   Activate the Unified Bed Leveling system.
  *
  *   B #   Business   Use the 'Business Card' mode of the Manual Probe subsystem with P2.
- *                    Note: A non-compressible Spark Gap feeler gauge is recommended over a business card.
+ *                    NOTE: A non-compressible Spark Gap feeler gauge is recommended over a business card.
  *                    In this mode of G29 P2, a business or index card is used as a shim that the nozzle can
  *                    grab onto as it is lowered. In principle, the nozzle-bed distance is the same when the
  *                    same resistance is felt in the shim. You can omit the numerical value on first invocation
@@ -153,8 +153,8 @@
  *
  *                    Use 'T' (Topology) to generate a report of mesh generation.
  *
- *                    P1 will suspend Mesh generation if the controller button is held down. Note that you may need
- *                    to press and hold the switch for several seconds if moves are underway.
+ *                    P1 will suspend Mesh generation if the controller button is held down.
+ *                    NOTE: you may need to press and hold the switch for several seconds if moves are underway.
  *
  *   P2    Phase 2    Probe unreachable points.
  *
@@ -165,11 +165,11 @@
  *
  *                    The 'H' value can be negative if the Mesh dips in a large area. Press and hold the
  *                    controller button to terminate the current Phase 2 command. You can then re-issue "G29 P 2"
- *                    with an 'H' parameter more suitable for the area you're manually probing. Note that the command
- *                    tries to start in a corner of the bed where movement will be predictable. Override the distance
- *                    calculation location with the X and Y parameters. You can print a Mesh Map (G29 T) to see where
- *                    the mesh is invalidated and where the nozzle needs to move to complete the command. Use 'C' to
- *                    indicate that the search should be based on the current position.
+ *                    with an 'H' parameter more suitable for the area you're manually probing.
+ *                    NOTE: that the command tries to start in a corner of the bed where movement will be predictable.
+ *                    Override the distance calculation location with the X and Y parameters. You can print a
+ *                    Mesh Map (G29 T) to see where the mesh is invalidated and where the nozzle needs to move to
+ *                    complete the command. Use 'C' to indicate that the search should be based on the current position.
  *
  *                    The 'B' parameter for this command is described above. It places the manual probe subsystem into
  *                    Business Card mode where the thickness of a business card is measured and then used to accurately
@@ -193,7 +193,8 @@
  *                      upward from the invalid point, it takes the value of the nearest point. If sloped downward, it's
  *                      replaced by a value that puts all three points in a line. This version of G29 P3 is a quick, easy
  *                      and (usually) safe way to populate unprobed mesh regions before continuing to G26 Mesh Validation
- *                      Pattern. Note that this populates the mesh with unverified values. Pay attention and use caution.
+ *                      Pattern.
+ *                      NOTE: this populates the mesh with unverified values. Pay attention and use caution.
  *
  *   P4    Phase 4    Fine tune the Mesh. The Delta Mesh Compensation System assumes the existence of
  *                    an LCD Panel. It is possible to fine tune the mesh without an LCD Panel using
@@ -219,7 +220,7 @@
  *
  *                    !!Use with caution, as a very poor mesh could cause the nozzle to crash into the bed!!
  *
- *                    NOTE:  P4 is not available unless you have LCD support enabled!
+ *                    NOTE: P4 is not available unless you have LCD support enabled!
  *
  *   P5    Phase 5    Find Mean Mesh Height and Standard Deviation. Typically, it is easier to use and
  *                    work with the Mesh if it is Mean Adjusted. You can specify a C parameter to
@@ -766,7 +767,7 @@ void unified_bed_leveling::shift_mesh_height() {
 
     TERN_(HAS_MARLINUI_MENU, ui.capture());
     TERN_(EXTENSIBLE_UI, ExtUI::onLevelingStart());
-    TERN_(DWIN_LCD_PROUI, DWIN_LevelingStart());
+    TERN_(DWIN_LCD_PROUI, DWIN_LevelingStart();)
 
     save_ubl_active_state_and_disable();  // No bed level correction so only raw data is obtained
     grid_count_t count = GRID_MAX_POINTS;
@@ -1218,7 +1219,7 @@ bool unified_bed_leveling::G29_parse_parameters() {
 
   /**
    * Activate or deactivate UBL
-   * Note: UBL's G29 restores the state set here when done.
+   * NOTE: UBL's G29 restores the state set here when done.
    *       Leveling is being enabled here with old data, possibly
    *       none. Error handling should disable for safety...
    */

@@ -684,7 +684,8 @@ class Planner {
 
       FORCE_INLINE static void set_filament_size(const uint8_t e, const_float_t v) {
         filament_size[e] = v;
-        if (v > 0) volumetric_area_nominal = CIRCLE_AREA(v * 0.5); //TODO: should it be per extruder
+        if (v > 0) volumetric_area_nominal = CIRCLE_AREA(v * 0.5);
+        /// TODO: should it be per extruder
         // make sure all extruders have some sane value for the filament size
         for (uint8_t i = 0; i < COUNT(filament_size); ++i)
           if (!filament_size[i]) filament_size[i] = DEFAULT_NOMINAL_FILAMENT_DIA;
@@ -985,7 +986,7 @@ class Planner {
 
     #if ENABLED(REALTIME_REPORTING_COMMANDS)
       // Force a quick pause of the machine (e.g., when a pause is required in the middle of move).
-      // NOTE: Hard-stops will lose steps so encoders are highly recommended if using these!
+      /// NOTE: Hard-stops will lose steps so encoders are highly recommended if using these!
       static void quick_pause();
       static void quick_resume();
     #endif

@@ -54,7 +54,7 @@
   #include "ft_types.h"
 #endif
 
-// TODO: Review and ensure proper handling for special E axes with commands like M17/M18, stepper timeout, etc.
+/// TODO: Review and ensure proper handling for special E axes with commands like M17/M18, stepper timeout, etc.
 #if ENABLED(MIXING_EXTRUDER)
   #define E_STATES EXTRUDERS  // All steppers are set together for each mixer. (Currently limited to 1.)
 #elif HAS_SWITCHING_EXTRUDER
@@ -121,7 +121,7 @@ constexpr bool any_enable_overlap(const uint8_t a=0) {
 }
 
 // Array of axes that overlap with each
-// TODO: Consider cases where >=2 steppers are used by a linear axis or extruder
+/// TODO: Consider cases where >=2 steppers are used by a linear axis or extruder
 //       (e.g., CoreXY, Dual XYZ, or E with multiple steppers, etc.).
 constexpr ena_mask_t enable_overlap[] = {
   #define _OVERLAP(N) ena_overlap(INDEX_OF_AXIS(AxisEnum(N))),
@@ -553,7 +553,8 @@ class Stepper {
     // The direction of a single motor. A true result indicates forward or positive motion.
     FORCE_INLINE static bool motor_direction(const AxisEnum axis) { return last_direction_bits[axis]; }
 
-    // The last movement direction was not null on the specified axis. Note that motor direction is not necessarily the same.
+    // The last movement direction was not null on the specified axis.
+    /// NOTE: motor direction is not necessarily the same.
     FORCE_INLINE static bool axis_is_moving(const AxisEnum axis) { return axis_did_move[axis]; }
 
     // Handle a triggered endstop

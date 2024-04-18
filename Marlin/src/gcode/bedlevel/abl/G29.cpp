@@ -713,7 +713,7 @@ G29_TYPE GcodeSuite::G29() {
               // move to the start point of new line
               abl.measured_z = faux ? 0.001f * random(-100, 101) : probe.probe_at_point(abl.probePos, raise_after, abl.verbose_level);
               // Go to the end of the row/column ... and back up by one
-              // TODO: Why not just use... PR_INNER_VAR = inStop - inInc
+              /// TODO: Why not just use... PR_INNER_VAR = inStop - inInc
               for (PR_INNER_VAR = inStart; PR_INNER_VAR != inStop; PR_INNER_VAR += inInc);
               PR_INNER_VAR -= inInc;
 
@@ -724,7 +724,7 @@ G29_TYPE GcodeSuite::G29() {
               abl.probePos -= probe.offset_xy;
 
               // Put a G1 move into the buffer
-              // TODO: Instead of G1, we can just add the move directly to the planner...
+              /// TODO: Instead of G1, we can just add the move directly to the planner...
               //  {
               //  destination = current_position; destination = abl.probePos;
               //  REMEMBER(fr, feedrate_mm_s, XY_PROBE_FEEDRATE_MM_S);
@@ -747,7 +747,7 @@ G29_TYPE GcodeSuite::G29() {
             }
 
             // Wait around until the real axis position reaches the comparison point
-            // TODO: Use NEAR() because float is imprecise
+            /// TODO: Use NEAR() because float is imprecise
             constexpr AxisEnum axis = TERN(PROBE_Y_FIRST, Y_AXIS, X_AXIS);
             const float cmp = abl.probePos[axis] - probe.offset_xy[axis];
             float pos;

@@ -3069,7 +3069,7 @@ void Temperature::init() {
     #endif
   #endif // HAS_HOTEND
 
-  // TODO: combine these into the macros above
+  /// TODO: combine these into the macros above
   #if HAS_HEATED_BED
     while (analog_to_celsius_bed(temp_sensor_range_bed.raw_min) < BED_MINTEMP)
       temp_sensor_range_bed.raw_min += TEMPDIR(BED) * (OVERSAMPLENR);
@@ -3671,7 +3671,7 @@ void Temperature::disable_all_heaters() {
  */
 void Temperature::update_raw_temperatures() {
 
-  // TODO: can this be collapsed into a HOTEND_LOOP()?
+  /// TODO: can this be collapsed into a HOTEND_LOOP()?
   #if HAS_TEMP_ADC_0 && !TEMP_SENSOR_IS_MAX_TC(0)
     temp_hotend[0].update();
   #endif

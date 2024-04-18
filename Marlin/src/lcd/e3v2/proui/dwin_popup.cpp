@@ -74,4 +74,9 @@ void HMI_Popup() {
   }
 }
 
+void DWIN_Popup_Pause(FSTR_P const fmsg, uint8_t button/*=0*/) {
+  HMI_SaveProcessID(button ? WaitResponse : NothingToDo);
+  DWIN_Show_Popup(ICON_Pause_1, GET_TEXT_F(MSG_ADVANCED_PAUSE), fmsg, button);
+}
+
 #endif // DWIN_LCD_PROUI

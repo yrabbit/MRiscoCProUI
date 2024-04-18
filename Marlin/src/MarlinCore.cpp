@@ -779,7 +779,7 @@ void idle(const bool no_stepper_sleep/*=false*/) {
   // Return if setup() isn't completed
   if (marlin_state == MF_INITIALIZING) goto IDLE_DONE;
 
-  // TODO: Still causing errors
+  /// TODO: Still causing errors
   TERN_(TOOL_SENSOR, (void)check_tool_sensor_stats(active_extruder, true));
 
   // Handle filament runout sensors
@@ -1666,7 +1666,7 @@ void setup() {
  * The main Marlin program loop
  *
  *  - Call idle() to handle all tasks between G-code commands
- *      Note that no G-codes from the queue can be executed during idle()
+ *      NOTE: no G-codes from the queue can be executed during idle()
  *      but many G-codes can be called directly anytime like macros.
  *  - Check whether SD card auto-start is needed now.
  *  - Check whether SD print finishing is needed now.

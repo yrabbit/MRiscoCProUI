@@ -462,7 +462,8 @@ void ubl_map_screen() {
 
     // Determine number of points to edit
     #if IS_KINEMATIC
-      n_edit_pts = 9; // TODO: Delta accessible edit points
+      n_edit_pts = 9;
+      /// TODO: Delta accessible edit points
     #else
       const bool xc = WITHIN(x, 1, (GRID_MAX_POINTS_X) - 2),
                  yc = WITHIN(y, 1, (GRID_MAX_POINTS_Y) - 2);
