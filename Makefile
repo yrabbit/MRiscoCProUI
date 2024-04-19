@@ -74,7 +74,7 @@ tests-all-local-docker:
 #	$(CONTAINER_RT_BIN) run $(CONTAINER_RT_OPTS)  $(CONTAINER_IMAGE) make unit-test-single-local TEST_TARGET=$(TEST_TARGET) ONLY_TEST="$(ONLY_TEST)"
 
 unit-test-all-local:
-	platformio run
+	platformio run -e STM32F103RE_creality
 
 unit-test-all-local-docker:
 	@if ! $(CONTAINER_RT_BIN) images -q $(CONTAINER_IMAGE) > /dev/null ; then $(MAKE) setup-local-docker ; fi
