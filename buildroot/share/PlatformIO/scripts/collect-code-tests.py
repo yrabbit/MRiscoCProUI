@@ -7,6 +7,9 @@ import pioutil
 if pioutil.is_pio_build():
 
     import os, re
+    from SCons.Script import Import
+    from SCons.Script import DefaultEnvironment
+    env = DefaultEnvironment()
     Import("env")
     Import("projenv")
 
@@ -33,7 +36,7 @@ if pioutil.is_pio_build():
                     "restore_configs",
                     f"cp -f {path} ./Marlin/config.ini",
                     "python ./buildroot/share/PlatformIO/scripts/configuration.py",
-                    f"platformio test -e linux_native_test -f {name}",
+                    f"platformio test -e STM32F103RE_creality -f {name}",
                     "restore_configs",
                 ],
                 title = "Marlin: {}".format(name.lower().title().replace("_", " ")),
@@ -47,7 +50,7 @@ if pioutil.is_pio_build():
             name = "test-marlin",
             dependencies = None,
             actions = [
-                f"platformio run -t marlin_{name} -e linux_native_test"
+                f"platformio run -t marlin_{name} -e STM32F103RE_creality"
                 for name in targets
             ],
             title = "Marlin: Test all code test suites",
