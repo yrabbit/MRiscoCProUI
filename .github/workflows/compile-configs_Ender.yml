@@ -8,7 +8,7 @@ on:
     types: [prereleased]
 
 jobs:
-  Build-Default-E:            # Default NoPro for Ender-3
+  Build-Default-E:            # Default for Ender-3
     name: Build Default Files E
     runs-on: ubuntu-latest
     strategy:
@@ -50,7 +50,7 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
-        echo "filename=${DTMP}Ender_GD32_Default-NoPro${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Ender_GD32_Default${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -87,8 +87,8 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-Manual-Mesh-E:        # MM Pro for Ender-3
-    name: Build Manual-Mesh Files E
+  Build-MM-ProUI-EX-E:            # MM EX for Ender-3
+    name: Build MM EX Files E
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -129,7 +129,7 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
-        echo "filename=${DTMP}Ender_GD32_MM-ProUI${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Ender_GD32_MM-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -166,8 +166,8 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-UBL-ProUI-E:            # UBL Pro for Ender-3
-    name: Build UBL Pro Files E
+  Build-UBL-ProUI-EX-E:            # UBL EX for Ender-3
+    name: Build UBL Files E
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -212,7 +212,7 @@ jobs:
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($T13); then TTMP=_SPRT13; else TTMP=; fi
         if ($MP); then MPTMP=_MP; else MPTMP=; fi;
-        echo "filename=${DTMP}Ender${TTMP}${MPTMP}_GD32_UBL-ProUI${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Ender${TTMP}${MPTMP}_GD32_UBL-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -349,8 +349,8 @@ jobs:
   #       asset_name: ${{ steps.build_configs.outputs.filename }}
   #       asset_content_type: application/x-binary
 
-  Build-BLTouch-E:            # BLTouch Pro for Ender-3
-    name: Build BLT Pro Files E
+  Build-BLTouch-E:            # BLTouch EX for Ender-3
+    name: Build BLT Files E
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -393,7 +393,7 @@ jobs:
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($MP); then MPTMP=_MP; else MPTMP=; fi;
-        echo "filename=${DTMP}Ender${MPTMP}_GD32_BLT-ProUI${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Ender${MPTMP}_GD32_BLT-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -438,8 +438,8 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-Default-E4:            # Default NoPro for Ender-3
-    name: Build Default Files Ender E4
+  Build-Default-E4:            # Default for Ender-3
+    name: Build Default Files E4
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -482,7 +482,7 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
-        echo "filename=${DTMP}Ender_${EVTMP}_Default-NoPro${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Ender_${EVTMP}_Default${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -521,8 +521,8 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-Manual-Mesh-E4:        # MM Pro for Ender-3
-    name: Build Manual-Mesh Files E4
+  Build-MM-E4:            # MM EX for Ender-3
+    name: Build MM Files E4
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -565,7 +565,7 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
-        echo "filename=${DTMP}Ender_${EVTMP}_MM-ProUI${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Ender_${EVTMP}_MM-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -604,8 +604,8 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-UBL-ProUI-E4:            # UBL Pro for Ender-3
-    name: Build UBL Pro Files E4
+  Build-UBL-ProUI-EX-E4:            # UBL EX for Ender-3
+    name: Build UBL EX Files E4
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -652,7 +652,7 @@ jobs:
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($T13); then TTMP=_SPRT13; else TTMP=; fi
         if ($MP); then MPTMP=_MP; else MPTMP=; fi;
-        echo "filename=${DTMP}Ender${TTMP}${MPTMP}_${EVTMP}_UBL-ProUI${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Ender${TTMP}${MPTMP}_${EVTMP}_UBL-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -702,8 +702,8 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-BLTouch-E4:            # BLTouch Pro for Ender-3
-    name: Build BLT Pro Files E4
+  Build-BLT-ProUI-EX-E4:            # BLT EX for Ender-3
+    name: Build BLT EX Files E4
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -748,7 +748,7 @@ jobs:
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($MP); then MPTMP=_MP; else MPTMP=; fi;
-        echo "filename=${DTMP}Ender_${EVTMP}_BLT-ProUI${ISTMP}${TPTMP}${MPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Ender_${EVTMP}_BLT-ProUI-EX${ISTMP}${TPTMP}${MPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
