@@ -13,6 +13,8 @@ on:
     - config/**
     - data/**
     - docs/**
+    - test/**
+    - Marlin/tests/**
     - '**/*.md'
   push:
     branches:
@@ -21,6 +23,8 @@ on:
     - config/**
     - data/**
     - docs/**
+    - test/**
+    - Marlin/tests/**
     - '**/*.md'
 
 jobs:
