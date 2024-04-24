@@ -79,7 +79,7 @@ enum processID : uint8_t {
       PID_TUNING_TIMEOUT,
     #endif
     #if ENABLED(MPCTEMP)
-      MPCTEMP_START,
+      MPC_STARTED,
       MPC_TEMP_ERROR,
       MPC_INTERRUPTED,
     #endif

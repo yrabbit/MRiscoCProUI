@@ -1256,15 +1256,15 @@
  */
 #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 98 }
 
-/**
- * Enable support for M92. Disable to save at least ~530 bytes of flash.
- */
-#define EDITABLE_STEPS_PER_UNIT
-
 //#define LIMITED_MAX_STEPS_EDITING
 #if ENABLED(LIMITED_MAX_STEPS_EDITING)
   #define MAX_STEPS_EDIT_VALUES       { 200, 200, 2000, 2000 }
 #endif
+
+/**
+ * Enable support for M92. Disable to save at least ~530 bytes of flash.
+ */
+#define EDITABLE_STEPS_PER_UNIT
 
 /**
  * Default Max Feed Rate (linear=mm/s, rotational=°/s)

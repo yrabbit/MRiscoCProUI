@@ -87,6 +87,7 @@
  */
 #define SERIAL_PORT 1  // Ender Configs
 #define NO_AUTO_ASSIGN_WARNING  // Disable serial warnings
+#define NO_MICROPROBE_WARNING
 
 /**
  * Serial Port Baud Rate

@@ -1205,9 +1205,9 @@ volatile bool Temperature::raw_temps_ready = false;
 
     // Determine ambient temperature.
     SERIAL_ECHOLNPGM(STR_MPC_COOLING_TO_AMBIENT);
-    TERN_(EXTENSIBLE_UI, ExtUI::onMPCTuning(ExtUI::mpcresult_t::MPCTEMP_START));
+    TERN_(EXTENSIBLE_UI, ExtUI::onMPCTuning(ExtUI::mpcresult_t::MPC_STARTED));
     #if ENABLED(DWIN_LCD_PROUI)
-      DWIN_MPCTuning(MPCTEMP_START);
+      DWIN_MPCTuning(MPC_STARTED);
       LCD_ALERTMESSAGE(MSG_MPC_COOLING_TO_AMBIENT);
     #else
       LCD_MESSAGE(MSG_COOLING);

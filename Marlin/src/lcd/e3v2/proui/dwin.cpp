@@ -1238,7 +1238,7 @@ void Draw_Main_Area() {
         OPTCODE(PIDTEMP,
         case PID_EXTR_START:    drawHPlot(); break)
         OPTCODE(MPCTEMP,
-        case MPCTEMP_START:     drawHPlot(); break)
+        case MPC_STARTED:       drawHPlot(); break)
         OPTCODE(PIDTEMPBED,
         case PID_BED_START:     drawBPlot(); break)
         OPTCODE(PIDTEMPCHAMBER,
@@ -1335,14 +1335,14 @@ void EachMomentUpdate() {
         TERN_(PIDTEMPCHAMBER, if (HMI_value.tempControl == PID_CHAMBER_START) { plot.update(thermalManager.wholeDegChamber()); })
       }
       if (checkkey == MPCProcess) {
-        TERN_(MPCTEMP, if (HMI_value.tempControl == MPCTEMP_START) { plot.update(thermalManager.wholeDegHotend(EXT)); })
+        TERN_(MPCTEMP, if (HMI_value.tempControl == MPC_STARTED) { plot.update(thermalManager.wholeDegHotend(EXT)); })
       }
       #if ENABLED(PROUI_ITEM_PLOT)
         if (checkkey == PlotProcess) {
           TERN_(PIDTEMP, if (HMI_value.tempControl == PID_EXTR_START) { plot.update(thermalManager.wholeDegHotend(EXT)); })
           TERN_(PIDTEMPBED, if (HMI_value.tempControl == PID_BED_START) { plot.update(thermalManager.wholeDegBed()); })
           TERN_(PIDTEMPCHAMBER, if (HMI_value.tempControl == PID_CHAMBER_START) { plot.update(thermalManager.wholeDegChamber()); })
-          TERN_(MPCTEMP, if (HMI_value.tempControl == MPCTEMP_START) { plot.update(thermalManager.wholeDegHotend(EXT)); })
+          TERN_(MPCTEMP, if (HMI_value.tempControl == MPC_STARTED) { plot.update(thermalManager.wholeDegHotend(EXT)); })
           if (HMI_flag.abort_flag || HMI_flag.pause_flag || print_job_timer.isPaused()) {
             HMI_ReturnScreen();
           }
@@ -1672,7 +1672,7 @@ void DWIN_HomingDone() {
     switch (HMI_value.tempControl) {
       default: return;
       #if ENABLED(MPC_AUTOTUNE)
-        case MPCTEMP_START:
+        case MPC_STARTED:
           DWINUI::Draw_CenteredString(2,HMI_data.PopupTxt_Color, 70, GET_TEXT_F(MSG_MPC_AUTOTUNE));
           DWINUI::Draw_String(HMI_data.PopupTxt_Color, gfrm.x, gfrm.y - DWINUI::fontHeight() - 4, GET_TEXT_F(MSG_MPC_TARGET));
           DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 92, GET_TEXT_F(MSG_FOR_NOZZLE));
@@ -1724,7 +1724,7 @@ void DWIN_HomingDone() {
 
       switch (result) {
         #if ENABLED(MPCTEMP)
-          case MPCTEMP_START:
+          case MPC_STARTED:
         #elif ENABLED(PIDTEMP)
           case PID_EXTR_START:
         #endif
@@ -1753,7 +1753,7 @@ void DWIN_HomingDone() {
 
     void drawHPlot() {
       TERN_(PIDTEMP, dwinDrawPlot(PID_EXTR_START);)
-      TERN_(MPCTEMP, dwinDrawPlot(MPCTEMP_START);)
+      TERN_(MPCTEMP, dwinDrawPlot(MPC_STARTED);)
     }
     void drawBPlot() {
       TERN_(PIDTEMPBED, dwinDrawPlot(PID_BED_START);)
@@ -1840,7 +1840,7 @@ void DWIN_HomingDone() {
   void DWIN_MPCTuning(tempcontrol_t result) {
     HMI_value.tempControl = result;
     switch (result) {
-      case MPCTEMP_START:
+      case MPC_STARTED:
         HMI_SaveProcessID(MPCProcess);
         #if PROUI_TUNING_GRAPH
           DWIN_Draw_PID_MPC_Popup();
