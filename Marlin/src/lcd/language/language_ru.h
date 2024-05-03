@@ -631,7 +631,17 @@ namespace LanguageNarrow_ru {
 
   LSTR MSG_TMC_DRIVERS                      = _UxGT("Драйвера TMC");
   LSTR MSG_TMC_CURRENT                      = _UxGT("Ток двигателей");
+  LSTR MSG_TMC_ACURRENT                     = _UxGT(STR_A " Ток двигателя");
+  LSTR MSG_TMC_BCURRENT                     = _UxGT(STR_B " Ток двигателя");
+  LSTR MSG_TMC_CCURRENT                     = _UxGT(STR_C " Ток двигателя");
+  LSTR MSG_TMC_ECURRENT                     = _UxGT(STR_E " Ток двигателя");
+  LSTR MSG_TMC_ENCURRENT                    = _UxGT("* Ток двигателя");
   LSTR MSG_TMC_HYBRID_THRS                  = _UxGT("Гибридный режим");
+  LSTR MSG_TMC_AHYBRID_THRS                 = _UxGT(STR_A " Гибридный режим");
+  LSTR MSG_TMC_BHYBRID_THRS                 = _UxGT(STR_B " Гибридный режим");
+  LSTR MSG_TMC_CHYBRID_THRS                 = _UxGT(STR_C " Гибридный режим");
+  LSTR MSG_TMC_EHYBRID_THRS                 = _UxGT(STR_E " Гибридный режим");
+  LSTR MSG_TMC_ENHYBRID_THRS                = _UxGT("* Гибридный режим");
   LSTR MSG_TMC_HOMING_THRS                  = _UxGT("Чувствительность");
   LSTR MSG_TMC_STEPPING_MODE                = _UxGT("Режим драйвера");
   LSTR MSG_TMC_STEALTH_ENABLED              = _UxGT("Тихий режим вкл");

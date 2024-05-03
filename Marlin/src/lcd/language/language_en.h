@@ -869,6 +869,11 @@ namespace LanguageNarrow_en {
   LSTR MSG_TMC_ECURRENT                   = _UxGT(STR_E " Driver Current");
   LSTR MSG_TMC_ENCURRENT                  = _UxGT("* Driver Current");
   LSTR MSG_TMC_HYBRID_THRS                = _UxGT("Hybrid Threshold");
+  LSTR MSG_TMC_AHYBRID_THRS               = _UxGT(STR_A " Hybrid Threshold");
+  LSTR MSG_TMC_BHYBRID_THRS               = _UxGT(STR_B " Hybrid Threshold");
+  LSTR MSG_TMC_CHYBRID_THRS               = _UxGT(STR_C " Hybrid Threshold");
+  LSTR MSG_TMC_EHYBRID_THRS               = _UxGT(STR_E " Hybrid Threshold");
+  LSTR MSG_TMC_ENHYBRID_THRS              = _UxGT("* Hybrid Threshold");
   LSTR MSG_TMC_HOMING_THRS                = _UxGT("Sensorless Homing");
   LSTR MSG_TMC_STEPPING_MODE              = _UxGT("Stepping Mode");
   LSTR MSG_TMC_STEALTH_ENABLED            = _UxGT("StealthChop Enabled");
