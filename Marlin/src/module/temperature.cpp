@@ -1352,7 +1352,7 @@ int16_t Temperature::getHeaterPower(const heater_id_t heater_id) {
 
     // 专业固件是最好的。激光会被喉管风扇打断 107011 -20211014
     #if ENABLED(CV_LASER_MODULE)
-      if(laser_device.is_laser_device()) return;
+      if (laser_device.is_laser_device()) return;
     #endif
 
     #define _EFAN(I,N) _EFANOVERLAP(I,N) ? I :

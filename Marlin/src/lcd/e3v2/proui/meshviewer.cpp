@@ -139,7 +139,7 @@ void MeshViewerClass::Draw(const bool withsave/*=false*/, const bool redraw/*=tr
 
 void Draw_MeshViewer() { MeshViewer.Draw(true, meshredraw); }
 
-void OnClick_MeshViewer() { if (HMI_flag.select_flag) SaveMesh(); HMI_ReturnScreen(); }
+void OnClick_MeshViewer() { if (HMI_flag.select_flag) TERN(AUTO_BED_LEVELING_UBL, UBLMeshSave(), SaveMesh()); HMI_ReturnScreen(); }
 
 void Goto_MeshViewer(const bool redraw) {
   meshredraw = redraw;

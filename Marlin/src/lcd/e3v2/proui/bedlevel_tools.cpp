@@ -94,9 +94,7 @@ void BedLevelToolsClass::manual_value_update(const uint8_t mesh_x, const uint8_t
   float zval;
   if (reset) { zval = 0; }
   else { zval = current_position.z; }
-  gcode.process_subcommands_now(
-  TS(F(TERN(AUTO_BED_LEVELING_UBL, "M421 I", "G29 I")), mesh_x, 'J', mesh_y, 'Z', p_float_t(zval, 3))
-  );
+  gcode.process_subcommands_now(TS(F("M421I"), mesh_x, F("J"), mesh_y, F("Z"), p_float_t(zval, 3)));
   planner.synchronize();
 }
 
@@ -111,8 +109,8 @@ void BedLevelToolsClass::manual_move(const uint8_t mesh_x, const uint8_t mesh_y,
   else {
     DWIN_Show_Popup(ICON_BLTouch, F("Moving to Point"), F("Please wait until done."));
     HMI_SaveProcessID(NothingToDo);
-    gcode.process_subcommands_now(TS(F("G0 F300 Z"), p_float_t(Z_CLEARANCE_BETWEEN_PROBES, 3)));
-    gcode.process_subcommands_now(TS(F("G42 F4000 I"), mesh_x, F(" J"), mesh_y));
+    gcode.process_subcommands_now(F("G0F300Z" STRINGIFY(Z_CLEARANCE_BETWEEN_PROBES)));
+    gcode.process_subcommands_now(TS(F("G42F4000I"), mesh_x, F("J"), mesh_y));
     planner.synchronize();
     current_position.z = goto_mesh_value ? bedlevel.z_values[mesh_x][mesh_y] : Z_CLEARANCE_BETWEEN_PROBES;
     planner.buffer_line(current_position, homing_feedrate(Z_AXIS), active_extruder);

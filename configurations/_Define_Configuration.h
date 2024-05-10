@@ -117,6 +117,12 @@
 // #define PSU_DEFAULT_OFF
 // #define PSU_POWERUP_DELAY      250
 // #define LED_POWEROFF_TIMEOUT 10000
+// #define PSU_OFF_REDUNDANT
+// #define PSU_OFF_REDUNDANT_INVERTED
+// #define PS_ON1_PIN               6
+// #define PS_ON_EDM_PIN            8
+// #define PS_ON1_EDM_PIN           9
+// #define PS_EDM_RESPONSE          250
 // #define POWER_OFF_TIMER
 // #define POWER_OFF_WAIT_FOR_COOLDOWN
 // #define PSU_POWERUP_GCODE  "M355 S1"
@@ -378,6 +384,7 @@
 // #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 98 }
 // #define LIMITED_MAX_STEPS_EDITING
 // #define MAX_STEPS_EDIT_VALUES       { 200, 200, 2000, 2000 }
+// #define EDITABLE_STEPS_PER_UNIT
 // #define DEFAULT_MAX_FEEDRATE          { 800, 800, 18, 120 }
 // #define LIMITED_MAX_FR_EDITING
 // #define MAX_FEEDRATE_EDIT_VALUES    { 1000, 1000, 40, 200 }
@@ -489,7 +496,7 @@
 // #define PROBE_ENABLE_DISABLE
 // #define PROBE_ENABLE_PIN -1
 // #define MULTIPLE_PROBING 2
-// #define EXTRA_PROBING    1
+// #define EXTRA_PROBING  1
 // #define Z_CLEARANCE_DEPLOY_PROBE   10
 // #define Z_CLEARANCE_BETWEEN_PROBES  5
 // #define Z_CLEARANCE_MULTI_PROBE     5
@@ -708,14 +715,12 @@
 // #define G26_RETRACT_MULTIPLIER   1.0
 // #define GRID_MAX_POINTS_X 5
 // #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
-// #define MESH_EDIT_MENU
 // #define MESH_INSET 10
 // #define PROBE_Y_FIRST
 // #define EXTRAPOLATE_BEYOND_GRID
 // #define ABL_BILINEAR_SUBDIVISION
 // #define BILINEAR_SUBDIVISIONS 3
 // #define MESH_EDIT_GFX_OVERLAY
-// #define MESH_EDIT_MENU
 // #define MESH_INSET 10
 // #define GRID_MAX_POINTS_X 7
 // #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
@@ -734,7 +739,6 @@
 // #define OBSTACLE3 { (X_BED_SIZE) / 4     - (CLIP_W) / 2, (Y_BED_SIZE) - (CLIP_H), (X_BED_SIZE) / 4     + (CLIP_W) / 2, Y_BED_SIZE }
 // #define OBSTACLE4 { (X_BED_SIZE) * 3 / 4 - (CLIP_W) / 2, (Y_BED_SIZE) - (CLIP_H), (X_BED_SIZE) * 3 / 4 + (CLIP_W) / 2, Y_BED_SIZE }
 // #define G29J_MESH_TILT_MARGIN ((CLIP_H) + 1)
-// #define MESH_EDIT_MENU
 // #define MESH_INSET 10
 // #define GRID_MAX_POINTS_X 5
 // #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
@@ -920,7 +924,7 @@
 // #define BTT_MINI_12864
 // #define BEEZ_MINI_12864
 // #define ANET_FULL_GRAPHICS_LCD
-// #define ANET_FULL_GRAPHICS_LCD_ALT_WIRING
+// #define CTC_A10S_A13
 // #define AZSMZ_12864
 // #define SILVER_GATE_GLCD_CONTROLLER
 // #define EMOTION_TECH_LCD
@@ -987,7 +991,7 @@
 // #define DACAI_DISPLAY
 // #define TJC_DISPLAY
 // #define PROUI_EX 1
-// #define HAS_TOOLBAR 1
+// #define CV_LASER_MODULE
 // #define HAS_GCODE_PREVIEW 1
 // #define DISABLE_TUNING_GRAPH 0
 // #define HAS_ESDIAG 1
@@ -1006,6 +1010,7 @@
 // #define CCLOUD_PRINT_SUPPORT
 // #define PROUI_ITEM_TRAM
 // #define PROUI_MEDIASORT
+// #define PROUI_ITEM_ENC
 // #define ENC_MENU_ITEM
 // #define SHOW_SPEED_IND
 // #define NO_BLINK_IND

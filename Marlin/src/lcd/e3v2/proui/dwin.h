@@ -135,14 +135,17 @@ inline bool Host_Printing() { return Printing() && !IS_SD_FILE_OPEN(); }
 
 // Tool Functions
 uint32_t GetHash(char * str);
+void WriteEeprom();
 #if ENABLED(EEPROM_SETTINGS)
-  void WriteEeprom();
   void ReadEeprom();
-  void ResetEeprom();
-  #if HAS_MESH
-    void ManualMeshSave();
-    void SaveMesh();
-  #endif
+#endif
+void ResetEeprom();
+#if ENABLED(MESH_BED_LEVELING)
+  void ManualMeshSave();
+#elif ENABLED(AUTO_BED_LEVELING_BILINEAR)
+  void SaveMesh();
+#elif ENABLED(AUTO_BED_LEVELING_UBL)
+  void UBLMeshSave();
 #endif
 #if ALL(PROUI_TUNING_GRAPH, PROUI_ITEM_PLOT)
   void dwinDrawPlot(tempcontrol_t result);
@@ -195,7 +198,6 @@ void DoCoolDown();
   void TurnOffBacklight();
 #endif
 void ApplyExtMinT();
-void ParkHead();
 void RaiseHead();
 TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool stow_probe=true));
 #if HAS_BED_PROBE && ENABLED(PROUI_ITEM_TRAM)
@@ -206,11 +208,6 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
 #endif
 #if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
   void ApplyLEDColor();
-#endif
-#if ENABLED(AUTO_BED_LEVELING_UBL)
-  void UBLMeshTilt();
-  void UBLMeshSave();
-  void UBLMeshLoad();
 #endif
 #if ENABLED(HOST_SHUTDOWN_MENU_ITEM) && defined(SHUTDOWN_ACTION)
   void HostShutDown();
@@ -231,6 +228,7 @@ void DWIN_RedrawScreen();   // Redraw all screen elements
 void HMI_MainMenu();        // Main process screen
 void HMI_Printing();        // Print page
 void HMI_ReturnScreen();    // Return to previous screen before popups
+void ReturnToPreviousMenu();
 void HMI_WaitForUser();
 void HMI_SaveProcessID(const uint8_t id);
 void HMI_SDCardUpdate();
@@ -243,7 +241,8 @@ void DWIN_CheckStatusMessage();
 void DWIN_HomingStart();
 void DWIN_HomingDone();
 #if HAS_MESH
-  void DWIN_MeshUpdate(const int8_t cpos, const int8_t tpos, const_float_t zval);
+  void DWIN_MeshUpdate(const int8_t xpos, const int8_t ypos, const_float_t zval);
+  void DWIN_PointUpdate(const int8_t cpos, const int8_t tpos, const_float_t zval);
 #endif
 #if HAS_LEVELING
   void DWIN_LevelingStart();
@@ -299,6 +298,7 @@ void Draw_Tramming_Menu();
 void Draw_FilSet_Menu();
 #if ENABLED(NOZZLE_PARK_FEATURE)
   void Draw_ParkPos_Menu();
+  void ParkHead();
 #endif
 void Draw_PhySet_Menu();
 #if ALL(CASE_LIGHT_MENU, CASELIGHT_USES_BRIGHTNESS)
@@ -345,7 +345,7 @@ void Draw_MaxAccel_Menu();
 // Custom colors editing
 #if HAS_CUSTOM_COLORS
   void DWIN_ApplyColor();
-  void DWIN_ApplyColor(const int8_t element, const bool ldef=false);
+  void DWIN_ApplyColor(const int8_t element);
   void Draw_SelectColors_Menu();
   void Draw_GetColor_Menu();
 #endif

@@ -66,7 +66,6 @@ void GcodeSuite::M48() {
   #endif
   #if ENABLED(DWIN_LCD_PROUI)
     TERN_(ADVANCED_PAUSE_FEATURE, DWIN_Popup_Pause(GET_TEXT_F(MSG_M48_TEST));)
-    HMI_SaveProcessID(NothingToDo);
   #endif
 
   if (homing_needed_error()) TERN(DWIN_LCD_PROUI, return HMI_ReturnScreen(), return);

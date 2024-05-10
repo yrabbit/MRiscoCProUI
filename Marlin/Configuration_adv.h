@@ -1729,7 +1729,7 @@
   #define SD_PROCEDURE_DEPTH 1              // Increase if you need more nested M32 calls  // MRiscoC save program memory
 
   #define SD_FINISHED_STEPPERRELEASE true   // Disable steppers when SD Print is finished
-  #define SD_FINISHED_RELEASECOMMAND "G27 P2"  // Use "M84XYE" to keep Z enabled so your bed stays in place
+  #define SD_FINISHED_RELEASECOMMAND "G27P2"  // Use "M84XYE" to keep Z enabled so your bed stays in place
 
   // Reverse SD sort to show "more recent" files first, according to the card's FAT.
   // Since the FAT gets out of order with usage, SDCARD_SORT_ALPHA is recommended.
@@ -3906,7 +3906,7 @@
 /**
  * Extra options for the M114 "Current Position" report
  */
-//#define M114_DETAIL         // Use 'M114' for details to check planner calculations
+#define M114_DETAIL           // Use 'M114' for details to check planner calculations
 //#define M114_REALTIME       // Real current position based on forward kinematics
 //#define M114_LEGACY         // M114 used to synchronize on every call. Enable if needed.
 
@@ -3943,7 +3943,7 @@
   // Include capabilities in M115 output
   #define EXTENDED_CAPABILITIES_REPORT // (1000 bytes of flash)
   #if ENABLED(EXTENDED_CAPABILITIES_REPORT)
-    //#define M115_GEOMETRY_REPORT  // (448 bytes of flash) MRiscoC Enabled
+    #define M115_GEOMETRY_REPORT  // (448 bytes of flash) MRiscoC Enabled
   #endif
 #endif
 

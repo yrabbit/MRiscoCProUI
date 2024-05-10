@@ -851,8 +851,8 @@ class Planner {
      */
     static bool _buffer_steps(const xyze_long_t &target
       OPTARG(HAS_POSITION_FLOAT, const xyze_pos_t &target_float)
-      OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm)
-      , feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints
+      OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm),
+      feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints
     );
 
     /**
@@ -873,9 +873,9 @@ class Planner {
      */
     static bool _populate_block(block_t * const block, const xyze_long_t &target
       OPTARG(HAS_POSITION_FLOAT, const xyze_pos_t &target_float)
-      OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm)
-      , feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints
-      , float &minimum_planner_speed_sqr
+      OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm),
+      feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints,
+      float &minimum_planner_speed_sqr
     );
 
     /**
@@ -906,10 +906,10 @@ class Planner {
      *  hints       - optional parameters to aid planner calculations
      */
     static bool buffer_segment(const abce_pos_t &abce
-      OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm)
-      , const_feedRate_t fr_mm_s
-      , const uint8_t extruder=active_extruder
-      , const PlannerHints &hints=PlannerHints()
+      OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm),
+      const_feedRate_t fr_mm_s,
+      const uint8_t extruder=active_extruder,
+      const PlannerHints &hints=PlannerHints()
     );
 
   public:
@@ -924,9 +924,9 @@ class Planner {
      *  extruder     - optional target extruder (otherwise active_extruder)
      *  hints        - optional parameters to aid planner calculations
      */
-    static bool buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s
-      , const uint8_t extruder=active_extruder
-      , const PlannerHints &hints=PlannerHints()
+    static bool buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s,
+      const uint8_t extruder=active_extruder,
+      const PlannerHints &hints=PlannerHints()
     );
 
     #if ENABLED(DIRECT_STEPPING)

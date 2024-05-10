@@ -237,6 +237,7 @@ jobs:
         sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
         sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
         sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
+        if ($MP); then sed -i -e "/.*#define BIQU_MICROPROBE_V2.*/a#define NO_MICROPROBE_WARNING" Marlin/Configuration.h; fi;
         pio run
         mkdir temp
         mv .pio/build/GD32F303RE_creality_maple/*.bin temp/build.bin
@@ -416,6 +417,7 @@ jobs:
         sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
         sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
         sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
+        if ($MP); then sed -i -e "/.*#define BIQU_MICROPROBE_V2.*/a#define NO_MICROPROBE_WARNING" Marlin/Configuration.h; fi;
         pio run
         mkdir temp
         mv .pio/build/GD32F303RE_creality_maple/*.bin temp/build.bin
@@ -678,6 +680,7 @@ jobs:
         sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
         sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
         sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
+        if ($MP); then sed -i -e "/.*#define BIQU_MICROPROBE_V2.*/a#define NO_MICROPROBE_WARNING" Marlin/Configuration.h; fi;
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -772,6 +775,7 @@ jobs:
         sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
         sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
         sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
+        if ($MP); then sed -i -e "/.*#define BIQU_MICROPROBE_V2.*/a#define NO_MICROPROBE_WARNING" Marlin/Configuration.h; fi;
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin

@@ -3458,11 +3458,6 @@
 #if ENABLED(DWIN_LCD_PROUI)
 // Professional firmware features:
   #define PROUI_EX 1            // Extended UI features (15152 bytes of flash)
-  #ifdef PROUI_EX
-    #define HAS_TOOLBAR 1
-  #else
-    #define PROUI_GRID_PNTS 1
-  #endif
   //#define CV_LASER_MODULE
   #define HAS_GCODE_PREVIEW 1
   #define DISABLE_TUNING_GRAPH 0// Temp plot graph - PID/MPC Tuning (1624 bytes of flash)
@@ -3490,6 +3485,7 @@
   //#define ENC_MENU_ITEM       // Menu item: faster/slower encoder rate (272 bytes of flash)
   //#define SHOW_SPEED_IND      // Menu item: blink speed in mm/s along with speed percentage (296 bytes of flash)
   //#define NO_BLINK_IND        // Disables dashboard icon blink indicator highlighted background
+  #define PROUI_ITEM_ABRT       // Menu item: enable/disable preconfigured abort commands (88 bytes of flash)
 
 #endif
 

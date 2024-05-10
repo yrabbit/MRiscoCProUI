@@ -577,6 +577,7 @@ void Stepper::enable_axis(const AxisEnum axis) {
  */
 bool Stepper::disable_axis(const AxisEnum axis) {
   mark_axis_disabled(axis);
+  TERN_(DWIN_LCD_PROUI, set_axis_untrusted(axis)); // MRISCOC workaround: https://github.com/MarlinFirmware/Marlin/issues/23095
 
   // This scheme prevents shared steppers being disabled. It should consider several axes at once
   // and keep a count of how many times each ENA pin has been set.
@@ -590,7 +591,6 @@ bool Stepper::disable_axis(const AxisEnum axis) {
       default: break;
     }
     TERN_(EXTENSIBLE_UI, ExtUI::onAxisDisabled(ExtUI::axis_to_axis_t(axis)));
-    TERN_(DWIN_LCD_PROUI, set_axis_untrusted(axis)); // MRISCOC workaround: https://github.com/MarlinFirmware/Marlin/issues/23095
   }
 
   return can_disable;
@@ -2387,7 +2387,7 @@ hal_timer_t Stepper::block_phase_isr() {
     // If current block is finished, reset pointer and finalize state
     if (step_events_completed >= step_event_count) {
       #if ENABLED(CV_LASER_MODULE)
-        if(laser_device.is_laser_device()) cutter.apply_power(0);
+        if (laser_device.is_laser_device()) cutter.apply_power(0);
       #endif
       #if ENABLED(DIRECT_STEPPING)
         // Direct stepping is currently not ready for HAS_I_AXIS

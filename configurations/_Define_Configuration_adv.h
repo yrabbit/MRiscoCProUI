@@ -329,43 +329,40 @@
 // #define FT_MOTION
 // #define FTM_DEFAULT_MODE        ftMotionMode_DISABLED
 // #define FTM_DEFAULT_DYNFREQ_MODE dynFreqMode_DISABLED
-// #define FTM_SHAPING_DEFAULT_X_FREQ 37.0f
-// #define FTM_SHAPING_DEFAULT_Y_FREQ 37.0f
-// #define FTM_LINEAR_ADV_DEFAULT_ENA false
-// #define FTM_LINEAR_ADV_DEFAULT_K    0.0f
-// #define FTM_SHAPING_ZETA_X          0.1f
-// #define FTM_SHAPING_ZETA_Y          0.1f
-// #define FTM_SHAPING_V_TOL_X         0.05f
-// #define FTM_SHAPING_V_TOL_Y         0.05f
+// #define FTM_SHAPING_DEFAULT_X_FREQ   37.0f
+// #define FTM_SHAPING_DEFAULT_Y_FREQ   37.0f
+// #define FTM_LINEAR_ADV_DEFAULT_ENA   false
+// #define FTM_LINEAR_ADV_DEFAULT_K      0.0f
+// #define FTM_SHAPING_ZETA_X            0.1f
+// #define FTM_SHAPING_ZETA_Y            0.1f
+// #define FTM_SHAPING_V_TOL_X           0.05f
+// #define FTM_SHAPING_V_TOL_Y           0.05f
+// #define FT_MOTION_MENU
 // #define FTM_UNIFIED_BWS
 // #define FTM_BW_SIZE               100
 // #define FTM_WINDOW_SIZE           200
 // #define FTM_BATCH_SIZE            100
-// #define FTM_FS                   1000
-// #define FTM_TS                      0.001f
-// #define FTM_STEPS_PER_LOOP         60
-// #define FTM_POINTS_PER_LOOP       100
+// #define FTM_FS                     1000
+// #define FTM_TS                        0.001f
+// #define FTM_STEPS_PER_LOOP           60
+// #define FTM_POINTS_PER_LOOP         100
 // #define FTM_STEPPER_FS          20000
 // #define FTM_STEPPERCMD_BUFF_SIZE 3000
+// #define FTM_STEPPER_FS          30000
+// #define FTM_STEPPERCMD_BUFF_SIZE 6000
 // #define FTM_STEPS_PER_UNIT_TIME (FTM_STEPPER_FS / FTM_FS)
 // #define FTM_CTS_COMPARE_VAL (FTM_STEPS_PER_UNIT_TIME / 2)
 // #define FTM_MIN_TICKS ((STEPPER_TIMER_RATE) / (FTM_STEPPER_FS))
-// #define FTM_MIN_SHAPE_FREQ         10
+// #define FTM_MIN_SHAPE_FREQ           10
 // #define FTM_RATIO (FTM_FS / FTM_MIN_SHAPE_FREQ)
 // #define FTM_ZMAX (FTM_RATIO * 2)
-// #define FTM_STEPS_PER_UNIT_TIME    20
-// #define FTM_CTS_COMPARE_VAL        10
-// #define FTM_STEPS_PER_LOOP         60
-// #define FTM_POINTS_PER_LOOP       100
-// #define FTM_STEPPERCMD_BUFF_SIZE 1000
-// #define FT_MOTION_MENU
 // #define INPUT_SHAPING_X
 // #define INPUT_SHAPING_Y
-// #define SHAPING_FREQ_X  40
-// #define SHAPING_ZETA_X  0.15f
-// #define SHAPING_FREQ_Y  40
-// #define SHAPING_ZETA_Y  0.15f
-// #define SHAPING_MIN_FREQ  20
+// #define SHAPING_FREQ_X  40.0
+// #define SHAPING_ZETA_X   0.15
+// #define SHAPING_FREQ_Y  40.0
+// #define SHAPING_ZETA_Y   0.15
+// #define SHAPING_MIN_FREQ  20.0
 // #define SHAPING_MAX_STEPRATE 10000
 // #define SHAPING_MENU
 // #define AXIS_RELATIVE_MODES { false, false, false, false }
@@ -467,6 +464,7 @@
 // #define FINE_MANUAL_MOVE 0.025
 // #define MANUAL_E_MOVES_RELATIVE
 // #define ULTIPANEL_FEEDMULTIPLY
+// #define ULTIPANEL_FLOWPERCENT
 // #define ENCODER_RATE_MULTIPLIER
 // #define ENCODER_5X_STEPS_PER_SEC    40
 // #define ENCODER_10X_STEPS_PER_SEC   70
@@ -555,7 +553,7 @@
 // #define GCODE_REPEAT_MARKERS
 // #define SD_PROCEDURE_DEPTH 1
 // #define SD_FINISHED_STEPPERRELEASE true
-// #define SD_FINISHED_RELEASECOMMAND "G27 P2"
+// #define SD_FINISHED_RELEASECOMMAND "G27P2"
 // #define SDCARD_RATHERRECENTFIRST
 // #define SD_MENU_CONFIRM_START
 // #define NO_SD_AUTOSTART
@@ -566,16 +564,15 @@
 // #define EVENT_GCODE_SD_ABORT "M84XYE"
 // #define PE_LEDS_COMPLETED_TIME  (30*60)
 // #define POWER_LOSS_RECOVERY
-// #define PLR_ENABLED_DEFAULT   false
-// #define BACKUP_POWER_SUPPLY
-// #define POWER_LOSS_ZRAISE       2
-// #define POWER_LOSS_PIN         44
-// #define POWER_LOSS_STATE     HIGH
+// #define PLR_ENABLED_DEFAULT       false
+// #define PLR_BED_THRESHOLD BED_MAXTEMP
+// #define POWER_LOSS_PIN             44
+// #define POWER_LOSS_STATE         HIGH
 // #define POWER_LOSS_PULLUP
 // #define POWER_LOSS_PULLDOWN
-// #define POWER_LOSS_PURGE_LEN   20
-// #define POWER_LOSS_RETRACT_LEN 10
-// #define POWER_LOSS_MIN_Z_CHANGE 0.05
+// #define POWER_LOSS_ZRAISE        2
+// #define POWER_LOSS_PURGE_LEN    20
+// #define POWER_LOSS_MIN_Z_CHANGE    0.05
 // #define BACKUP_POWER_SUPPLY
 // #define POWER_LOSS_RETRACT_LEN   10
 // #define POWER_LOSS_RECOVER_ZHOME
@@ -1101,20 +1098,20 @@
 // #define TMC_SPI_MOSI  -1
 // #define TMC_SPI_MISO  -1
 // #define TMC_SPI_SCK   -1
-// #define X_SLAVE_ADDRESS 0
-// #define Y_SLAVE_ADDRESS 0
-// #define Z_SLAVE_ADDRESS 0
+// #define  X_SLAVE_ADDRESS 0
+// #define  Y_SLAVE_ADDRESS 0
+// #define  Z_SLAVE_ADDRESS 0
 // #define X2_SLAVE_ADDRESS 0
 // #define Y2_SLAVE_ADDRESS 0
 // #define Z2_SLAVE_ADDRESS 0
 // #define Z3_SLAVE_ADDRESS 0
 // #define Z4_SLAVE_ADDRESS 0
-// #define I_SLAVE_ADDRESS 0
-// #define J_SLAVE_ADDRESS 0
-// #define K_SLAVE_ADDRESS 0
-// #define U_SLAVE_ADDRESS 0
-// #define V_SLAVE_ADDRESS 0
-// #define W_SLAVE_ADDRESS 0
+// #define  I_SLAVE_ADDRESS 0
+// #define  J_SLAVE_ADDRESS 0
+// #define  K_SLAVE_ADDRESS 0
+// #define  U_SLAVE_ADDRESS 0
+// #define  V_SLAVE_ADDRESS 0
+// #define  W_SLAVE_ADDRESS 0
 // #define E0_SLAVE_ADDRESS 0
 // #define E1_SLAVE_ADDRESS 0
 // #define E2_SLAVE_ADDRESS 0
@@ -1285,7 +1282,6 @@
 // #define POWER_MONITOR_VOLTAGE_OFFSET  0
 // #define DISABLE_DRIVER_SAFE_POWER_PROTECT
 // #define CNC_COORDINATE_SYSTEMS
-// #define CNC_DRILLING_CYCLE
 // #define EXPECTED_PRINTER_CHECK
 // #define NO_VOLUMETRICS
 // #define VOLUMETRIC_DEFAULT_ON
@@ -1463,6 +1459,7 @@
 // #define MAX7219_DEBUG_PROFILE       6
 // #define MAX7219_DEBUG_MULTISTEPPING 6
 // #define MAX7219_DEBUG_SLOWDOWN      6
+// #define MAX7219_REINIT_ON_POWERUP
 // #define NANODLP_Z_SYNC
 // #define NANODLP_ALL_AXIS
 // #define MAC_ADDRESS { 0xDE, 0xAD, 0xBE, 0xEF, 0xF0, 0x0D }
@@ -1482,15 +1479,35 @@
 // #define MMU2_FILAMENT_RUNOUT_SCRIPT "M600"
 // #define MMU2_MENUS
 // #define MMU2_FILAMENTCHANGE_EJECT_FEED 80.0
-// #define MMU2_LOAD_TO_NOZZLE_SEQUENCE
-// #define MMU2_RAMMING_SEQUENCE
+// #define MMU2_LOAD_TO_NOZZLE_SEQUENCE \
+  {  7.2, 1145 }, \
+  { 14.4,  871 }, \
+  { 36.0, 1393 }, \
+  { 14.4,  871 }, \
+  { 50.0,  198 }
+// #define MMU2_RAMMING_SEQUENCE \
+  {   1.0, 1000 }, \
+  {   1.0, 1500 }, \
+  {   2.0, 2000 }, \
+  {   1.5, 3000 }, \
+  {   2.5, 4000 }, \
+  { -15.0, 5000 }, \
+  { -14.0, 1200 }, \
+  {  -6.0,  600 }, \
+  {  10.0,  700 }, \
+  { -10.0,  400 }, \
+  { -50.0, 2000 }
 // #define MMU2_C0_RETRY   5
 // #define MMU2_CAN_LOAD_FEEDRATE 800
-// #define MMU2_CAN_LOAD_SEQUENCE
+// #define MMU2_CAN_LOAD_SEQUENCE \
+  {  0.1, MMU2_CAN_LOAD_FEEDRATE }, \
+  {  60.0, MMU2_CAN_LOAD_FEEDRATE }, \
+  { -52.0, MMU2_CAN_LOAD_FEEDRATE }
 // #define MMU2_CAN_LOAD_RETRACT   6.0
 // #define MMU2_CAN_LOAD_DEVIATION 0.8
 // #define MMU2_CAN_LOAD_INCREMENT 0.2
-// #define MMU2_CAN_LOAD_INCREMENT_SEQUENCE
+// #define MMU2_CAN_LOAD_INCREMENT_SEQUENCE \
+  { -MMU2_CAN_LOAD_INCREMENT, MMU2_CAN_LOAD_FEEDRATE }
 // #define MMU_IR_UNLOAD_MOVE
 // #define MMU_EXTRUDER_SENSOR
 // #define MMU_LOADING_ATTEMPTS_NR 5
@@ -1512,3 +1529,4 @@
 // #define SOFT_RESET_VIA_SERIAL
 // #define SOFT_RESET_ON_KILL
 // #define OPTIBOOT_RESET_REASON
+// #define MARLIN_SMALL_BUILD

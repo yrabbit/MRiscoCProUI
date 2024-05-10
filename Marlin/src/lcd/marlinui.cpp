@@ -1602,14 +1602,14 @@ void MarlinUI::host_notify(const char * const cstr) {
   /**
    * @brief Set a status with a format string and parameters.
    *
-   * @param pfmt    A constant format P-string
+   * @param ffmt    A constant format F-string
    */
-  void MarlinUI::status_printf(int8_t level, FSTR_P const pfmt, ...) {
+  void MarlinUI::status_printf(int8_t level, FSTR_P const ffmt, ...) {
     if (set_alert_level(level)) return;
 
     va_list args;
-    va_start(args, pfmt);
-    vsnprintf_P(status_message, MAX_MESSAGE_LENGTH, FTOP(pfmt), args);
+    va_start(args, ffmt);
+    vsnprintf_P(status_message, MAX_MESSAGE_LENGTH, FTOP(ffmt), args);
     va_end(args);
 
     host_notify(status_message);
@@ -1673,23 +1673,23 @@ void MarlinUI::host_notify(const char * const cstr) {
   //
   // Send the status line as a host notification
   //
-  void MarlinUI::_set_status(const char * const cstr, const bool, const bool pgm) {
-    host_notify(cstr);
+  void MarlinUI::_set_status(const char * const ustr, const bool, const bool pgm) {
+    host_notify(ustr);
   }
-  void MarlinUI::_set_alert(const char * const cstr, const int8_t, const bool pgm) {
-    host_notify(cstr);
+  void MarlinUI::_set_alert(const char * const ustr, const int8_t, const bool pgm) {
+    host_notify(ustr);
   }
   void MarlinUI::_set_status_and_level(const char * const ustr, const int8_t=0, const bool pgm) {
     pgm ? host_notify_P(ustr) : host_notify(ustr);
   }
-  void MarlinUI::status_printf(int8_t level, FSTR_P const pfmt, ...) {
+  void MarlinUI::status_printf(int8_t level, FSTR_P const ffmt, ...) {
     if (set_alert_level(level)) return;
 
     MString<30> msg;
 
     va_list args;
-    va_start(args, pfmt);
-    vsnprintf_P(&msg, 30, FTOP(pfmt), args);
+    va_start(args, ffmt);
+    vsnprintf_P(&msg, 30, FTOP(ffmt), args);
     va_end(args);
 
     host_notify(msg);
@@ -1770,7 +1770,7 @@ void MarlinUI::host_notify(const char * const cstr) {
       #endif
       {
         pause_show_message(PAUSE_MESSAGE_PARKING, PAUSE_MODE_PAUSE_PRINT); // Show message immediately to let user know about pause in progress
-        queue.inject(F("M25 P\nM24"));
+        queue.inject(F("M25P\nM24"));
       }
     #elif HAS_MEDIA
       queue.inject(F("M25"));

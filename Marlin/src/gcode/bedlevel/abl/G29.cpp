@@ -258,7 +258,6 @@ G29_TYPE GcodeSuite::G29() {
   #if ENABLED(DWIN_LCD_PROUI)
     else {
       process_subcommands_now(F("G28Z"));
-      process_subcommands_now(F("G28XY"));
     }
   #endif
 
@@ -865,6 +864,8 @@ G29_TYPE GcodeSuite::G29() {
         bedlevel.set_grid(abl.gridSpacing, abl.probe_position_lf);
         COPY(bedlevel.z_values, abl.z_values);
         TERN_(IS_KINEMATIC, bedlevel.extrapolate_unprobed_bed_levels());
+        if (parser.boolval('K')) { bedlevel.extrapolate_unprobed_bed_levels(); }
+        else if (ENABLED(DWIN_LCD_PROUI)) { bedlevel.extrapolate_unprobed_bed_levels(); }
         bedlevel.refresh_bed_level();
 
         bedlevel.print_leveling_grid();

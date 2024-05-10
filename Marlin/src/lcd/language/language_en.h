@@ -580,7 +580,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_PARK_YPOSITION                 = _UxGT("Park Y Position");
   LSTR MSG_PARK_ZRAISE                    = _UxGT("Park Z Raise");
   LSTR MSG_PARK_FAILED                    = _UxGT("Head cannot be parked");
-  LSTR MSG_PHY_SET                        = _UxGT("Physical settings");
+  LSTR MSG_PHY_SET                        = _UxGT("Physical Settings");
   LSTR MSG_PHY_XBEDSIZE                   = _UxGT("X Bed Size");
   LSTR MSG_PHY_YBEDSIZE                   = _UxGT("Y Bed Size");
   LSTR MSG_PHY_XMINPOS                    = _UxGT("X Min Position");

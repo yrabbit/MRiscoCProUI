@@ -175,7 +175,7 @@ typedef bool (*statusResetFunc_t)();
       static bool constexpr processing = false;
     #endif
     static void task();
-    static void soon(const AxisEnum axis OPTARG(MULTI_E_MANUAL, const int8_t eindex=active_extruder));
+    static void soon(const AxisEnum move_axis OPTARG(MULTI_E_MANUAL, const int8_t eindex=active_extruder));
   };
 
   void lcd_move_axis(const AxisEnum);
@@ -377,7 +377,7 @@ public:
     static constexpr uint8_t get_progress_percent() { return 0; }
   #endif
 
-  static void host_notify_P(PGM_P const fstr);
+  static void host_notify_P(PGM_P const pstr);
   static void host_notify(FSTR_P const fstr) { host_notify_P(FTOP(fstr)); }
   static void host_notify(const char * const cstr);
 
@@ -511,9 +511,9 @@ public:
   /**
    * @brief Set a status with a format string and parameters.
    *
-   * @param pfmt    A constant format P-string
+   * @param ffmt    A constant format F-string
    */
-  static void status_printf(int8_t level, FSTR_P const pfmt, ...);
+  static void status_printf(int8_t level, FSTR_P const ffmt, ...);
 
   // Periodic or as-needed display update
   static void update() IF_DISABLED(HAS_UI_UPDATE, {});

@@ -43,9 +43,9 @@ template<typename T, typename U>
 void DWIN_Draw_Popup(const uint8_t icon, T amsg1=nullptr, U amsg2=nullptr, uint8_t button=0) {
   xy_uint8_t pos;
   switch (icon) {
-    default: pos.set(81, 90); break;               // Icon#:1-8,90-91,93-94; W:110px|H:100px
-    case 17 ... 24: pos.set(96, 90); break;        // Icon#:17-24;           W: 80px|H:100px
-    case 78 ... 81: pos.set(100, 107); break;      // Icon#:78-81;           W: 73px|H: 66px
+    default: pos.set(81, 90); break;          // Icon#:1-8,90-91,93-94; W:110px|H:100px
+    case 17 ... 24: pos.set(96, 90); break;   // Icon#:17-24;           W: 80px|H:100px
+    case 78 ... 81: pos.set(100, 107); break; // Icon#:78-81;           W: 73px|H: 66px
   }
   DWINUI::ClearMainArea();
   Draw_Popup_Bkgd();
@@ -62,8 +62,22 @@ void DWIN_Show_Popup(const uint8_t icon, T amsg1=nullptr, U amsg2=nullptr, uint8
 }
 
 template<typename T, typename U>
+void DWIN_Popup_Cancel(const uint8_t icon, T amsg1, U amsg2) {
+  HMI_SaveProcessID(WaitResponse);
+  DWIN_Draw_Popup(icon, amsg1, amsg2, BTN_Cancel); // Button Cancel
+  DWIN_UpdateLCD();
+}
+
+template<typename T, typename U>
+void DWIN_Popup_Confirm(const uint8_t icon, T amsg1, U amsg2) {
+  HMI_SaveProcessID(WaitResponse);
+  DWIN_Draw_Popup(icon, amsg1, amsg2, BTN_Confirm); // Button Confirm
+  DWIN_UpdateLCD();
+}
+
+template<typename T, typename U>
 void DWIN_Popup_Continue(const uint8_t icon, T amsg1, U amsg2) {
   HMI_SaveProcessID(WaitResponse);
-  DWIN_Draw_Popup(icon, amsg1, amsg2, BTN_Continue);  // Button Continue
+  DWIN_Draw_Popup(icon, amsg1, amsg2, BTN_Continue); // Button Continue
   DWIN_UpdateLCD();
 }

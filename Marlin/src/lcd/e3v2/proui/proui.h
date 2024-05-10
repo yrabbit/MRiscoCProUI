@@ -200,7 +200,7 @@ typedef struct {
   OPTCODE(PREVENT_COLD_EXTRUSION, celsius_t ExtMinT)
   OPTCODE(PREHEAT_BEFORE_LEVELING, celsius_t BedLevT)
   OPTCODE(BAUD_RATE_GCODE, bool Baud250K)
-  OPTCODE(HAS_BED_PROBE, bool CalcAvg)
+  OPTCODE(PROUI_ITEM_TRAM, bool CalcAvg)
   OPTCODE(SHOW_SPEED_IND, bool SpdInd)
   OPTCODE(HAS_BED_PROBE, bool FullManualTramming)
   bool MediaSort;
@@ -211,6 +211,9 @@ typedef struct {
   uint32_t Led_Color;
 #endif
   IF_DISABLED(HAS_BED_PROBE, float ManualZOffset;)
+#if ENABLED(PROUI_ITEM_ABRT)
+  bool auto_abort;
+#endif
 #if ENABLED(PROUI_MESH_EDIT)
   float mesh_min_x = DEF_MESH_MIN_X;
   float mesh_max_x = DEF_MESH_MAX_X;

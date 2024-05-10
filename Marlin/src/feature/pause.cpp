@@ -436,7 +436,7 @@ bool pause_print(const_float_t retract, const xyz_pos_t &park_point, const bool 
   resume_position = current_position;
 
   // Force axes home to allow parking
-  #if PROUI_EX
+  #if ENABLED(DWIN_LCD_PROUI)
     gcode.process_subcommands_now(F("G28XYO"));
     set_all_homed();
   #endif

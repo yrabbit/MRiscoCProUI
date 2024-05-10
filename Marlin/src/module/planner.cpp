@@ -1827,8 +1827,8 @@ void Planner::synchronize() { while (busy()) idle(); }
  */
 bool Planner::_buffer_steps(const xyze_long_t &target
   OPTARG(HAS_POSITION_FLOAT, const xyze_pos_t &target_float)
-  OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm)
-  , feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints
+  OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm),
+  feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints
 ) {
 
   // Wait for the next available block
@@ -1844,9 +1844,9 @@ bool Planner::_buffer_steps(const xyze_long_t &target
   float minimum_planner_speed_sqr;
   if (!_populate_block(block, target
         OPTARG(HAS_POSITION_FLOAT, target_float)
-        OPTARG(HAS_DIST_MM_ARG, cart_dist_mm)
-        , fr_mm_s, extruder, hints
-        , minimum_planner_speed_sqr
+        OPTARG(HAS_DIST_MM_ARG, cart_dist_mm),
+        fr_mm_s, extruder, hints,
+        minimum_planner_speed_sqr
       )
   ) {
     // Movement was not queued, probably because it was too short.
@@ -1900,9 +1900,9 @@ bool Planner::_populate_block(
   block_t * const block,
   const abce_long_t &target
   OPTARG(HAS_POSITION_FLOAT, const xyze_pos_t &target_float)
-  OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm)
-  , feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints
-  , float &minimum_planner_speed_sqr
+  OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm),
+  feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints,
+  float &minimum_planner_speed_sqr
 ) {
   xyze_long_t dist = target - position;
 
@@ -2147,9 +2147,9 @@ bool Planner::_populate_block(
   #endif
 
   if (true NUM_AXIS_GANG(
-      && block->steps.a < MIN_STEPS_PER_SEGMENT, && block->steps.b < MIN_STEPS_PER_SEGMENT, && block->steps.c < MIN_STEPS_PER_SEGMENT,
-      && block->steps.i < MIN_STEPS_PER_SEGMENT, && block->steps.j < MIN_STEPS_PER_SEGMENT, && block->steps.k < MIN_STEPS_PER_SEGMENT,
-      && block->steps.u < MIN_STEPS_PER_SEGMENT, && block->steps.v < MIN_STEPS_PER_SEGMENT, && block->steps.w < MIN_STEPS_PER_SEGMENT
+      && (block->steps.a < MIN_STEPS_PER_SEGMENT), && (block->steps.b < MIN_STEPS_PER_SEGMENT), && (block->steps.c < MIN_STEPS_PER_SEGMENT),
+      && (block->steps.i < MIN_STEPS_PER_SEGMENT), && (block->steps.j < MIN_STEPS_PER_SEGMENT), && (block->steps.k < MIN_STEPS_PER_SEGMENT),
+      && (block->steps.u < MIN_STEPS_PER_SEGMENT), && (block->steps.v < MIN_STEPS_PER_SEGMENT), && (block->steps.w < MIN_STEPS_PER_SEGMENT)
     )
   ) {
     block->millimeters = TERN0(HAS_EXTRUDERS, ABS(dist_mm.e));
@@ -2948,10 +2948,10 @@ void Planner::buffer_sync_block(const BlockFlagBit sync_flag/*=BLOCK_BIT_SYNC_PO
  * @return  false if no segment was queued due to cleaning, cold extrusion, full queue, etc.
  */
 bool Planner::buffer_segment(const abce_pos_t &abce
-  OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm)
-  , const_feedRate_t fr_mm_s
-  , const uint8_t extruder/*=active_extruder*/
-  , const PlannerHints &hints/*=PlannerHints()*/
+  OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm),
+  const_feedRate_t fr_mm_s,
+  const uint8_t extruder/*=active_extruder*/,
+  const PlannerHints &hints/*=PlannerHints()*/
 ) {
 
   // If we are cleaning, do not accept queuing of movements
@@ -3056,8 +3056,8 @@ bool Planner::buffer_segment(const abce_pos_t &abce
   // Queue the movement. Return 'false' if the move was not queued.
   if (!_buffer_steps(target
       OPTARG(HAS_POSITION_FLOAT, target_float)
-      OPTARG(HAS_DIST_MM_ARG, cart_dist_mm)
-      , fr_mm_s, extruder, hints
+      OPTARG(HAS_DIST_MM_ARG, cart_dist_mm),
+      fr_mm_s, extruder, hints
   )) return false;
 
   stepper.wake_up();
@@ -3074,9 +3074,9 @@ bool Planner::buffer_segment(const abce_pos_t &abce
  *  extruder        - optional target extruder (otherwise active_extruder)
  *  hints           - optional parameters to aid planner calculations
  */
-bool Planner::buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s
-  , const uint8_t extruder/*=active_extruder*/
-  , const PlannerHints &hints/*=PlannerHints()*/
+bool Planner::buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s,
+  const uint8_t extruder/*=active_extruder*/,
+  const PlannerHints &hints/*=PlannerHints()*/
 ) {
   xyze_pos_t machine = cart;
   TERN_(HAS_POSITION_MODIFIERS, apply_modifiers(machine));

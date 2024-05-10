@@ -55,7 +55,7 @@ void Goto_Popup(const popupDrawFunc_t fnDraw, const popupClickFunc_t fnClick/*=n
   ClickPopup = fnClick;
   PopupChange = fnChange;
   HMI_SaveProcessID(Popup);
-  HMI_flag.select_flag = 0;
+  HMI_flag.select_flag = false;
   Draw_Popup();
 }
 
