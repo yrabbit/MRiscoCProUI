@@ -2232,7 +2232,6 @@ void MarlinUI::init_lcd() {
   #endif
   DWIN_Frame_SetDir(1);
   DWIN_UpdateLCD();
-  encoderConfiguration();
 }
 
 void MarlinUI::update() {
