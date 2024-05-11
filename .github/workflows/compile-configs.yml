@@ -504,6 +504,7 @@ jobs:
         sed -i "s/.*#define SHOW_SPEED_IND/${ITEMP}#define SHOW_SPEED_IND/" Marlin/Configuration.h
         if [[ $IS == true && $AQUILA_VER == "N32" ]]; then
           sed -i "s/.*#define G26_MESH_VALIDATION/\/\/#define G26_MESH_VALIDATION/" Marlin/Configuration.h
+          sed -i "s/.*#define HAS_ESDIAG 1/\/\/#define HAS_ESDIAG 1/" Marlin/Configuration.h
         fi;
         if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
@@ -895,6 +896,8 @@ jobs:
   Build-LCD-Probe-A:            # CR10 LCD w/Probe
     name: Build LCD Probe Files A
     runs-on: ubuntu-latest
+    env:
+      BYPASS: 'false'
     strategy:
       matrix:
         chip: [GD32,N32]
@@ -937,8 +940,8 @@ jobs:
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($MP); then MPTMP=_MP; else MPTMP=; fi;
         if ($TP) && ($IS); then exit 0; fi;
-        if [ "$TP" = true ] && [ "$IS" = true ]; then exit 0;
-        elif [[ "$TP" = true && "$IS" = true ]]; then exit 0; fi;
+        if ${{ matrix.temp == 'true' && matrix.inshape == 'true' }}; then echo "BYPASS=true" >> $GITHUB_ENV; exit 0;
+        elif [[ "$TP" == true && "$IS" == true ]]; then echo "BYPASS=true" >> $GITHUB_ENV; exit 0; fi;
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -978,6 +981,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
+      if: ${{ env.BYPASS == 'false' }}
       uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
