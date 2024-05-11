@@ -3147,10 +3147,12 @@ void ReturnToPreviousMenu() {
    || ANY(MPC_EDIT_MENU, MPC_AUTOTUNE_MENU)
     if (PreviousMenu == PIDMenu)        return Draw_PID_Menu();
   #endif
+  #if HAS_MESH
+    if (PreviousMenu == AdvancedMenu)   return Draw_Advanced_Menu();
+  #endif
+  if (PreviousMenu == AdvancedSettings) return Draw_AdvancedSettings_Menu();
   if (PreviousMenu == TemperatureMenu)  return Draw_Temperature_Menu();
   if (PreviousMenu == FilamentMenu)     return Draw_FilamentMan_Menu();
-  if (PreviousMenu == AdvancedSettings) return Draw_AdvancedSettings_Menu();
-  if (PreviousMenu == AdvancedMenu)     return Draw_Advanced_Menu();
   if (PreviousMenu == TuneMenu)         return Draw_Tune_Menu();
   if (PreviousMenu == FileMenu)         return Draw_Print_File_Menu();
   if (PreviousMenu == PrepareMenu)      return Draw_Prepare_Menu();

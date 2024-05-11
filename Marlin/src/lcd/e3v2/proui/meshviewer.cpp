@@ -141,7 +141,7 @@ void Draw_MeshViewer() { MeshViewer.Draw(true, meshredraw); }
 
 void OnClick_MeshViewer() {
   if (HMI_flag.select_flag) {
-    #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
+    #if ENABLED(MESH_BED_LEVELING)
       ManualMeshSave();
     #elif ENABLED(AUTO_BED_LEVELING_BILINEAR)
       SaveMesh();
