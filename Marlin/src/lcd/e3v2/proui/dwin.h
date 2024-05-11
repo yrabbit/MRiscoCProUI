@@ -260,11 +260,6 @@ void DWIN_CopySettingsFrom(PGM_P const buff);
 void DWIN_SetDataDefaults();
 void DWIN_RebootScreen();
 
-#if ENABLED(ADVANCED_PAUSE_FEATURE)
-  void Draw_Popup_FilamentPurge();
-  void Goto_FilamentPurge();
-#endif
-
 // Utility and extensions
 #if HAS_LOCKSCREEN
   void DWIN_LockScreen();
@@ -311,6 +306,7 @@ void Draw_Tune_Menu();
 void Draw_Motion_Menu();
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
   void ChangeFilament();
+  void Goto_FilamentPurge();
 #endif
 void Draw_FilamentMan_Menu();
 void Draw_Temperature_Menu();

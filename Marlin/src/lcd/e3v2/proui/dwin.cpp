@@ -2687,13 +2687,6 @@ void ApplyMove() {
 
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
 
-  void Draw_Popup_FilamentPurge() {
-    DWIN_Draw_Popup(ICON_AutoLeveling, GET_TEXT_F(MSG_ADVANCED_PAUSE), GET_TEXT_F(MSG_FILAMENT_CHANGE_PURGE_CONTINUE));
-    DWINUI::Draw_Button(BTN_Purge, 26, 280);
-    DWINUI::Draw_Button(BTN_Continue, 146, 280);
-    Draw_Select_Highlight(true);
-  }
-
   void OnClick_FilamentPurge() {
     if (HMI_flag.select_flag) {
       pause_menu_response = PAUSE_RESPONSE_EXTRUDE_MORE; // "Purge More" button
@@ -4429,8 +4422,9 @@ void Draw_MaxAccel_Menu() {
   void LaserRunRange() {
     if (!laser_device.is_laser_device()) return;
     if (!all_axes_trusted()) return LCD_MESSAGE_F("First set home");
-    DWIN_Popup_Cancel(ICON_TempTooHigh, F("LASER"), F("Run Range"));
+    DWIN_Draw_Popup(ICON_TempTooHigh, F("LASER"), F("Run Range"), BTN_Cancel);
     HMI_SaveProcessID(WaitResponse);
+    DWIN_UpdateLCD();
     laser_device.laser_range();
   }
 

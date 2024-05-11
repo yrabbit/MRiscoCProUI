@@ -32,7 +32,10 @@ inline void Draw_Select_Highlight(const bool sel) { Draw_Select_Highlight(sel, 2
 void DWIN_Popup_ConfirmCancel(const uint8_t icon, FSTR_P const fmsg2);
 void Goto_Popup(const popupDrawFunc_t fnDraw, const popupClickFunc_t fnClick=nullptr, const popupChangeFunc_t fnChange=nullptr);
 void HMI_Popup();
-void DWIN_Popup_Pause(FSTR_P const fmsg, uint8_t button=0);
+#if ENABLED(ADVANCED_PAUSE_FEATURE)
+  void DWIN_Popup_Pause(FSTR_P const fmsg, uint8_t button=0);
+  void Draw_Popup_FilamentPurge();
+#endif
 
 inline void Draw_Popup_Bkgd() {
   DWIN_Draw_Rectangle(1, HMI_data.PopupBg_Color, 14, 60, 258, 330);
@@ -58,13 +61,6 @@ void DWIN_Draw_Popup(const uint8_t icon, T amsg1=nullptr, U amsg2=nullptr, uint8
 template<typename T, typename U>
 void DWIN_Show_Popup(const uint8_t icon, T amsg1=nullptr, U amsg2=nullptr, uint8_t button=0) {
   DWIN_Draw_Popup(icon, amsg1, amsg2, button);
-  DWIN_UpdateLCD();
-}
-
-template<typename T, typename U>
-void DWIN_Popup_Cancel(const uint8_t icon, T amsg1, U amsg2) {
-  HMI_SaveProcessID(WaitResponse);
-  DWIN_Draw_Popup(icon, amsg1, amsg2, BTN_Cancel); // Button Cancel
   DWIN_UpdateLCD();
 }
 
