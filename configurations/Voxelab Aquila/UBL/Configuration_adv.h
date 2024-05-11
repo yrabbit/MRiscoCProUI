@@ -1505,17 +1505,17 @@
 #endif
 
 #if HAS_BED_PROBE && ANY(HAS_MARLINUI_MENU, HAS_TFT_LVGL_UI)
-  //#define PROBE_OFFSET_WIZARD       // Add a Probe Z Offset calibration option to the LCD menu
+  #define PROBE_OFFSET_WIZARD         // Add a Probe Z Offset calibration option to the LCD menu
   #if ENABLED(PROBE_OFFSET_WIZARD)
     /**
      * Enable to init the Probe Z-Offset when starting the Wizard.
      * Use a height slightly above the estimated nozzle-to-probe Z offset.
      * For example, with an offset of -5, consider a starting height of -4.
      */
-    //#define PROBE_OFFSET_WIZARD_START_Z -4.0
+    #define PROBE_OFFSET_WIZARD_START_Z -1.0
 
     // Set a convenient position to do the calibration (probing point and nozzle/bed-distance)
-    //#define PROBE_OFFSET_WIZARD_XY_POS { X_CENTER, Y_CENTER }
+    #define PROBE_OFFSET_WIZARD_XY_POS { X_CENTER, Y_CENTER }
   #endif
 #endif
 
@@ -1541,7 +1541,7 @@
   #endif
 
   // Include a page of printer information in the LCD Main Menu
-  //#define LCD_INFO_MENU
+  #define LCD_INFO_MENU
   #if ENABLED(LCD_INFO_MENU)
     //#define LCD_PRINTER_INFO_IS_BOOTSCREEN // Show bootscreen(s) instead of Printer Info pages
   #endif
@@ -2978,12 +2978,15 @@
  *    Some boards have simple jumper connections! See your board's documentation.
  *  - These drivers can also be used with Hardware Serial.
  *
+ * The TMC26XStepper library is required for TMC26X stepper drivers.
+ *   https://github.com/MarlinFirmware/TMC26XStepper
+ *
  * The TMCStepper library is required for other TMC stepper drivers.
  *   https://github.com/teemuatlut/TMCStepper
  *
  * @section tmc/config
  */
-#if HAS_TRINAMIC_CONFIG
+#if HAS_TRINAMIC_CONFIG || HAS_TMC26X
 
   #define HOLD_MULTIPLIER    0.5  // Scales down the holding current from run current
 
@@ -3490,7 +3493,7 @@
    */
   #define TMC_ADV() {  }
 
-#endif // HAS_TRINAMIC_CONFIG
+#endif // HAS_TRINAMIC_CONFIG || HAS_TMC26X
 
 // @section i2cbus
 
@@ -3906,7 +3909,7 @@
 /**
  * Extra options for the M114 "Current Position" report
  */
-//#define M114_DETAIL         // Use 'M114' for details to check planner calculations
+#define M114_DETAIL           // Use 'M114' for details to check planner calculations
 //#define M114_REALTIME       // Real current position based on forward kinematics
 //#define M114_LEGACY         // M114 used to synchronize on every call. Enable if needed.
 
@@ -3943,7 +3946,7 @@
   // Include capabilities in M115 output
   #define EXTENDED_CAPABILITIES_REPORT // (1000 bytes of flash)
   #if ENABLED(EXTENDED_CAPABILITIES_REPORT)
-    //#define M115_GEOMETRY_REPORT  // (448 bytes of flash) MRiscoC Enabled
+    #define M115_GEOMETRY_REPORT  // (448 bytes of flash) MRiscoC Enabled
   #endif
 #endif
 

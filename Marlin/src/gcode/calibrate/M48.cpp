@@ -58,7 +58,7 @@
 
 void GcodeSuite::M48() {
 
-  #if ENABLED(BLTOUCH)
+  #if HAS_BLTOUCH_HS_MODE
     // Store the original value of bltouch.high_speed_mode
     const bool prev_high_speed_mode = bltouch.high_speed_mode;
     // Set bltouch.high_speed_mode to 0
@@ -286,7 +286,7 @@ void GcodeSuite::M48() {
   report_current_position();
 
   // Restore the previous value of bltouch.high_speed_mode
-  TERN_(BLTOUCH, bltouch.high_speed_mode = prev_high_speed_mode;)
+  TERN_(HAS_BLTOUCH_HS_MODE, bltouch.high_speed_mode = prev_high_speed_mode;)
   TERN_(DWIN_LCD_PROUI, HMI_ReturnScreen();)
 }
 
