@@ -1,4 +1,4 @@
-/** Aquila BLT Mriscoc ProUI
+/** Aquila BLT ProUI
  * Marlin 3D Printer Firmware
  * Copyright (c) 2022 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
@@ -3455,7 +3455,7 @@
 
 #if ENABLED(DWIN_LCD_PROUI)
 // Professional firmware features:
-  //#define PROUI_EX 1            // Extended UI features (15152 bytes of flash)
+  //#define PROUI_EX 1          // Extended UI features (15152 bytes of flash)
   //#define CV_LASER_MODULE
   #define HAS_GCODE_PREVIEW 1
   #define DISABLE_TUNING_GRAPH 0// Temp plot graph - PID/MPC Tuning (1624 bytes of flash)

@@ -1,4 +1,4 @@
-/** Ender-3 Manual Mesh
+/** Ender-3 MM ProUI-EX
  * Marlin 3D Printer Firmware
  * Copyright (c) 2022 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
