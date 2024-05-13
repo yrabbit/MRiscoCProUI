@@ -2331,13 +2331,6 @@ void ResetEeprom() {
   DONE_BUZZ(true);
 }
 
-#if ENABLED(AUTO_BED_LEVELING_BILINEAR)
-  void SaveMesh() {
-    WriteEeprom();
-    TERN_(EEPROM_SETTINGS, safe_delay(500); (void)settings.load();)
-  }
-#endif
-
 // Reset Printer
 void RebootPrinter() {
   wait_for_heatup = wait_for_user = false; // Stop waiting for heating/user
@@ -2545,19 +2538,10 @@ void ApplyMove() {
   void SetProbeOffsetX() { SetPFloatOnClick(-60, 60, UNITFDIGITS, TERN(PROUI_EX, ProEx.ApplyPhySet, nullptr)); }
   void SetProbeOffsetY() { SetPFloatOnClick(-60, 60, UNITFDIGITS, TERN(PROUI_EX, ProEx.ApplyPhySet, nullptr)); }
   void SetProbeOffsetZ() { SetPFloatOnClick(-10, 10, 2); }
-
-  #if PROUI_EX
-    void SetProbeZSpeed()  { SetPIntOnClick(60, 1000); }
-    #if DISABLED(BD_SENSOR)
-      void ApplyProbeMultiple() { PRO_data.multiple_probing = MenuData.Value; }
-      void SetProbeMultiple()  { SetIntOnClick(1, 4, PRO_data.multiple_probing, ApplyProbeMultiple); }
-    #endif
-  #else
-    void SetProbeZSpeed()  { SetPIntOnClick(60, 1000); }
-    #if DISABLED(BD_SENSOR)
-      void ApplyProbeMultiple() { HMI_data.multiple_probing = MenuData.Value; }
-      void SetProbeMultiple()  { SetIntOnClick(1, 4, HMI_data.multiple_probing, ApplyProbeMultiple); }
-    #endif
+  void SetProbeZSpeed() { SetPIntOnClick(60, 1000); }
+  #if DISABLED(BD_SENSOR)
+    void ApplyProbeMultiple() { TERN(PROUI_EX, PRO_data, HMI_data).multiple_probing = MenuData.Value; }
+    void SetProbeMultiple() { SetIntOnClick(1, 4, TERN(PROUI_EX, PRO_data, HMI_data).multiple_probing, ApplyProbeMultiple); }
   #endif
 
   #if ENABLED(Z_MIN_PROBE_REPEATABILITY_TEST)
@@ -3096,12 +3080,10 @@ void ApplyMaxAccel() { planner.set_max_acceleration(HMI_value.axis, MenuData.Val
 
 #if ENABLED(FWRETRACT)
   void SetRetractLength() { SetPFloatOnClick( 0, 10, UNITFDIGITS); }
-  void SetRetractSpeed()  { SetPFloatOnClick( 1, 90, UNITFDIGITS); }
   void SetZRaise()        { SetPFloatOnClick( 0, 2, 2); }
   void SetAddRecover()    { SetPFloatOnClick(-5, 5, UNITFDIGITS); }
-#else
-  void SetRetractSpeed()  { SetPFloatOnClick( 1, 90, UNITFDIGITS); }
 #endif
+  void SetRetractSpeed()  { SetPFloatOnClick( 1, 90, UNITFDIGITS); }
 
 #if ENABLED(ENC_MENU_ITEM)
   void SetEncRateA() { SetPIntOnClick(ui.enc_rateB + 1, 1000); }
@@ -4294,8 +4276,8 @@ void Draw_MaxAccel_Menu() {
 
     // Mesh Inset
     void ApplyMeshInset() { reset_bed_level(); ReDrawItem(); }
-    void SetXMeshInset()  { SetPFloatOnClick(0, X_BED_SIZE, UNITFDIGITS, ApplyMeshInset); }
-    void SetYMeshInset()  { SetPFloatOnClick(0, Y_BED_SIZE, UNITFDIGITS, ApplyMeshInset); }
+    void SetXMeshInset() { SetPFloatOnClick(0, X_BED_SIZE, UNITFDIGITS, ApplyMeshInset); }
+    void SetYMeshInset() { SetPFloatOnClick(0, Y_BED_SIZE, UNITFDIGITS, ApplyMeshInset); }
     void MaxMeshArea() {
       HMI_data.mesh_min_x = 0;
       HMI_data.mesh_max_x = X_BED_SIZE;

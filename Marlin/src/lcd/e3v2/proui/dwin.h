@@ -140,13 +140,6 @@ void WriteEeprom();
   void ReadEeprom();
 #endif
 void ResetEeprom();
-#if ENABLED(MESH_BED_LEVELING)
-  void ManualMeshSave();
-#elif ENABLED(AUTO_BED_LEVELING_BILINEAR)
-  void SaveMesh();
-#elif ENABLED(AUTO_BED_LEVELING_UBL)
-  void UBLMeshSave();
-#endif
 #if ALL(PROUI_TUNING_GRAPH, PROUI_ITEM_PLOT)
   void dwinDrawPlot(tempcontrol_t result);
   void drawHPlot();
@@ -240,14 +233,6 @@ void DWIN_HandleScreen();
 void DWIN_CheckStatusMessage();
 void DWIN_HomingStart();
 void DWIN_HomingDone();
-#if HAS_MESH
-  void DWIN_MeshUpdate(const int8_t xpos, const int8_t ypos, const_float_t zval);
-  void DWIN_PointUpdate(const int8_t cpos, const int8_t tpos, const_float_t zval);
-#endif
-#if HAS_LEVELING
-  void DWIN_LevelingStart();
-  void DWIN_LevelingDone();
-#endif
 void DWIN_Print_Started();
 void DWIN_Print_Pause();
 void DWIN_Print_Resume();
@@ -267,10 +252,21 @@ void DWIN_RebootScreen();
   void HMI_LockScreen();
 #endif
 #if HAS_MESH
+  void DWIN_MeshUpdate(const int8_t xpos, const int8_t ypos, const_float_t zval);
+  void DWIN_PointUpdate(const int8_t cpos, const int8_t tpos, const_float_t zval);
   void DWIN_MeshViewer();
+  #if ENABLED(MESH_BED_LEVELING)
+    void ManualMeshSave();
+  #elif ENABLED(AUTO_BED_LEVELING_UBL)
+    void UBLMeshSave();
+  #endif
   #if USE_GRID_MESHVIEWER
     void SetViewMesh();
   #endif
+#endif
+#if HAS_LEVELING
+  void DWIN_LevelingStart();
+  void DWIN_LevelingDone();
 #endif
 #if HAS_ESDIAG
   void Draw_EndStopDiag();
