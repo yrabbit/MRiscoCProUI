@@ -2201,7 +2201,7 @@ void __Os Init(){
   sprintf_P(ver, PSTR("Version: %s"), SHORT_BUILD_VERSION);
   DWINUI::Draw_CenteredString(2, Color_Cyan, 230, TERN(PROUI_EX, F("MRiscoC ProUI-EX"), F("MRiscoC ProUI")));
   DWINUI::Draw_CenteredString((fontid_t)2, Color_White, 260, F(ver));
-  DWINUI::Draw_CenteredString(false, 1, Color_White, DWINUI::backcolor, 280, DateTime);
+  DWINUI::Draw_CenteredString(false, 1, Color_White, DWINUI::backcolor, 280, STRING_DISTRIBUTION_DATE);
   DWINUI::Draw_CenteredString(2, 0xffe0, 305, F("ClassicRocker883"));
   DWIN_UpdateLCD();
   safe_delay(300);
