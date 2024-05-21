@@ -528,32 +528,32 @@ void Draw_Print_ProgressBar() {
   DWINUI::Draw_String(HMI_data.PercentTxt_Color, HMI_data.Background_Color, 117, 133, pcttostrpctrj(_percent_done));
 }
 
-duration_t _printtime = print_job_timer.duration();
 void Draw_Print_ProgressElapsed() {
-  char buf[10];
-  const bool has_days = (_printtime.value > 60*60*24L);
-  _printtime.toDigital(buf, has_days);
+  duration_t elapsed = print_job_timer.duration(); // Print timer
+  char buf[16];
+  const bool has_days = (elapsed.value > 60*60*24L);
+  elapsed.toDigital(buf, has_days);
   DWINUI::Draw_String(HMI_data.Text_Color, HMI_data.Background_Color, 45, 192, buf);
 }
 
 #if ENABLED(SHOW_REMAINING_TIME)
   duration_t _remain_time = 0;
   void Draw_Print_ProgressRemain() {
-    char buf[10];
+    char buf[16];
     const bool has_days = (_remain_time.value > 60*60*24L);
     _remain_time.toDigital(buf, has_days);
     DWINUI::Draw_String(HMI_data.Text_Color, HMI_data.Background_Color, 181, 192, buf);
   }
 #endif
 
-/// Not ready
+/// TODO: Not ready
 #if ENABLED(SHOW_INTERACTION_TIME)
-static uint32_t _interact_time = 0;
+  duration_t _interact_time = 0;
   void Draw_Print_ProgressInteract() {
-    uint32_t interact_time = _interact_time;
-      MString<12> buf;
-      buf.setf(F("%02i:%02i "), interact_time / 3600, (interact_time % 3600) / 60);
-      DWINUI::Draw_String(HMI_data.Text_Color, HMI_data.Background_Color, 251, 192, buf);
+    char buf[16];
+    const bool has_days = (_interact_time.value > 60*60*24L);
+    _interact_time.toDigital(buf, has_days);
+    DWINUI::Draw_String(HMI_data.Text_Color, HMI_data.Background_Color, 251, 192, buf);
   }
 #endif
 
@@ -1423,9 +1423,8 @@ void EachMomentUpdate() {
       #endif
 
       // Elapsed print time
-      const duration_t min = print_job_timer.duration();
+      //const duration_t min = print_job_timer.duration();
       //if ((min.value % 60) == 0) // 1 minute update, else every second
-      _printtime = min;
       Draw_Print_ProgressElapsed();
     }
     #if HAS_PLR_UI_FLAG
@@ -2181,7 +2180,7 @@ void DWIN_CopySettingsFrom(PGM_P const buff) {
 // Initialize or Re-initialize the LCD
 //=============================================================================
 
-void Init(){
+void __Os Init(){
   uint16_t uVar2;
   uint16_t uVar3;
   uint16_t uVar4;
