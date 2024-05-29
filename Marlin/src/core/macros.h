@@ -36,13 +36,13 @@
 #define _FORCE_INLINE_ __attribute__((__always_inline__)) __inline__
 #define  FORCE_INLINE  __attribute__((always_inline)) inline
 #define NO_INLINE      __attribute__((noinline))
-#define _UNUSED      __attribute__((unused))
-#define __O0         __attribute__((optimize("O0")))  // No optimization and less debug info
-#define __Og         __attribute__((optimize("Og")))  // Optimize the debugging experience
-#define __Os         __attribute__((optimize("Os")))  // Optimize for size
-#define __O1         __attribute__((optimize("O1")))  // Try to reduce size and cycles; nothing that takes a lot of time to compile
-#define __O2         __attribute__((optimize("O2")))  // Optimize even more
-#define __O3         __attribute__((optimize("O3")))  // Optimize yet more
+#define _UNUSED        __attribute__((unused))
+#define __O0           __attribute__((optimize("O0"))) // No optimization and less debug info
+#define __Og           __attribute__((optimize("Og"))) // Optimize the debugging experience
+#define __Os           __attribute__((optimize("Os"))) // Optimize for size
+#define __O1           __attribute__((optimize("O1"))) // Try to reduce size and cycles; nothing that takes a lot of time to compile
+#define __O2           __attribute__((optimize("O2"))) // Optimize even more
+#define __O3           __attribute__((optimize("O3"))) // Optimize yet more
 
 #define IS_CONSTEXPR(...) __builtin_constant_p(__VA_ARGS__) // Only valid solution with C++14. Should use std::is_constant_evaluated() in C++20 instead
 
@@ -60,7 +60,7 @@
 
 // Macros to make a string from a macro
 #define STRINGIFY_(M) #M
-#define STRINGIFY(M) STRINGIFY_(M)
+#define STRINGIFY( M) STRINGIFY_(M)
 
 #define A(CODE) " " CODE "\n\t"
 #define L(CODE) CODE ":\n\t"
@@ -667,6 +667,7 @@
 #define SUB8( N) SUB4(SUB4(N))
 #define SUB9( N) SUB4(SUB5(N))
 #define SUB10(N) SUB5(SUB5(N))
+#define DIFF(A,B) _CAT(SUB,A)(B)
 
 //
 // REPEAT core macros. Recurse N times with ascending I.
