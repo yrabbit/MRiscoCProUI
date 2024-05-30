@@ -142,10 +142,6 @@
 #define SECOND(a,b,...)   b
 #define THIRD( a,b,c,...) c
 
-// Concatenate symbol names, without or with pre-expansion
-#define _CAT(a,V...) a##V
-#define CAT( a,V...) _CAT(a,V)
-
 // Defer expansion
 #define EMPTY()
 #define DEFER( M) M EMPTY()
@@ -154,7 +150,6 @@
 #define DEFER4(M) M EMPTY EMPTY EMPTY EMPTY()()()()
 
 // Force define expansion
-#define EVAL           EVAL16
 #define EVAL1(V...)    V
 #define EVAL2(V...)    EVAL1(EVAL1(V))
 #define EVAL4(V...)    EVAL2(EVAL2(V))
@@ -168,6 +163,11 @@
 #define EVAL1024(V...) EVAL512(EVAL512(V))
 #define EVAL2048(V...) EVAL1024(EVAL1024(V))
 #define EVAL4096(V...) EVAL2048(EVAL2048(V))
+#define EVAL(V...)     EVAL16(V)
+
+// Concatenate symbol names, without or with pre-expansion
+#define _CAT(a,V...) a##V
+#define CAT( a,V...) _CAT(a,V)
 
 #define IS_PROBE(V...) SECOND(V, 0)     // Get the second item passed, or 0
 #define PROBE() ~, 1                    // Second item will be 1 if this is passed
@@ -175,22 +175,22 @@
 #define NOT(x) IS_PROBE(_CAT(_NOT_, x)) //   NOT('0') gets '1'. Anything else gets '0'.
 #define _BOOL(x) NOT(NOT(x))            // _BOOL('0') gets '0'. Anything else gets '1'.
 
+#define _END_OF_ARGUMENTS_() 0
+#define HAS_ARGS(V...) _BOOL(FIRST(_END_OF_ARGUMENTS_ V)())
+
 #define _IF_ELSE(TF) _CAT(_IF_, TF)
 #define IF_ELSE(TF) _IF_ELSE(_BOOL(TF))
 
-#define _IF_1(V...) V _IF_1_ELSE
-#define _IF_0(...)    _IF_0_ELSE
-
 #define _IF_1_ELSE(...)
 #define _IF_0_ELSE(V...) V
+
+#define _IF_1(V...) V _IF_1_ELSE
+#define _IF_0(...)    _IF_0_ELSE
 
 // Simple Inline IF Macros, friendly to use in other macro definitions
 #define IF(O, A, B) ((O) ? (A) : (B))
 #define IF_0(O, A) IF(O, A, 0)
 #define IF_1(O, A) IF(O, A, 1)
-
-#define _END_OF_ARGUMENTS_() 0
-#define HAS_ARGS(V...) _BOOL(FIRST(_END_OF_ARGUMENTS_ V)())
 
 // Use NUM_ARGS(__VA_ARGS__) to get the number of variadic arguments
 #define _NUM_ARGS(_,n,m,l,k,j,i,h,g,f,e,d,c,b,a,Z,Y,X,W,V,U,T,S,R,Q,P,O,N,M,L,K,J,I,H,G,F,E,D,C,B,A,OUT,...) OUT
@@ -258,8 +258,8 @@
 #define ENABLED(V...)       DO(ENA,&&,V)
 #define DISABLED(V...)      DO(DIS,&&,V)
 #define ANY(V...)          !DISABLED(V)
-#define ALL                 ENABLED
-#define NONE                DISABLED
+#define ALL(V...)           ENABLED(V)
+#define NONE(V...)          DISABLED(V)
 #define COUNT_ENABLED(V...) DO(ENA,+,V)
 #define MANY(V...)          (COUNT_ENABLED(V) > 1)
 
