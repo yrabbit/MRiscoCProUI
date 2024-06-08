@@ -72,7 +72,7 @@
 from __future__ import print_function
 from __future__ import division
 
-import sys,os,re
+import sys, os, re
 
 pwd = os.getcwd()  # make sure we're executing from the correct directory level
 pwd = pwd.replace('\\', '/')
@@ -103,7 +103,7 @@ current_OS = platform.system()
 target_env = ''
 board_name = ''
 
-from datetime import datetime, date, time
+from datetime import datetime
 
 #########
 #  Python 2 error messages:
@@ -965,7 +965,6 @@ def run_PIO(dummy):
 
 ########################################################################
 
-import time
 import threading
 if python_ver == 2:
   import Tkinter as tk
@@ -978,7 +977,6 @@ else:
   import tkinter as tk
   import queue as queue
   from tkinter import ttk, Tk, Frame, Text, Menu
-import subprocess
 import sys
 que = queue.Queue()
 #IO_queue = queue.Queue()

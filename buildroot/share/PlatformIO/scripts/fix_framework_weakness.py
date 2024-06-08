@@ -7,7 +7,6 @@ if pioutil.is_pio_build():
     import shutil
     from os.path import join, isfile
     from pprint import pprint
-    from SCons.Script import Import
     from SCons.Script import DefaultEnvironment
     env = DefaultEnvironment()
     Import("env")

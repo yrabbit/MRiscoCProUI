@@ -3,9 +3,7 @@
 #
 import pioutil
 if pioutil.is_pio_build():
-    from os.path import join
-    from os.path import expandvars
-    from SCons.Script import Import
+    from os.path import join, expandvars
     from SCons.Script import DefaultEnvironment
     env = DefaultEnvironment()
     Import("env")
