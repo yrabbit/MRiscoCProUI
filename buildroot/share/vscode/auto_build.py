@@ -151,8 +151,6 @@ def get_answer(board_name, question_txt, options, default_value=1):
   root_get_answer.protocol("WM_DELETE_WINDOW", disable_event)
   root_get_answer.resizable(False, False)
 
-  root_get_answer.radio_state = default_value  # declare variables used by TK and enable
-
   global get_answer_val
   get_answer_val = default_value  # return get_answer_val, set default to match radio_state default
 
@@ -880,7 +878,6 @@ def run_PIO(dummy):
   print('build_type:  ', build_type)
 
   import subprocess
-  import sys
 
   print('starting platformio')
 
