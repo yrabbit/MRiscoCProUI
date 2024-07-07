@@ -1504,12 +1504,13 @@ void MarlinUI::host_notify(const char * const cstr) {
       else if (IS_SD_PRINTING())
         return set_status_no_expire(card.longest_filename());
     #endif
-    else if (print_job_timer.isRunning())
+    else if (print_job_timer.isRunning()) {
       #if ENABLED(CV_LASER_MODULE)
         msg = laser_device.is_laser_device() ? GET_TEXT_F(MSG_ENGRAVING) : GET_TEXT_F(MSG_PRINTING);
       #else
         msg = GET_TEXT_F(MSG_PRINTING);
       #endif
+    }
     #if SERVICE_INTERVAL_1 > 0
       else if (print_job_timer.needsService(1)) msg = FPSTR(service1);
     #endif
@@ -1535,10 +1536,6 @@ void MarlinUI::host_notify(const char * const cstr) {
    * @param level Alert level. Negative to ignore and reset the level. Non-zero never expires.
    * @return      TRUE if the level could NOT be set.
    */
-  void MarlinUI::set_status(FSTR_P const fstr, int8_t level) { // PROUI_EX workaround libproui.a undefined reference
-    _set_status_and_level(FTOP(fstr), level);
-  }
-
   bool MarlinUI::set_alert_level(int8_t &level) {
     if (level < 0) level = alert_level = 0;
     if (level < alert_level) return true;

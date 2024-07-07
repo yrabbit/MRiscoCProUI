@@ -465,7 +465,6 @@ public:
    */
   static void _set_alert(const char * const ustr, int8_t level, const bool pgm=false);
 
-  static void set_status(FSTR_P const, int8_t); // set_status undefined reference libproui.a PROUI_EX workaround
   static void set_status(const char * const cstr, const bool persist=false) { _set_status(cstr, persist, false); }
   static void set_status_P(PGM_P const pstr, const bool persist=false)      { _set_status(pstr, persist, true);  }
   static void set_status(FSTR_P const fstr, const bool persist=false)       { set_status_P(FTOP(fstr), persist); }
@@ -507,8 +506,8 @@ public:
    * @param cstr    A C-string to set as the status.
    */
   static void set_status_no_expire_P(PGM_P const pstr)      { set_status_P(pstr, true); }
-  static void set_status_no_expire(const char * const cstr) { set_status(cstr, true); }
-  static void set_status_no_expire(FSTR_P const fstr)       { set_status(fstr, (bool)true); }
+  static void set_status_no_expire(const char * const cstr) { set_status(cstr, true);   }
+  static void set_status_no_expire(FSTR_P const fstr)       { set_status(fstr, true);   }
 
   /**
    * @brief Set a status with a format string and parameters.
