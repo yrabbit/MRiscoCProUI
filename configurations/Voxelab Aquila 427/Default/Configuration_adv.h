@@ -433,7 +433,7 @@
    *   kf = (power_fan * eff_fan) / power_heater * 255
    * where eff_fan is between 0.0 and 1.0, based on fan-efficiency and airflow to the nozzle / heater.
    *
-   * Example:
+   * EXAMPLE:
    *   Heater: 40W, Fan: 0.1A * 24V = 2.4W, eff_fan = 0.8
    *   Kf = (2.4W * 0.8) / 40W * 255 = 12.24
    *
@@ -2496,7 +2496,8 @@
     #define PTC_PARK_POS   { 0, 0, 100 }
 
     // Probe position to probe and wait for probe to reach target temperature
-    //#define PTC_PROBE_POS  { 12.0f, 7.3f } // Example: MK52 magnetic heatbed
+    //#define PTC_PROBE_POS  { 12.0f, 7.3f }
+    /// EXAMPLE: MK52 magnetic heatbed
     #define PTC_PROBE_POS  { 90, 100 }
 
     // The temperature the probe should be at while taking measurements during
@@ -3486,7 +3487,7 @@
    * A list of available functions can be found on the library github page
    * https://github.com/teemuatlut/TMCStepper
    *
-   * Example:
+   * EXAMPLE:
    * #define TMC_ADV() { \
    *   stepperX.diag0_otpw(1); \
    *   stepperY.intpol(0); \

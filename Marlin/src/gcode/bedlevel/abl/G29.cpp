@@ -158,19 +158,19 @@ public:
  *
  *  J  Jettison current bed leveling data
  *
- *  V  Set the verbose level (0-4). Example: "G29 V3"
+ *  V  Set the verbose level (0-4). EXAMPLE: "G29 V3"
  *
  * Parameters With LINEAR leveling only:
  *
  *  P  Set the size of the grid that will be probed (P x P points).
- *     Example: "G29 P4"
+ *     EXAMPLE: "G29 P4"
  *
  *  X  Set the X size of the grid that will be probed (X x Y points).
- *     Example: "G29 X7 Y5"
+ *     EXAMPLE: "G29 X7 Y5"
  *
  *  Y  Set the Y size of the grid that will be probed (X x Y points).
  *
- *  T  Generate a Bed Topology Report. Example: "G29 P5 T" for a detailed report.
+ *  T  Generate a Bed Topology Report. EXAMPLE: "G29 P5 T" for a detailed report.
  *     This is useful for manual bed leveling and finding flaws in the bed (to
  *     assist with part placement).
  *     Not supported by non-linear delta printer bed leveling.

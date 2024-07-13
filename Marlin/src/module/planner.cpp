@@ -2206,8 +2206,8 @@ bool Planner::_populate_block(
   const float inverse_millimeters = 1.0f / block->millimeters;  // Inverse millimeters to remove multiple divides
 
   // Calculate inverse time for this move. No divide by zero due to previous checks.
-  // Example: At 120mm/s a 60mm move involving XYZ axes takes 0.5s. So this will give 2.0.
-  // Example 2: At 120°/s a 60° move involving only rotational axes takes 0.5s. So this will give 2.0.
+  /// EXAMPLE: At 120mm/s a 60mm move involving XYZ axes takes 0.5s. So this will give 2.0.
+  /// EXAMPLE: At 120°/s a 60° move involving only rotational axes takes 0.5s. So this will give 2.0.
   float inverse_secs = inverse_millimeters * (
     #if ALL(HAS_ROTATIONAL_AXES, INCH_MODE_SUPPORT)
       /**
