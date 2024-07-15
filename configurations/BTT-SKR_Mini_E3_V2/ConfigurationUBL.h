@@ -83,7 +83,7 @@
  * Serial port -1 is the USB emulated serial port, if available.
  * NOTE: The first serial port (-1 or 0) will always be used by the Arduino bootloader.
  *
- * :[-1, 0, 1, 2, 3, 4, 5, 6, 7]
+ * :[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
  */
 #define SERIAL_PORT -1  // BTT SKR MINI E3 TFT >> 2
 #define NO_AUTO_ASSIGN_WARNING  // Disable serial warnings
