@@ -2789,8 +2789,10 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
   #else
     const_float_t lfrb[] = { ui.screw_pos, ui.screw_pos, TERN(HAS_BED_PROBE, _MAX(((X_BED_SIZE - X_MAX_POS) - probe.offset.x), ui.screw_pos), ui.screw_pos), TERN(HAS_BED_PROBE, _MAX(((Y_BED_SIZE - Y_MAX_POS) - probe.offset.y), ui.screw_pos), ui.screw_pos) };
   #endif
-  OPTCODE(HAS_BED_PROBE, static bool inLev = false)
-  OPTCODE(HAS_BED_PROBE, if (inLev) return NAN)
+  #if HAS_BED_PROBE
+    static bool inLev = false;
+    if (inLev) return NAN;
+  #endif
   float xpos = 0, ypos = 0 OPTARG(HAS_BED_PROBE, zval = 0);
   gcode.process_subcommands_now(F("G28O"));
   ui.reset_status(true);
@@ -2901,7 +2903,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
     }
     if (fabsf(MeshViewer.max - MeshViewer.min) < BED_TRAMMING_PROBE_TOLERANCE || UNEAR_ZERO(max)) {
       DWINUI::Draw_CenteredString(140, GET_TEXT_F(MSG_CORNERS_LEVELED));
-      DWINUI::Draw_CenteredString(160, GET_TEXT_F(MSG_CORNERS_NOT_LEVELED));
+      DWINUI::Draw_CenteredString(160, GET_TEXT_F(MSG_TOLERANCE_ACHIEVED));
     }
     else {
       switch (p) {
@@ -2935,8 +2937,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
     if (HMI_flag.select_flag) {
       if (HMI_data.FullManualTramming) {
         LCD_MESSAGE(MSG_DISABLE_MANUAL_TRAMMING);
-        HMI_ReturnScreen();
-        return;
+        return HMI_ReturnScreen();
       }
       else { Trammingwizard(); }
     }
