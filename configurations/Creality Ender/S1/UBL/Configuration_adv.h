@@ -689,7 +689,7 @@
  * Multiple extruders can be assigned to the same pin in which case
  * the fan will turn on when any selected extruder is above the threshold.
  */
-#define E0_AUTO_FAN_PIN -1  // Ender3V2 Configs
+#define E0_AUTO_FAN_PIN FAN1_PIN // Board v301 Configs
 #define E1_AUTO_FAN_PIN -1
 #define E2_AUTO_FAN_PIN -1
 #define E3_AUTO_FAN_PIN -1
@@ -1394,7 +1394,7 @@
  * This allows higher feedrates than the MCU could otherwise support.
  */
 #define MULTISTEPPING_LIMIT   16  //: [1, 2, 4, 8, 16, 32, 64, 128]
-#define OLD_ADAPTIVE_MULTISTEPPING 1
+//#define OLD_ADAPTIVE_MULTISTEPPING 1
 
 /**
  * Adaptive Step Smoothing increases the resolution of multi-axis moves, particularly at step frequencies
@@ -1844,7 +1844,7 @@
 
   //#define SD_REPRINT_LAST_SELECTED_FILE // On print completion open the LCD Menu and select the same file
 
-  #define AUTO_REPORT_SD_STATUS           // Auto-report media status with 'M27 S<seconds>' (416 bytes of flash)
+  //#define AUTO_REPORT_SD_STATUS           // Auto-report media status with 'M27 S<seconds>' (416 bytes of flash)
 
   /**
    * Support for USB thumb drives using an Arduino USB Host Shield or
@@ -2760,7 +2760,7 @@
  *
  * NOTE: M207 / M208 / M209 settings are saved to EEPROM.
  */
-#define FWRETRACT  // MRiscoC Enabled support for firmware based retract (1592 bytes of flash)
+//#define FWRETRACT  // MRiscoC Enabled support for firmware based retract (1592 bytes of flash)
 #if ENABLED(FWRETRACT)
   //#define FWRETRACT_AUTORETRACT             // Override slicer retractions  // MRiscoC use slicer retract
   #if ENABLED(FWRETRACT_AUTORETRACT)
@@ -3920,7 +3920,7 @@
 /**
  * Auto-report temperatures with M155 S<seconds>
  */
-#define AUTO_REPORT_TEMPERATURES // (288 bytes of flash)
+//#define AUTO_REPORT_TEMPERATURES // (288 bytes of flash)
 #if ENABLED(AUTO_REPORT_TEMPERATURES) && TEMP_SENSOR_REDUNDANT
   //#define AUTO_REPORT_REDUNDANT // Include the "R" sensor in the auto-report
 #endif
@@ -3937,10 +3937,10 @@
  * M115 - Report capabilites. Disable to save ~1150 bytes of flash.
  *        Some hosts (and serial TFT displays) rely on this feature.
  */
-#define CAPABILITIES_REPORT
+//#define CAPABILITIES_REPORT
 #if ENABLED(CAPABILITIES_REPORT)
   // Include capabilities in M115 output
-  //#define EXTENDED_CAPABILITIES_REPORT // (1000 bytes of flash)
+  #define EXTENDED_CAPABILITIES_REPORT // (1000 bytes of flash)
   #if ENABLED(EXTENDED_CAPABILITIES_REPORT)
     #define M115_GEOMETRY_REPORT  // (448 bytes of flash) MRiscoC Enabled
   #endif
