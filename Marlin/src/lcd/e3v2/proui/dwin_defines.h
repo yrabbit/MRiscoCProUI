@@ -171,10 +171,10 @@
     #undef  MESH_MAX_X
     #undef  MESH_MIN_Y
     #undef  MESH_MAX_Y
-    #define MESH_MIN_X PRO_data.mesh_min_x
-    #define MESH_MAX_X PRO_data.mesh_max_x
-    #define MESH_MIN_Y PRO_data.mesh_min_y
-    #define MESH_MAX_Y PRO_data.mesh_max_y
+    #define MESH_MIN_X (float)PRO_data.mesh_min_x
+    #define MESH_MAX_X (float)PRO_data.mesh_max_x
+    #define MESH_MIN_Y (float)PRO_data.mesh_min_y
+    #define MESH_MAX_Y (float)PRO_data.mesh_max_y
   #endif
 
 #else
@@ -209,10 +209,10 @@
     #undef  MESH_MAX_X
     #undef  MESH_MIN_Y
     #undef  MESH_MAX_Y
-    #define MESH_MIN_X HMI_data.mesh_min_x
-    #define MESH_MAX_X HMI_data.mesh_max_x
-    #define MESH_MIN_Y HMI_data.mesh_min_y
-    #define MESH_MAX_Y HMI_data.mesh_max_y
+    #define MESH_MIN_X (float)HMI_data.mesh_min_x
+    #define MESH_MAX_X (float)HMI_data.mesh_max_x
+    #define MESH_MIN_Y (float)HMI_data.mesh_min_y
+    #define MESH_MAX_Y (float)HMI_data.mesh_max_y
   #endif
 
 #endif // PROUI_EX
