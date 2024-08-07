@@ -3271,7 +3271,7 @@ void Draw_Control_Menu() {
       MENU_ITEM(ICON_LedControl, MSG_LED_CONTROL, onDrawSubMenu, Draw_LedControl_Menu);
     #endif
     #if ENABLED(PRINTCOUNTER)
-      MENU_ITEM(ICON_PrintStats, MSG_INFO_STATS_MENU, onDrawSubMenu, gotoPrintStats);
+      MENU_ITEM(ICON_PrintStats, MSG_INFO_PRINTER_STATS_MENU, onDrawSubMenu, gotoPrintStats);
     #endif
     MENU_ITEM(ICON_Info, MSG_INFO_SCREEN, onDrawSubMenu, Goto_Info_Menu);
   }
