@@ -999,7 +999,7 @@
     #error "BOARD_STM32F1R is now BOARD_STM32F103RE. Please update your configuration."
   #elif MB(STM32F103R)
     #error "BOARD_STM32F103R is now BOARD_STM32F103RE. Please update your configuration."
-  #elif MOTHERBOARD == BOARD_ESP32
+  #elif MB(ESP32)
     #error "BOARD_ESP32 is now BOARD_ESPRESSIF_ESP32. Please update your configuration."
   #elif MB(STEVAL)
     #error "BOARD_STEVAL_3DP001V1 (BOARD_STEVAL) is no longer supported in Marlin."

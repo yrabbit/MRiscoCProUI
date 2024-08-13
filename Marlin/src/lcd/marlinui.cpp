@@ -1647,7 +1647,7 @@ void MarlinUI::host_notify(const char * const cstr) {
     TERN_(STATUS_MESSAGE_SCROLLING, reset_status_scroll());
 
     TERN_(EXTENSIBLE_UI, ExtUI::onStatusChanged(status_message));
-    TERN_(DWIN_LCD_PROUI, DWIN_CheckStatusMessage());
+    TERN_(DWIN_LCD_PROUI, DWIN_CheckStatusMessage(); DWIN_DrawStatusMessage(););
   }
 
   #if ENABLED(STATUS_MESSAGE_SCROLLING)

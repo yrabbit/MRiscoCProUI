@@ -28,11 +28,7 @@
 #include "../../../module/probe.h"
 #include "../../../gcode/gcode.h"
 #include "../../../module/planner.h"
-#include "../../../gcode/queue.h"
-#include "../../../libs/least_squares_fit.h"
-#include "../../../libs/vector_3.h"
 
-#include "dwin_popup.h"
 #include "bedlevel_tools.h"
 
 #define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
@@ -48,6 +44,8 @@ uint8_t BedLevelToolsClass::tilt_grid = 2;
 bool drawing_mesh = false;
 
 #if ENABLED(AUTO_BED_LEVELING_UBL)
+#include "../../../libs/least_squares_fit.h"
+#include "../../../libs/vector_3.h"
 
   bool BedLevelToolsClass::create_plane_from_mesh() {
     struct linear_fit_data lsf_results;

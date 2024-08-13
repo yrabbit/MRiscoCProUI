@@ -2865,7 +2865,7 @@ void MarlinSettings::postprocess() {
           EEPROM_READ(dwin_data);
           if (!validating) DWIN_CopySettingsFrom(dwin_data);
         }
-      #endif // DWIN_LCD_PROUI
+      #endif
 
       //
       // Case Light Brightness
@@ -3186,7 +3186,7 @@ void MarlinSettings::postprocess() {
     #if ANY(EEPROM_AUTO_INIT, EEPROM_INIT_NOW)
       (void)save();
       SERIAL_ECHO_MSG("EEPROM Initialized");
-      #if PROUI_EX
+      #if ENABLED(DWIN_LCD_PROUI)
         safe_delay(200);
         RebootPrinter();
       #endif
@@ -3224,109 +3224,96 @@ void MarlinSettings::postprocess() {
 
     void MarlinSettings::store_mesh(const int8_t slot) {
 
-      #if ENABLED(AUTO_BED_LEVELING_UBL)
-        const int16_t a = calc_num_meshes();
-        if (!WITHIN(slot, 0, a - 1)) {
-          ubl_invalid_slot(a);
-          DEBUG_ECHOLNPGM("E2END=", persistentStore.capacity() - 1, " meshes_end=", meshes_end, " slot=", slot);
-          DEBUG_EOL();
-          return;
-        }
+      const int16_t a = calc_num_meshes();
+      if (!WITHIN(slot, 0, a - 1)) {
+        ubl_invalid_slot(a);
+        DEBUG_ECHOLNPGM("E2END=", persistentStore.capacity() - 1, " meshes_end=", meshes_end, " slot=", slot);
+        DEBUG_EOL();
+        return;
+      }
 
-        int pos = mesh_slot_offset(slot);
-        uint16_t crc = 0;
+      int pos = mesh_slot_offset(slot);
+      uint16_t crc = 0;
 
-        #if ENABLED(OPTIMIZED_MESH_STORAGE)
-          #if ANY(PROUI_EX, PROUI_GRID_PNTS)
-            int16_t z_mesh_store[GRID_LIMIT][GRID_LIMIT];
-          #else
-            int16_t z_mesh_store[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
-          #endif
-          bedlevel.set_store_from_mesh(bedlevel.z_values, z_mesh_store);
-          uint8_t * const src = (uint8_t*)&z_mesh_store;
+      #if ENABLED(OPTIMIZED_MESH_STORAGE)
+        #if ANY(PROUI_EX, PROUI_GRID_PNTS)
+          int16_t z_mesh_store[GRID_LIMIT][GRID_LIMIT];
         #else
-          uint8_t * const src = (uint8_t*)&bedlevel.z_values;
+          int16_t z_mesh_store[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
         #endif
-
-        // Write crc to MAT along with other data, or just tack on to the beginning or end
-        persistentStore.access_start();
-        const bool status = persistentStore.write_data(pos, src, MESH_STORE_SIZE, &crc);
-        persistentStore.access_finish();
-
-        if (status) SERIAL_ECHOLNPGM("?Unable to save mesh data.");
-        else        DEBUG_ECHOLNPGM("Mesh saved in slot ", slot);
-
+        bedlevel.set_store_from_mesh(bedlevel.z_values, z_mesh_store);
+        uint8_t * const src = (uint8_t*)&z_mesh_store;
       #else
-
-        // Other mesh types
-
+        uint8_t * const src = (uint8_t*)&bedlevel.z_values;
       #endif
+
+      // Write crc to MAT along with other data, or just tack on to the beginning or end
+      persistentStore.access_start();
+      const bool status = persistentStore.write_data(pos, src, MESH_STORE_SIZE, &crc);
+      persistentStore.access_finish();
+
+      if (status) SERIAL_ECHOLNPGM("?Unable to save mesh data.");
+      else        DEBUG_ECHOLNPGM("Mesh saved in slot ", slot);
+
     }
 
     void MarlinSettings::load_mesh(const int8_t slot, void * const into/*=nullptr*/) {
 
-      #if ENABLED(AUTO_BED_LEVELING_UBL)
+      const int16_t a = settings.calc_num_meshes();
 
-        const int16_t a = settings.calc_num_meshes();
+      if (!WITHIN(slot, 0, a - 1)) {
+        ubl_invalid_slot(a);
+        return;
+      }
 
-        if (!WITHIN(slot, 0, a - 1)) {
-          ubl_invalid_slot(a);
-          return;
-        }
-
-        int pos = mesh_slot_offset(slot);
-        uint16_t crc = 0;
-        #if ENABLED(OPTIMIZED_MESH_STORAGE)
-          #if ANY(PROUI_EX, PROUI_GRID_PNTS)
-            int16_t z_mesh_store[GRID_LIMIT][GRID_LIMIT];
-          #else
-            int16_t z_mesh_store[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
-          #endif
-          uint8_t * const dest = (uint8_t*)&z_mesh_store;
+      int pos = mesh_slot_offset(slot);
+      uint16_t crc = 0;
+      #if ENABLED(OPTIMIZED_MESH_STORAGE)
+        #if ANY(PROUI_EX, PROUI_GRID_PNTS)
+          int16_t z_mesh_store[GRID_LIMIT][GRID_LIMIT];
         #else
-          uint8_t * const dest = into ? (uint8_t*)into : (uint8_t*)&bedlevel.z_values;
+          int16_t z_mesh_store[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
         #endif
-
-        persistentStore.access_start();
-        uint16_t status = persistentStore.read_data(pos, dest, MESH_STORE_SIZE, &crc);
-        persistentStore.access_finish();
-
-        #if ENABLED(OPTIMIZED_MESH_STORAGE)
-          if (into) {
-            #if ANY(PROUI_EX, PROUI_GRID_PNTS)
-              float z_values[GRID_LIMIT][GRID_LIMIT];
-            #else
-              float z_values[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
-            #endif
-            bedlevel.set_mesh_from_store(z_mesh_store, z_values);
-            memcpy(into, z_values, sizeof(z_values));
-          }
-          else
-            bedlevel.set_mesh_from_store(z_mesh_store, bedlevel.z_values);
-        #endif
-
-        #if ENABLED(DWIN_LCD_PROUI)
-          if (bedLevelTools.meshValidate()) {
-            ui.status_printf(0, GET_TEXT_F(MSG_MESH_LOADED), slot);
-          }
-          else {
-            status = true;
-            bedlevel.invalidate();
-            LCD_MESSAGE(MSG_UBL_MESH_INVALID);
-            DONE_BUZZ(false);
-          }
-        #endif
-
-        if (status) SERIAL_ECHOLNPGM("?Unable to load mesh data.");
-        else        DEBUG_ECHOLNPGM("Mesh loaded from slot ", slot);
-
-        EEPROM_FINISH();
-
+        uint8_t * const dest = (uint8_t*)&z_mesh_store;
       #else
-
-        // Other mesh types
-
+        uint8_t * const dest = into ? (uint8_t*)into : (uint8_t*)&bedlevel.z_values;
       #endif
+
+      persistentStore.access_start();
+      uint16_t status = persistentStore.read_data(pos, dest, MESH_STORE_SIZE, &crc);
+      persistentStore.access_finish();
+
+      #if ENABLED(OPTIMIZED_MESH_STORAGE)
+        if (into) {
+          #if ANY(PROUI_EX, PROUI_GRID_PNTS)
+            float z_values[GRID_LIMIT][GRID_LIMIT];
+          #else
+            float z_values[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
+          #endif
+          bedlevel.set_mesh_from_store(z_mesh_store, z_values);
+          memcpy(into, z_values, sizeof(z_values));
+        }
+        else
+          bedlevel.set_mesh_from_store(z_mesh_store, bedlevel.z_values);
+      #endif
+
+      #if ENABLED(DWIN_LCD_PROUI)
+        if (bedLevelTools.meshValidate()) {
+          ui.status_printf(0, GET_TEXT_F(MSG_MESH_LOADED), slot);
+        }
+        else {
+          status = true;
+          bedlevel.invalidate();
+          LCD_MESSAGE(MSG_UBL_MESH_INVALID);
+          DONE_BUZZ(false);
+        }
+      #endif
+
+      if (status) SERIAL_ECHOLNPGM("?Unable to load mesh data.");
+      else        DEBUG_ECHOLNPGM("Mesh loaded from slot ", slot);
+
+      EEPROM_FINISH();
+
     }
 
     //void MarlinSettings::delete_mesh() { return; }
