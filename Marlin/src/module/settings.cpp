@@ -1007,7 +1007,10 @@ void MarlinSettings::postprocess() {
     // Global Leveling
     //
     {
-      const float planner_z_fade_height = TERN(ENABLE_LEVELING_FADE_HEIGHT, planner.z_fade_height, (DEFAULT_LEVELING_FADE_HEIGHT));
+      #ifndef DEFAULT_LEVELING_FADE_HEIGHT
+        #define DEFAULT_LEVELING_FADE_HEIGHT 0
+      #endif
+      const float planner_z_fade_height = TERN(ENABLE_LEVELING_FADE_HEIGHT, planner.z_fade_height, DEFAULT_LEVELING_FADE_HEIGHT);
       EEPROM_WRITE(planner_z_fade_height);
     }
 
@@ -1415,7 +1418,7 @@ void MarlinSettings::postprocess() {
       #if ENABLED(VOLUMETRIC_EXTRUDER_LIMIT)
         EEPROM_WRITE(planner.volumetric_extruder_limit);
       #else
-        dummyf = DEFAULT_VOLUMETRIC_EXTRUDER_LIMIT;
+        dummyf = 0.0;
         for (uint8_t q = EXTRUDERS; q--;) EEPROM_WRITE(dummyf);
       #endif
     }
@@ -3488,10 +3491,10 @@ void MarlinSettings::reset() {
   // MESH_INSET workaround
   //
   #if ALL(PROUI_MESH_EDIT, HAS_MESH)
-    ui.mesh_min_x = TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_x;
-    ui.mesh_max_x = TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_x;
-    ui.mesh_min_y = TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_y;
-    ui.mesh_max_y = TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_y;
+    ui.mesh_min_x = DEF_MESH_MIN_X;
+    ui.mesh_max_x = DEF_MESH_MAX_X;
+    ui.mesh_min_y = DEF_MESH_MIN_Y;
+    ui.mesh_max_y = DEF_MESH_MAX_Y;
   #endif
 
   //
@@ -3527,7 +3530,7 @@ void MarlinSettings::reset() {
   //
   // Global Leveling
   //
-  TERN_(ENABLE_LEVELING_FADE_HEIGHT, new_z_fade_height = (DEFAULT_LEVELING_FADE_HEIGHT));
+  TERN_(ENABLE_LEVELING_FADE_HEIGHT, new_z_fade_height = DEFAULT_LEVELING_FADE_HEIGHT);
   TERN_(HAS_LEVELING, reset_bed_level());
 
   //
