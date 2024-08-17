@@ -1379,7 +1379,7 @@ void EachMomentUpdate() {
     #endif
   }
 
-  if (!PENDING(ms, next_rts_update_ms)) {
+  if (ELAPSED(ms, next_rts_update_ms)) {
     next_rts_update_ms = ms + DWIN_UPDATE_INTERVAL;
 
     if ((HMI_flag.printing_flag != Printing()) && (checkkey != Homing) TERN_(HAS_BED_PROBE, && (checkkey != Leveling))) {
