@@ -1042,7 +1042,7 @@
 #endif
 #if HAS_MANUAL_MOVE_MENU
   #ifndef MANUAL_FEEDRATE
-    #define MANUAL_FEEDRATE { 60*60, 60*60, 8*60, 2*60 }
+    #define MANUAL_FEEDRATE { 60*60, 60*60, 10*60, 2*60 }
   #endif
   #ifndef FINE_MANUAL_MOVE
     #define FINE_MANUAL_MOVE 0.025
