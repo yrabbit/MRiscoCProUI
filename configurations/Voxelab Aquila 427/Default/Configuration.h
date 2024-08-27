@@ -3471,7 +3471,7 @@
   //#define PROUI_EX 1          // Extended UI features (15152 bytes of flash)
   //#define CV_LASER_MODULE
   #define HAS_GCODE_PREVIEW 1
-  #define DISABLE_TUNING_GRAPH 0// Temp plot graph - PID/MPC Tuning (1624 bytes of flash)
+  #define DISABLE_TUNING_GRAPH 0// PID/MPC Tuning Plot Graph (1624 bytes of flash)
   #define HAS_ESDIAG 1          // View End-stop switch continuity (560 bytes of flash)
   #define HAS_CGCODE 1          // Extra Gcode options (3320 bytes of flash)
   #define HAS_LOCKSCREEN 1      // Simple lockscreen as to not accidentally change something (568 bytes of flash)
@@ -3482,9 +3482,7 @@
   #if ENABLED(BLTOUCH)
     //#define HS_MENU_ITEM      // BLTOUCH_HS_MODE menu option (56 bytes of flash)
   #endif
-  #if DISABLED(DISABLE_TUNING_GRAPH)
-    #define PROUI_ITEM_PLOT     // Temperature Plot Graph item in Tune/Prepare Menu (688 bytes of flash)
-  #endif
+  #define PROUI_ITEM_PLOT       // Temp Plot Graph item in Tune/Prepare Menu (688 bytes of flash)
   #define PROUI_ITEM_PLR        // Power-loss Recovery option in Tune Menu (POWER_LOSS_RECOVERY 3400 bytes of flash)
   //#define PROUI_ITEM_JD       // Juntion Deviation item in Tune Menu (only if JD is enabled)
   #define PROUI_ITEM_ADVK       // Linear Advance item in Tune Menu (only if LA is enabled)

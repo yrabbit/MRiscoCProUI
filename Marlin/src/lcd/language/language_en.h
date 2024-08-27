@@ -405,6 +405,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_PID_TEMP_TOO_HIGH              = _UxGT("Autotune failed! Temperature too high.");
   LSTR MSG_PID_TIMEOUT                    = _UxGT("Autotune failed! Timeout.");
 
+  LSTR MSG_SHOW_TEMP_GRAPH                = _UxGT("Show Temp Graph");
   LSTR MSG_HOTEND_TEMP_GRAPH              = _UxGT("Hotend Temp Graph");
   LSTR MSG_BED_TEMP_GRAPH                 = _UxGT("Bed Temp Graph");
   LSTR MSG_CHAMBER_TEMP_GRAPH             = _UxGT("Chamber Temp Graph");
