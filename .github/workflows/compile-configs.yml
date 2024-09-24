@@ -92,3 +92,8 @@ jobs:
         TJC: ${{ matrix.tjc }}
         T13: ${{ matrix.t13 }}
         BMP: ${{ matrix.bmp }}
+    - name: Archive firmware
+      uses: actions/upload-artifact@v4
+      with:
+          name: yrfw.bin
+          path: temp/build.bin
